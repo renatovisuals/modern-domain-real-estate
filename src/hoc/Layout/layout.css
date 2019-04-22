@@ -1,0 +1,17 @@
+.navLink{
+  color:#3bc193;
+  text-decoration:none;
+  padding:10px 25px;
+  margin: 15px;
+  border-radius: 5px;
+  border:1px solid #3bc193;
+  display:inline-block;
+  cursor:pointer;
+  transition: all .3s ease;
+}
+
+.navLink:hover{
+  background:#3bc193;
+  color:white;
+  border:none;
+}

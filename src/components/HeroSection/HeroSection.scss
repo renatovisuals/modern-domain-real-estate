@@ -1,0 +1,33 @@
+.hero-section{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  height:600px;
+  width:100%;
+  background-image: url("/images/hero-image.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position:center;
+
+  &__content{
+    color:#fff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    padding:0 20px;
+  }
+
+  &__title{
+    margin:0;
+    padding:0;
+    font-size: 38px;
+    text-shadow: 0px 2px 5px rgba(0,0,0,0.5);
+  }
+
+  &__subtitle{
+    font-size: 28px;
+    padding:10px 0;
+    margin:0;
+    text-shadow: 0px 2px 5px rgba(0,0,0,0.5);
+    font-weight: 400;
+  }
+}
