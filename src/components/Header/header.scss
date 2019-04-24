@@ -52,10 +52,9 @@
     cursor:pointer;
   }
 
-  &__container{
+  & .content-container{
     display:flex;
     width:100%;
-    margin: 0 10%;
     align-items:center;
   }
 
@@ -76,12 +75,9 @@
       width:190px;
     }
 
-    &__container{
-      margin: 0 15%;
-    }
-
     &__hamburger{
       display:none;
+      visibility: none;
     }
   }
 

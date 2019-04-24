@@ -5,7 +5,7 @@ import './layout.css';
 
 class Layout extends Component {
   state ={
-    showNav:true
+    showNav:false
   }
 
   toggleSidenav = (action) => {
