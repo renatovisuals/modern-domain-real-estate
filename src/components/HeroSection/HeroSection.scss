@@ -68,7 +68,6 @@
     flex-basis:100%;
     cursor:pointer;
     border-radius:5px;
-    overflow:hidden;
     margin: 5px 0px;
     -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.2);
     -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.2);
@@ -87,6 +86,7 @@
       bottom:0;
       right:0;
       width:40px;
+      border-radius: 0 5px 5px 0;
       pointer-events:none;
       cursor:pointer;
     }
@@ -101,6 +101,7 @@
       position:absolute;
       top:53%;
       transform: translateY(-50%);
+      pointer-events: none;
       right:12px;
     }
 
