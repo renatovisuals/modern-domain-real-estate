@@ -24,6 +24,7 @@ class ServicesSection extends Component {
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna'
       }
     ];
+
     const renderedItems = cards.map((card)=>{
       return(
         <div className = "services-section__card">

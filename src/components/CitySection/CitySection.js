@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import SectionTitle from '../SectionTitle/SectionTitle';
-import Slider from '../Slider/Slider';
+import SliderTemplates from'../Widgets/Slider_templates';
+import data from '../../db';
 import './CitySection.scss';
 
 
@@ -9,13 +10,26 @@ class CitySection extends Component {
 
 
 render(){
+  const {featuredCities} = data;
+  const sliderSettings = {
+    responsive: [
+      {
+        breakpoint:768,
+        settings:{
+          arrows:false
+        }
+      }
+    ]
+  }
   return(
     <section className = "city-section">
       <ContentContainer>
-        <SectionTitle> Choose From Any Major City In Texas </SectionTitle>
+        <SectionTitle white shadow> Choose From Any Major City In Texas </SectionTitle>
       </ContentContainer>
       <div className ="slider-container">
-        <Slider/>
+       <SliderTemplates type = "city" data ={featuredCities} settings = {sliderSettings}/>
+      </div>
+      <div className = "city-section__background">
       </div>
     </section>
   )
