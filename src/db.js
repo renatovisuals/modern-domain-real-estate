@@ -28,7 +28,7 @@
           description:'Gorgeous Golf Course Estate in Gated Community! Nestled in prestigious Chateaus at Fossil Creek with easy access to Downtown Ft. Worth & Alliance. 20 Foot High windows offer spectacular views of 3 holes on the course. Protected natural habitat & pool. Master retreat with 2 Fireplaces. Separate, detached 4th Bedroom with private Bath could be Pool Bath, Game Room, Exercise Room or Guest Quarters. Come make this breathtaking home your own for under $500,000!  Real AVM = over $900,000!  Buyers to verify all information contained herein including but not limited to schools, measurements & mineral rights to their satisfaction prior to submitting an offer. Adjacent LOT 9 IS AVAILABLE FOR SALE - Contact listing.'
       },
       {
-          id: 2,
+          id: 1,
           buildingType:'Home',
           city:'Fort Worth',
           state:'Tx',
@@ -55,7 +55,34 @@
           description:'Gorgeous Golf Course Estate in Gated Community! Nestled in prestigious Chateaus at Fossil Creek with easy access to Downtown Ft. Worth & Alliance. 20 Foot High windows offer spectacular views of 3 holes on the course. Protected natural habitat & pool. Master retreat with 2 Fireplaces. Separate, detached 4th Bedroom with private Bath could be Pool Bath, Game Room, Exercise Room or Guest Quarters. Come make this breathtaking home your own for under $500,000!  Real AVM = over $900,000!  Buyers to verify all information contained herein including but not limited to schools, measurements & mineral rights to their satisfaction prior to submitting an offer. Adjacent LOT 9 IS AVAILABLE FOR SALE - Contact listing.'
       },
       {
-          id: 3,
+          id: 1,
+          buildingType:'Home',
+          city:'Fort Worth',
+          state:'Tx',
+          street:'3536 Clubgate Dr',
+          apt:null,
+          zip:'76137',
+          position:{lat:32.853750,lng:-97.308290},
+          price:480000,
+          estPayment:2999,
+          bedrooms:4,
+          bathrooms:4,
+          sqft:4343,
+          type:'Single Family',
+          yearBuilt:'1988',
+          heating:'Forced air',
+          cooling:'Central',
+          parking:2,
+          lot:{
+            unit:'acres',
+            quantity:0.36
+          },
+          pricepersqft:111,
+          images:['1.jpg','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpg','10.jpg','11.jpg','12.jpg','13.jpg','14.jpg'],
+          description:'Gorgeous Golf Course Estate in Gated Community! Nestled in prestigious Chateaus at Fossil Creek with easy access to Downtown Ft. Worth & Alliance. 20 Foot High windows offer spectacular views of 3 holes on the course. Protected natural habitat & pool. Master retreat with 2 Fireplaces. Separate, detached 4th Bedroom with private Bath could be Pool Bath, Game Room, Exercise Room or Guest Quarters. Come make this breathtaking home your own for under $500,000!  Real AVM = over $900,000!  Buyers to verify all information contained herein including but not limited to schools, measurements & mineral rights to their satisfaction prior to submitting an offer. Adjacent LOT 9 IS AVAILABLE FOR SALE - Contact listing.'
+      },
+      {
+          id: 1,
           buildingType:'Home',
           city:'Fort Worth',
           state:'Tx',

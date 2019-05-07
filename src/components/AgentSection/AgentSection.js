@@ -43,7 +43,7 @@ render(){
   }
   return(
     <section className = "agent-section">
-      <ContentContainer narrow>
+      <ContentContainer>
         <SectionTitle> Choose The Perfect Agent For Your Needs </SectionTitle>
         <SliderTemplates type = "agent" data = {featuredAgents} settings = {sliderSettings}> </SliderTemplates>
       </ContentContainer>

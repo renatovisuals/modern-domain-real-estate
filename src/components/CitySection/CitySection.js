@@ -25,10 +25,10 @@ render(){
     <section className = "city-section">
       <ContentContainer>
         <SectionTitle white shadow> Choose From Any Major City In Texas </SectionTitle>
+        <div className ="slider-container">
+         <SliderTemplates type = "city" data ={featuredCities} settings = {sliderSettings}/>
+        </div>
       </ContentContainer>
-      <div className ="slider-container">
-       <SliderTemplates type = "city" data ={featuredCities} settings = {sliderSettings}/>
-      </div>
       <div className = "city-section__background">
       </div>
     </section>

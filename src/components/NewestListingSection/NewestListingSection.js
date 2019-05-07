@@ -12,7 +12,7 @@ getData(){
 const houses = data.houses;
 let arr = new Array;
 
-for(let i = 0; i<1; i++){
+for(let i = 0; i<4; i++){
   arr.push(<ListingCard data = {houses[i]}/>)
 }
 return arr;
@@ -23,7 +23,7 @@ render(){
 
   return(
     <section className = "new-listings">
-      <ContentContainer narrow>
+      <ContentContainer>
         <SectionTitle> Newest Listings </SectionTitle>
         <div className = "new-listings__listing-container">
           {this.getData()}
