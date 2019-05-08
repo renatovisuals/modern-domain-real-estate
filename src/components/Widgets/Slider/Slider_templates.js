@@ -34,28 +34,22 @@ const SliderTemplates = (props) => {
             )
           })
           break;
-        case('test'):
-          console.log(props.data, "agents");
-          template = props.data.map((agent,i) => {
-            console.log(agent.image)
-            return(
-              <Link>
-                <div key ={i} className = "agent-card">
-                  <div className="agent-card__image" style={{backgroundImage:`url(./images/agents/${agent.image})`}}></div>
-                  <span className="agent-card__name"> {agent.name} </span>
-                  <span className="agent-card__occupation"> Realtor </span>
-                </div>
-              </Link>
-            )
-          })
-          break;
         case('agent'):
           console.log(props.data, "agents");
           template = props.data.map((agent,i) => {
             console.log(agent.image)
             return(
-              <Link>
+              <Link draggable = 'false'>
                 <Card type = "agent" data ={agent}> </Card>
+              </Link>
+            )
+          })
+          break;
+        case('newListings'):
+          template = props.data.map((listing,i) => {
+            return(
+              <Link draggable = 'false'>
+                <Card type = "listing" data ={listing}> </Card>
               </Link>
             )
           })

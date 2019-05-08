@@ -4,36 +4,55 @@ import SectionTitle from '../SectionTitle/SectionTitle';
 import data from '../../db';
 import './NewestListingSection.scss';
 import ListingCard from '../ListingCard/ListingCard';
+import SliderTemplates from '../Widgets/Slider/Slider_templates';
 import Card from '../Widgets/Card/Card';
 
 
-class NewestListingSection extends Component {
-
-getData(){
-const houses = data.agents;
-let arr = new Array;
-
-for(let i = 0; i<4; i++){
-  arr.push(<Card type ="agent" data = {houses[i]} />)
-}
-return arr;
-}
-
-render(){
-  console.log(this.getData(), "this is the getdata funtion")
+const NewestListingSection = ()=> {
+  const houses = ()=>{
+    let arr = new Array
+    for (let i=0; i<4 ; i++){
+      arr.push(data.houses[i])
+    }
+    return arr;
+  }
+  const sliderSettings = {
+    slidesToShow:4,
+    autoplay:false,
+    responsive: [
+      {
+        breakpoint:1200,
+        settings:{
+          slidesToShow:2,
+          arrows:false
+        }
+      },
+      {
+        breakpoint:1500,
+        settings:{
+          slidesToShow:3,
+          arrows:false
+        }
+      },
+      {
+        breakpoint:700,
+        settings:{
+          slidesToShow:1,
+          arrows:false
+        }
+      }
+    ]
+  }
 
   return(
     <section className = "new-listings">
       <ContentContainer>
         <SectionTitle> Newest Listings </SectionTitle>
-        <div className = "new-listings__listing-container">
-          {this.getData()}
-        </div>
+        <SliderTemplates settings = {sliderSettings} type ="newListings" data ={houses()} />
       </ContentContainer>
     </section>
   )
 }
 
-}
 
 export default NewestListingSection;

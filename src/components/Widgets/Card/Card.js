@@ -6,24 +6,27 @@ import './card.scss';
 
 const Card = (props) => {
   let template = null;
+  const {data} = props;
 
     switch(props.type){
       case 'listing':
         return(
           <div className = "card">
-            <div className = "card__image" style = {{backgroundImage:`url("./images/listings/${props.data.id}/${props.data.images[0]}")`}}></div>
-            <div className = "card__details-container">
-              <div className ="card__price-and-rooms">
-                $480,000
-                <span className="card__rooms">
-                  4bds
-                </span>
-                <span className="card__rooms">
-                  4ba
-                </span>
-              </div>
-              <div className="card__address">
-                3535 Clubgate Dr, Fort Worth, TX
+            <div className = "card__image" style = {{backgroundImage:`url("./images/listings/${data.id}/${data.images[0]}")`}}></div>
+            <div className = "card__details">
+              <div className = "card__text-container">
+                <div className ="card__price-and-rooms">
+                  {`$${data.price}`}
+                  <span className="card__rooms">
+                    {`${data.bedrooms}bd`}
+                  </span>
+                  <span className="card__rooms">
+                    {`${data.bathrooms}bd`}
+                  </span>
+                </div>
+                <div className="card__address">
+                  {`${data.street}, ${data.city}, ${data.state}`}
+                </div>
               </div>
             </div>
           </div>

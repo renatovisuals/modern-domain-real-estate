@@ -4,6 +4,7 @@ import ServicesSection from '../ServicesSection/ServicesSection';
 import CitySection from '../CitySection/CitySection';
 import AgentSection from '../AgentSection/AgentSection';
 import NewestListingSection from '../NewestListingSection/NewestListingSection';
+import Footer from '../Footer/Footer';
 
 
 class Home extends Component {
@@ -17,6 +18,7 @@ render(){
       <CitySection />
       <AgentSection />
       <NewestListingSection />
+      <Footer />
     </div>
   )
 }

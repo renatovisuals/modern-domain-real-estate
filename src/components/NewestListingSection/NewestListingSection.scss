@@ -1,5 +1,5 @@
 .new-listings{
-  padding-top: 100px;
+  padding: 100px 0;
 
   &__listing-container{
     display:flex;
@@ -10,16 +10,12 @@
 
   .card{
     margin-right:20px;
-    transition: .3s ease;
     flex:1;
 
     &:last-child{
       margin-right: 0;
     }
 
-    &:hover{
-      transform: scale(1.03);
-    }
   }
 
 }
