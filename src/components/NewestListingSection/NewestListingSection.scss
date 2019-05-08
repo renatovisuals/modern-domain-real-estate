@@ -1,9 +1,5 @@
 .new-listings{
   padding-top: 100px;
-  text-align: center;
-
-  .content-container{
-  }
 
   &__listing-container{
     display:flex;
@@ -12,9 +8,10 @@
     flex-wrap:wrap;
   }
 
-  .listing-card{
+  .card{
     margin-right:20px;
     transition: .3s ease;
+    flex:1;
 
     &:last-child{
       margin-right: 0;

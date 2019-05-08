@@ -2,6 +2,7 @@ import React from "react";
 import Slider from "react-slick";
 import './slider.scss';
 import { Link } from 'react-router-dom';
+import Card from '../Card/Card';
 
 
 const SliderTemplates = (props) => {
@@ -33,7 +34,7 @@ const SliderTemplates = (props) => {
             )
           })
           break;
-        case('agent'):
+        case('test'):
           console.log(props.data, "agents");
           template = props.data.map((agent,i) => {
             console.log(agent.image)
@@ -44,6 +45,17 @@ const SliderTemplates = (props) => {
                   <span className="agent-card__name"> {agent.name} </span>
                   <span className="agent-card__occupation"> Realtor </span>
                 </div>
+              </Link>
+            )
+          })
+          break;
+        case('agent'):
+          console.log(props.data, "agents");
+          template = props.data.map((agent,i) => {
+            console.log(agent.image)
+            return(
+              <Link>
+                <Card type = "agent" data ={agent}> </Card>
               </Link>
             )
           })

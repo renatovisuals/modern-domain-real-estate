@@ -150,10 +150,6 @@ $slick-opacity-on-hover:.75;
     padding:0 10px;
     box-sizing: border-box;
     width:25%;
-
-    &:first{
-      padding: 0 10px 0 0;
-    }
   }
 
   .agent-card{
@@ -189,4 +185,9 @@ $slick-opacity-on-hover:.75;
 
 
   }
+}
+
+.card{
+  width:100% !important;
+  border:1px solid red;
 }

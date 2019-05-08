@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import SectionTitle from '../SectionTitle/SectionTitle';
-import SliderTemplates from'../Widgets/Slider_templates';
+import SliderTemplates from'../Widgets/Slider/Slider_templates';
 import data from '../../db';
 import './agentsection.scss';
 
@@ -43,7 +43,7 @@ render(){
   }
   return(
     <section className = "agent-section">
-      <ContentContainer>
+      <ContentContainer narrow>
         <SectionTitle> Choose The Perfect Agent For Your Needs </SectionTitle>
         <SliderTemplates type = "agent" data = {featuredAgents} settings = {sliderSettings}> </SliderTemplates>
       </ContentContainer>

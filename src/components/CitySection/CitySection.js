@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import SectionTitle from '../SectionTitle/SectionTitle';
-import SliderTemplates from'../Widgets/Slider_templates';
+import SliderTemplates from'../Widgets/Slider/Slider_templates';
 import data from '../../db';
 import './CitySection.scss';
 

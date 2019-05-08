@@ -15,7 +15,7 @@ render(){
         <form action ="#">
           <div class = "hero-section__select">
             <select name="city">
-              <option value="0">Select an available city</option>
+              <option value="0">Select a City</option>
               <option value="Fort Worth">Fort Worth</option>
               <option value="Dallas">Dallas</option>
               <option value="Austin">Austin</option>

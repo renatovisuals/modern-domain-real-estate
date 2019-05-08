@@ -4,16 +4,17 @@ import SectionTitle from '../SectionTitle/SectionTitle';
 import data from '../../db';
 import './NewestListingSection.scss';
 import ListingCard from '../ListingCard/ListingCard';
+import Card from '../Widgets/Card/Card';
 
 
 class NewestListingSection extends Component {
 
 getData(){
-const houses = data.houses;
+const houses = data.agents;
 let arr = new Array;
 
 for(let i = 0; i<4; i++){
-  arr.push(<ListingCard data = {houses[i]}/>)
+  arr.push(<Card type ="agent" data = {houses[i]} />)
 }
 return arr;
 }
