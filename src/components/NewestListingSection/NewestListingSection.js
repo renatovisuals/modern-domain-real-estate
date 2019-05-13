@@ -3,7 +3,6 @@ import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import SectionTitle from '../SectionTitle/SectionTitle';
 import data from '../../db';
 import './NewestListingSection.scss';
-import ListingCard from '../ListingCard/ListingCard';
 import SliderTemplates from '../Widgets/Slider/Slider_templates';
 import Card from '../Widgets/Card/Card';
 
