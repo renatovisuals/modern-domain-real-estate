@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import SectionTitle from '../SectionTitle/SectionTitle';
 import SliderTemplates from'../Widgets/Slider/Slider_templates';
+import { Link } from 'react-router-dom';
 import data from '../../db';
 import './agentsection.scss';
 
@@ -45,7 +46,7 @@ render(){
     <section className = "agent-section">
       <ContentContainer narrow>
         <SectionTitle> Choose The Perfect Agent For Your Needs </SectionTitle>
-        <SliderTemplates type = "agent" data = {featuredAgents} settings = {sliderSettings}> </SliderTemplates>
+          <SliderTemplates type = "agent" data = {featuredAgents} settings = {sliderSettings}> </SliderTemplates>
       </ContentContainer>
     </section>
   )

@@ -12,14 +12,7 @@ class CitySection extends Component {
 render(){
   const {featuredCities} = data;
   const sliderSettings = {
-    responsive: [
-      {
-        breakpoint:768,
-        settings:{
-          arrows:false
-        }
-      }
-    ]
+    arrows:false
   }
   return(
     <section className = "city-section">

@@ -7,7 +7,7 @@ class About extends Component {
 render(){
   const id = this.props.match.params.id
 
-  console.log(Data()[0].id === Number(id))
+  console.log(id)
 
 
   return(

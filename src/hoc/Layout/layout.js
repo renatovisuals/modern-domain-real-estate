@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../../components/Header/header';
+import Footer from '../../components/Footer/Footer';
 import './layout.css';
 
 class Layout extends Component {
@@ -16,13 +17,14 @@ class Layout extends Component {
 
 render(){
   return(
-    <div>
+    <div className = "app-container">
       <Header
         showNav = {this.state.showNav}
         onHideNav = {() => this.toggleSidenav(false)}
         onOpenNav = {() => this.toggleSidenav(true)}
       />
       {this.props.children}
+      <Footer/>
     </div>
   )
 }

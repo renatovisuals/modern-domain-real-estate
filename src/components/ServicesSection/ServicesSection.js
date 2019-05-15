@@ -9,17 +9,17 @@ class ServicesSection extends Component {
     const url = '/images/services-section/';
     const cards = [
       {
-        image: `${url}home-icon.png`,
+        image: `${url}home-icon-square.png`,
         title:'Real Estate Expertise',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna'
       },
       {
-        image: `${url}local-icon.png`,
+        image: `${url}texas-icon-square.png`,
         title:'Our Services are Local',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna'
       },
       {
-        image: `${url}inspection-icon.png`,
+        image: `${url}inspection-icon-square.png`,
         title:'High Quality Inspections',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna'
       }
@@ -28,7 +28,7 @@ class ServicesSection extends Component {
     const renderedItems = cards.map((card)=>{
       return(
         <div className = "services-section__card">
-          <img className = "services-section__img" src ={card.image}/>
+          <img className = "services-section__image" src ={card.image}/>
           <h2 className = "services-section__card-title">{card.title}</h2>
           <p className = "services-section__description">{card.description}</p>
         </div>

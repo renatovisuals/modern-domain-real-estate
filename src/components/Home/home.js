@@ -18,7 +18,6 @@ render(){
       <CitySection />
       <AgentSection />
       <NewestListingSection />
-      <Footer />
     </div>
   )
 }

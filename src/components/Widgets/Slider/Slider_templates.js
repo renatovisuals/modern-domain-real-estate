@@ -39,7 +39,7 @@ const SliderTemplates = (props) => {
           template = props.data.map((agent,i) => {
             console.log(agent.image)
             return(
-              <Link draggable = 'false'>
+              <Link to={`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent.id}`} draggable="false" onClick={()=>{console.log("link was clicked!")}}>
                 <Card type = "agent" data ={agent}> </Card>
               </Link>
             )

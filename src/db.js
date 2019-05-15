@@ -223,7 +223,9 @@
 
     agents:[
       {
-        name:'Veeti Seppanen',
+        id:'1',
+        firstName:'Veeti',
+        lastName:'Seppanen',
         qualifications:['Realtor','Texas Certified','Arizona Certified'],
         email:'veeti.seppanen@moderndomain.com',
         phone:'(548) 877-2246',
@@ -235,7 +237,9 @@
         featured:true
       },
       {
-        name:'Thomas Stock',
+        id:'2',
+        firstName:'Thomas',
+        lastName:'Stock',
         qualifications:['Realtor','Texas Certified'],
         email:'thomas.stock@moderndomain.com',
         phone:'(662) 824-7765',
@@ -247,7 +251,9 @@
         featured:true
       },
       {
-        name:'Steve Scaife',
+        id:'3',
+        firstName:'Steve',
+        lastName:'Scaife',
         qualifications:['Realtor','Texas Certified'],
         email:'steve.scaife@moderndomain.com',
         phone:'(906) 560-2087',
@@ -259,7 +265,9 @@
         featured:true
       },
       {
-        name:'Andreas Brixen',
+        id:'4',
+        firstName:'Andreas',
+        lastName:'Brixen',
         qualifications:['Realtor','Texas Certified'],
         email:'abrixen@gmail.com',
         phone:'817-732-5752',
@@ -271,7 +279,9 @@
         featured:true,
       },
       {
-        name:'Sean Doran',
+        id:'5',
+        firstName:'Sean',
+        lastName:'Doran',
         qualifications:['Realtor','Texas Certified'],
         email:'sean.doran@moderndomain.com',
         phone:'817-250-6623',
@@ -283,7 +293,9 @@
         featured:true
       },
       {
-        name:'Isabel Kirkland',
+        id:'6',
+        firstName:'Isabel ',
+        lastName:'Kirkland',
         qualifications:['Realtor','Texas Certified','California Certified'],
         email:'isabel.kirkland@moderndomain.com',
         phone:'281-786-2662',
