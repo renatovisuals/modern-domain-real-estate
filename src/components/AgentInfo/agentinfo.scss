@@ -4,7 +4,12 @@
   .content-container{
     display:flex;
     flex-wrap: wrap-reverse;
-    text-align: center;
+  }
+
+  @media screen and (min-width:1200px){
+    .content-container{
+      flex-wrap: wrap;
+    }
   }
 
 }

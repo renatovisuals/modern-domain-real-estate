@@ -1,0 +1,43 @@
+.social-media{
+  &__social-link{
+    display:inline-block;
+    background-color:#4b4b4b;
+    width: 45px;
+    height: 45px;
+    position: relative;
+    transition: all .3s ease;
+    overflow:hidden;
+    margin-right:10px;
+    margin-bottom: 5px;
+    cursor:pointer;
+
+    &:hover{
+      transform: scale(0.93);
+      background-color:#3bc193;
+    }
+
+    &:hover svg{
+      animation-name: socialIconSlide;
+      animation-duration:.3s;
+    }
+       svg{
+        top:50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        position:absolute;
+        color:#fff;
+        transform-origin: center;
+      }
+  }
+}
+
+@keyframes socialIconSlide{
+   0%{
+    top: -50%;
+  }
+
+  100%{
+    top:50%;
+
+  }
+}

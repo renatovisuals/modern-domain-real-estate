@@ -1,9 +1,28 @@
 import React, { Component } from 'react';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
+import SocialMedia from '../Widgets/SocialMedia/SocialMedia';
 import './AgentInfoPanel.scss';
 
 
 const AgentInfoPanel = (props)=> {
+  const links = [
+    {
+      type:'twitter',
+      link:'https://twitter.com/'
+    },
+    {
+      type:'facebook',
+      link:'https://www.facebook.com/'
+    },
+    {
+      type:'pinterest',
+      link:'https://www.pinterest.com/'
+    },
+    {
+      type:'instagram',
+      link:'https://www.instagram.com/?hl=en'
+    }
+  ]
 
   return(
     <div className = "agent-info-panel">
@@ -21,10 +40,7 @@ const AgentInfoPanel = (props)=> {
       </div>
       <div className ="agent-info-panel__section agent-info-panel__section--social">
           <span className = "agent-info-panel__info-title"> Social Media </span>
-          <div className ="agent-info-panel__social-icon"> </div>
-          <div className ="agent-info-panel__social-icon"> </div>
-          <div className ="agent-info-panel__social-icon"> </div>
-          <div className ="agent-info-panel__social-icon"> </div>
+          <SocialMedia/>
       </div>
     </div>
   )
