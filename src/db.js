@@ -229,6 +229,7 @@
         qualifications:['Realtor','Texas Certified','Arizona Certified'],
         email:'veeti.seppanen@moderndomain.com',
         phone:'(548) 877-2246',
+        fax:'(548) 877-2246',
         street:'3009 Moore Avenue',
         city:'Keller',
         state:'TX',

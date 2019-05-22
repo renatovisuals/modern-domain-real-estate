@@ -1,18 +1,9 @@
 import React from 'react';
-
+import './modal-backdrop.scss';
  const ModalBackdrop = (props)=>{
-  let style = {
-    position:'fixed',
-    zIndex:'100',
-    top:'0',
-    left:'0',
-    right:'0',
-    bottom:'0',
-    background:'rgba(0,0,0,0.3)'
-  }
-
   return(
-    <div onClick = {props.click} style = {style}>
+    <div onClick = {props.click} className = {`modal-backdrop ${props.hidden ? 'modal-backdrop--hidden' : null}`} >
+      {props.children}
     </div>
   )
 }

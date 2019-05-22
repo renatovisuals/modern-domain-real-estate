@@ -32,7 +32,7 @@ const AgentHeader = (props)=> {
             <span className = "agent-header__agent-phone"> {`${props.data.phone}`} </span>
             <div className = "agent-header__agent-qualifications"> {getQualifications()} </div>
           </div>
-          <button className = "agent-header__btn">
+          <button className = "agent-header__btn" onClick = {()=> props.toggleModal()}>
             Work With {`${props.data.firstName} ${props.data.lastName}`}
           </button>
         </div>
