@@ -5,6 +5,7 @@
     margin:0;
     padding:0;
     color:red;
+    display:none;
 
     &--radio{
       padding-top:5px;
@@ -12,7 +13,13 @@
   }
 
   &__input-error{
-    border:1px solid red !important;
+    input{
+      border:1px solid red !important;
+      margin: 5px 0 2px 0 !important;
+    }
+    p{
+      display:block !important;
+    }
   }
 
   &__input-container{

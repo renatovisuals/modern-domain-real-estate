@@ -12,7 +12,14 @@ class AgentModal extends Component {
     email:'',
     phone:'',
     transaction:'',
-    inputErrors:{},
+    showErrors:false,
+    inputErrors:{
+      firstName:"please enter a first name",
+      lastName:"please enter a last name",
+      email:"please enter a valid email",
+      phone:null,
+      transaction:null
+    },
     firstNameValid:false,
     lastNameValid:false,
     emailValid:false,
@@ -26,41 +33,55 @@ class AgentModal extends Component {
     const value = e.target.value;
     this.setState({
         [name]:value
-    })
-
-    console.log(name,value,'this is an input');
+    },()=>{this.validateField(name,value)})
   }
 
-  validateField = ()=>{
-    let formValid = false;
-    let inputErrors = {
-      firstName:null,
-      lastName:null,
-      email:null,
-      phone:null,
-      transaction:null
+  onFormSubmit = (e)=>{
+  e.preventDefault();
+   if(this.state.formValid){
+     console.log("form submission successful");
+   }else{
+     this.setState({
+       showErrors:true
+     })
+   }
+  }
+
+  validateField = (fieldName,value)=>{
+    let inputErrors = this.state.inputErrors;
+    let firstNameValid = this.state.firstNameValid;
+    let lastNameValid = this.state.lastNameValid;
+    let emailValid = this.state.emailValid;
+    let phoneValid = this.state.phoneValid;
+    let formValid = this.state.formValid;
+
+    switch(fieldName) {
+      case "firstName":
+        firstNameValid = value.length >0;
+        inputErrors.firstName = firstNameValid ? '' : 'enter a first name';
+        break;
+      case "lastName":
+        lastNameValid = value.length >0;
+        inputErrors.lastName = lastNameValid ? '' : 'enter a last name';
+        break;
+      case "email":
+        emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        inputErrors.email = emailValid ? '' : 'please enter a valid email';
+        break;
+      default:
     }
-    const formKeys = Object.keys(this.state);
-    formKeys.forEach((key)=>{
-      switch(key) {
-        case 'firstName':
-        if(this.state.firstName.length === 0){
-          inputErrors.firstName='please enter a first name';
-          this.setState({
-          firstNameValid:false
-          })
-        }
-      }
-    })
-    if(this.state.firstNameValid && this.state.lastNameValid && this.state.emailValid && this.state.phoneValid && this.state.transactionValid){
-      this.setState({
-        formValid:true
-      })
-    }else{
-      this.setState({
-        inputErrors
-      },console.log(this.state.inputErrors, "these are the new errors"))
+
+    if(firstNameValid && lastNameValid && emailValid){
+        formValid = true
     }
+
+  this.setState({
+    inputErrors,
+    lastNameValid,
+    firstNameValid,
+    emailValid,
+    phoneValid
+  })
 
   }
 
@@ -91,7 +112,7 @@ class AgentModal extends Component {
       >
         <div className = "agent-modal" onClick = {(e)=>{this.props.handleModalClick(e)}}>
           <span className = "agent-modal__ex-icon" onClick = {this.props.toggleModal}> &#10005; </span>
-          <AgentContactForm formData = {this.state} validate = {this.validateField} handleUserInput = {this.handleUserInput}/>
+          <AgentContactForm formData = {this.state} validate = {this.validateField} handleUserInput = {this.handleUserInput} submitForm = {this.onFormSubmit} agent = {this.props.agent}/>
         </div>
       </CSSTransition>
     )

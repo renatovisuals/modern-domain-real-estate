@@ -4,31 +4,23 @@ import './agentcontactform.scss';
 
 
 const AgentContactForm = (props)=> {
-  const {errors} = props.formData.inputErrors;
-  console.log(props.formData.inputErrors.firstName, "this")
-  const renderError = (errorText)=>{
-    if(!props.formData.formValid){
-      return(
-        <p className="agent-contact-form__input-error-text">{errorText}</p>
-      )
-    }
-  }
+  const {inputErrors,showErrors,phoneValid,emailValid,firstNameValid,lastNameValid} = props.formData;
 
   return(
     <div className="agent-contact-form">
-      <div className = "agent-contact-form__form-title"> Work With Dan Bilzerian </div>
-      <form autocomplete="on" onSubmit ={(e)=>{e.preventDefault(); console.log("form was submitted!")}}>
-        <div className="agent-contact-form__input-container--narrow">
-          <input className= {`${props.formData.inputErrors.firstName ? "agent-contact-form__input-error" : null}`} name="firstName" placeholder="First Name" type ="text"  value={props.formData.firstName} onChange={(e)=>{props.handleUserInput(e)}}/>
-          {renderError(props.formData.inputErrors.firstName)}
+      <div className = "agent-contact-form__form-title"> {`Work with ${props.agent.firstName} ${props.agent.lastName}`} </div>
+      <form autocomplete="on" onSubmit ={(e)=>{props.submitForm(e)}}>
+        <div className={`agent-contact-form__input-container--narrow ${ !firstNameValid && showErrors ? 'agent-contact-form__input-error' : null }`}>
+          <input name="firstName" placeholder="First Name" type ="text"  value={props.formData.firstName} onChange={(e)=>{props.handleUserInput(e)}}/>
+          <p className="agent-contact-form__input-error-text"> {inputErrors.firstName} </p>
         </div>
-        <div className="agent-contact-form__input-container--narrow">
-          <input className= "agent-contact-form__input-error" name="last name" placeholder="Last Name" type ="text"/>
-          <p className ="agent-contact-form__input-error-text">please enter a last name</p>
+        <div className={`agent-contact-form__input-container--narrow ${ !lastNameValid && showErrors ? 'agent-contact-form__input-error' : null}`}>
+          <input name="lastName" placeholder="Last Name" type ="text" value={props.formData.lastName} onChange={(e)=>{props.handleUserInput(e)}}/>
+          <p className="agent-contact-form__input-error-text"> {inputErrors.lastName} </p>
         </div>
-        <div className="agent-contact-form__input-container">
-          <input name="email" placeholder="Email" type ="text"/>
-          <p className ="agent-contact-form__input-error-text">please enter a valid email</p>
+        <div className={`agent-contact-form__input-container ${ !emailValid && showErrors ? 'agent-contact-form__input-error' : null}`}>
+          <input name="email" placeholder="Email" type ="text" value={props.formData.email} onChange={(e)=>{props.handleUserInput(e)}}/>
+          <p className="agent-contact-form__input-error-text"> {inputErrors.email} </p>
         </div>
         <div className="agent-contact-form__input-container">
           <input name="phone" placeholder="Phone(optional)" type ="text"/>
@@ -42,7 +34,7 @@ const AgentContactForm = (props)=> {
           <label className="transaction-label" htmlFor="buy">Buy</label>
         </div>
         <div>
-          <input name="transaction" value="sell" type="radio" id="sell"/>
+          <input name="transaction" value="sell" type="radio" checked="true" id="sell"/>
           <label className="transaction-label" htmlFor="sell">Sell</label>
         </div>
         <div>

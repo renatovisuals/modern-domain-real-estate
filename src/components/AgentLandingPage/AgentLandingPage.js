@@ -38,7 +38,7 @@ class AgentLandingPage extends Component {
     }
       return(
           <div>
-            <AgentModal toggleModal = {this.toggleModal} handleModalClick = {this.handleModalClick} appear = {this.state.modalWindowOpen}/>
+            <AgentModal toggleModal = {this.toggleModal} handleModalClick = {this.handleModalClick} appear = {this.state.modalWindowOpen} agent ={this.agentData}/>
             <ModalBackdrop click = {this.toggleModal} hidden = {!this.state.modalWindowOpen}/>
           </div>
       )
