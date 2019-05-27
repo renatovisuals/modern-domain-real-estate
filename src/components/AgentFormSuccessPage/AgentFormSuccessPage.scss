@@ -1,0 +1,32 @@
+.agent-success-page{
+  display:inline-block;
+  text-align: center;
+  padding: 70px 50px 70px 50px;
+  box-sizing: border-box;
+  width:100%;
+
+  &--enter{
+    opacity:0;
+    margin-left:-100%;
+  }
+
+  &--enter-active{
+    opacity:1;
+    margin-left:0;
+    color:orange;
+    transition: opacity 300ms ease-in, margin-left 300ms ease;
+  }
+
+  &__title{
+    font-size:30px;
+    color:#555;
+    text-align: center;
+    display:block;
+    margin-bottom:15px;
+  }
+
+  &__description{
+    color:#555;
+    display:block;
+  }
+}

@@ -1,31 +1,46 @@
 import React, { Component } from 'react';
 import {CSSTransition} from 'react-transition-group';
 import AgentContactForm from '../AgentContactForm/AgentContactForm';
+import AgentFormSuccessPage from '../AgentFormSuccessPage/AgentFormSuccessPage';
 import './AgentModal.scss';
 
 
 class AgentModal extends Component {
 
   state={
-    firstName:'',
-    lastName:'',
-    email:'',
-    phone:'',
-    transaction:'',
-    showErrors:false,
-    inputErrors:{
-      firstName:"please enter a first name",
-      lastName:"please enter a last name",
-      email:"please enter a valid email",
-      phone:null,
-      transaction:null
-    },
-    firstNameValid:false,
-    lastNameValid:false,
-    emailValid:false,
-    phoneValid:false,
-    transactionValid:false,
-    formValid:false
+
+  }
+
+  componentWillMount(){
+    this.setState(this.getInitialState())
+  }
+
+  getInitialState = ()=>{
+    return(
+      {
+        height:'',
+        firstName:'',
+        lastName:'',
+        email:'',
+        phone:'',
+        transactionType:'sell',
+        submissionFailed:false,
+        sumbmissionSuccess:false,
+        inputErrors:{
+          firstName:"please enter a first name",
+          lastName:"please enter a last name",
+          email:"please enter a valid email",
+          phone:null,
+          transaction:null
+        },
+        firstNameValid:false,
+        lastNameValid:false,
+        emailValid:false,
+        phoneValid:false,
+        transactionValid:false,
+        formValid:false
+      }
+    )
   }
 
   handleUserInput = (e)=>{
@@ -36,13 +51,26 @@ class AgentModal extends Component {
     },()=>{this.validateField(name,value)})
   }
 
+  handleModalClose =()=>{
+    setTimeout(()=>{this.setState({submissionSuccess:false})},300)
+    this.props.toggleModal()
+
+  }
+
+  setModalHeight = (height)=>{
+    this.setState({
+      height
+    })
+  }
+
   onFormSubmit = (e)=>{
   e.preventDefault();
    if(this.state.formValid){
-     console.log("form submission successful");
+     this.setState(this.getInitialState());
+     setTimeout(()=>{this.setState({submissionSuccess:true})},500)
    }else{
      this.setState({
-       showErrors:true
+       submissionFailed:true
      })
    }
   }
@@ -52,7 +80,6 @@ class AgentModal extends Component {
     let firstNameValid = this.state.firstNameValid;
     let lastNameValid = this.state.lastNameValid;
     let emailValid = this.state.emailValid;
-    let phoneValid = this.state.phoneValid;
     let formValid = this.state.formValid;
 
     switch(fieldName) {
@@ -80,7 +107,7 @@ class AgentModal extends Component {
     lastNameValid,
     firstNameValid,
     emailValid,
-    phoneValid
+    formValid
   })
 
   }
@@ -110,9 +137,18 @@ class AgentModal extends Component {
             exitDone: 'agent-modal--exit-done'
         }}
       >
-        <div className = "agent-modal" onClick = {(e)=>{this.props.handleModalClick(e)}}>
-          <span className = "agent-modal__ex-icon" onClick = {this.props.toggleModal}> &#10005; </span>
-          <AgentContactForm formData = {this.state} validate = {this.validateField} handleUserInput = {this.handleUserInput} submitForm = {this.onFormSubmit} agent = {this.props.agent}/>
+        <div className = "agent-modal" onClick = {(e)=>{this.props.handleModalClick(e)}} style={{height:this.state.height +'px'}}>
+          <span className = "agent-modal__ex-icon" onClick = {this.handleModalClose}> &#10005; </span>
+            <AgentContactForm
+              formData = {this.state}
+              validate = {this.validateField}
+              handleUserInput = {this.handleUserInput}
+              submitForm = {this.onFormSubmit}
+              agent = {this.props.agent}
+              appear = {!this.state.submissionSuccess}
+              setContainerHeight = {this.setModalHeight}
+            />
+            <AgentFormSuccessPage agent = {this.props.agent} appear = {this.state.submissionSuccess}/>
         </div>
       </CSSTransition>
     )

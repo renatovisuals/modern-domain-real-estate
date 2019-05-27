@@ -1,54 +1,73 @@
 import React, { Component } from 'react';
+import {CSSTransition} from 'react-transition-group';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import './agentcontactform.scss';
 
 
-const AgentContactForm = (props)=> {
-  const {inputErrors,showErrors,phoneValid,emailValid,firstNameValid,lastNameValid} = props.formData;
+class AgentContactForm extends Component{
+  componentDidMount(){
+    const height = document.getElementById('agent-form').clientHeight;
+    this.props.setContainerHeight(height);
+  }
 
-  return(
-    <div className="agent-contact-form">
-      <div className = "agent-contact-form__form-title"> {`Work with ${props.agent.firstName} ${props.agent.lastName}`} </div>
-      <form autocomplete="on" onSubmit ={(e)=>{props.submitForm(e)}}>
-        <div className={`agent-contact-form__input-container--narrow ${ !firstNameValid && showErrors ? 'agent-contact-form__input-error' : null }`}>
-          <input name="firstName" placeholder="First Name" type ="text"  value={props.formData.firstName} onChange={(e)=>{props.handleUserInput(e)}}/>
-          <p className="agent-contact-form__input-error-text"> {inputErrors.firstName} </p>
-        </div>
-        <div className={`agent-contact-form__input-container--narrow ${ !lastNameValid && showErrors ? 'agent-contact-form__input-error' : null}`}>
-          <input name="lastName" placeholder="Last Name" type ="text" value={props.formData.lastName} onChange={(e)=>{props.handleUserInput(e)}}/>
-          <p className="agent-contact-form__input-error-text"> {inputErrors.lastName} </p>
-        </div>
-        <div className={`agent-contact-form__input-container ${ !emailValid && showErrors ? 'agent-contact-form__input-error' : null}`}>
-          <input name="email" placeholder="Email" type ="text" value={props.formData.email} onChange={(e)=>{props.handleUserInput(e)}}/>
-          <p className="agent-contact-form__input-error-text"> {inputErrors.email} </p>
-        </div>
-        <div className="agent-contact-form__input-container">
-          <input name="phone" placeholder="Phone(optional)" type ="text"/>
-          <p className ="agent-contact-form__input-error-text">please enter a last name</p>
-        </div>
+  render(){
+    const {inputErrors,submissionFailed,phoneValid,emailValid,firstNameValid,lastNameValid} = this.props.formData;
+    return(
+      <CSSTransition
+        in={this.props.appear}
+        appear={true}
+        timeout={300}
+        unmountOnExit={true}
+        classNames={{
+            exit: 'agent-contact-form--exit',
+            exitActive: 'agent-contact-form--exit-active',
+        }}
+      >
+        <div className="agent-contact-form" id="agent-form">
+          <div className = "agent-contact-form__form-title"> {`Work with ${this.props.agent.firstName} ${this.props.agent.lastName}`} </div>
+          <form autocomplete="on" onSubmit ={(e)=>{this.props.submitForm(e)}}>
+            <div className={`agent-contact-form__input-container--narrow ${ !firstNameValid && submissionFailed ? 'agent-contact-form__input-error' : null }`}>
+              <input name="firstName" placeholder="First Name" type ="text"  value={this.props.formData.firstName} onChange={(e)=>{this.props.handleUserInput(e)}}/>
+              <p className="agent-contact-form__input-error-text"> {inputErrors.firstName} </p>
+            </div>
+            <div className={`agent-contact-form__input-container--narrow ${ !lastNameValid && submissionFailed ? 'agent-contact-form__input-error' : null}`}>
+              <input name="lastName" placeholder="Last Name" type ="text" value={this.props.formData.lastName} onChange={(e)=>{this.props.handleUserInput(e)}}/>
+              <p className="agent-contact-form__input-error-text"> {inputErrors.lastName} </p>
+            </div>
+            <div className={`agent-contact-form__input-container ${ !emailValid && submissionFailed ? 'agent-contact-form__input-error' : null}`}>
+              <input name="email" placeholder="Email" type ="text" value={this.props.formData.email} onChange={(e)=>{this.props.handleUserInput(e)}}/>
+              <p className="agent-contact-form__input-error-text"> {inputErrors.email} </p>
+            </div>
+            <div className="agent-contact-form__input-container">
+              <input name="phone" placeholder="Phone(optional)" type ="text" value={this.props.formData.phone} onChange={(e)=>{this.props.handleUserInput(e)}}/>
+              <p className ="agent-contact-form__input-error-text">please enter a last name</p>
+            </div>
 
-        <div className ="agent-contact-form__form-select-title"> I Want To</div>
+            <div className ="agent-contact-form__form-select-title"> I Want To</div>
 
-        <div>
-          <input name="transaction" value="buy" type="radio" id="buy"/>
-          <label className="transaction-label" htmlFor="buy">Buy</label>
-        </div>
-        <div>
-          <input name="transaction" value="sell" type="radio" checked="true" id="sell"/>
-          <label className="transaction-label" htmlFor="sell">Sell</label>
-        </div>
-        <div>
-          <input name="transaction" value="rent" type="radio" id="rent"/>
-          <label className="transaction-label" htmlFor="rent">Rent</label>
-        </div>
-        <p className ="agent-contact-form__input-error-text agent-contact-form__input-error-text--radio">please select an option</p>
+            <div style={{display:'inherit',justifyContent:'inherit',width:'inherit'}} value = {this.props.formData.transactionType} onChange ={(e)=>{this.props.handleUserInput(e)}}>
+              <div>
+                <input name="transactionType" value="buy" type="radio" id="buy" checked = {this.props.formData.transactionType === 'buy'}/>
+                <label className="transaction-label" htmlFor="buy">Buy</label>
+              </div>
+              <div>
+                <input name="transactionType" value="sell" type="radio" id="sell" checked = {this.props.formData.transactionType === 'sell'} />
+                <label className="transaction-label" htmlFor="sell">Sell</label>
+              </div>
+              <div>
+                <input name="transactionType" value="rent" type="radio" id="rent" checked = {this.props.formData.transactionType === 'rent'}/>
+                <label className="transaction-label" htmlFor="rent">Rent</label>
+              </div>
+            </div>
 
-        <button type="submit" className = "agent-contact-form__form-submit-btn" onClick ={props.validate}>
-          submit form
-        </button>
-      </form>
-    </div>
-  )
+            <button type="submit" className = "agent-contact-form__form-submit-btn" onClick ={this.props.validate}>
+              submit form
+            </button>
+          </form>
+        </div>
+      </CSSTransition>
+    )
+  }
 
 }
 
