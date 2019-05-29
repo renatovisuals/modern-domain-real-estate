@@ -46,7 +46,8 @@ render(){
     <section className = "agent-section">
       <ContentContainer narrow>
         <SectionTitle> Choose The Perfect Agent For Your Needs </SectionTitle>
-          <SliderTemplates type = "agent" data = {featuredAgents} settings = {sliderSettings}> </SliderTemplates>
+        <Link to="/agents" className = "agent-section__find-agent"> find an agent near you </Link>
+        <SliderTemplates type = "agent" data = {featuredAgents} settings = {sliderSettings}> </SliderTemplates>
       </ContentContainer>
     </section>
   )

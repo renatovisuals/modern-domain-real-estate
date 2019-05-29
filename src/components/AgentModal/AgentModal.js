@@ -13,6 +13,11 @@ class AgentModal extends Component {
 
   componentWillMount(){
     this.setState(this.getInitialState())
+    document.addEventListener('click',this.handleOutsideClick, false);
+  }
+
+  componentWillUnmount(){
+    document.removeEventListener('click',this.handleOutsideClick, false);
   }
 
   getInitialState = ()=>{
@@ -25,7 +30,7 @@ class AgentModal extends Component {
         phone:'',
         transactionType:'sell',
         submissionFailed:false,
-        sumbmissionSuccess:false,
+        submissionSuccess:false,
         inputErrors:{
           firstName:"please enter a first name",
           lastName:"please enter a last name",
@@ -52,9 +57,19 @@ class AgentModal extends Component {
   }
 
   handleModalClose =()=>{
-    setTimeout(()=>{this.setState({submissionSuccess:false})},300)
     this.props.toggleModal()
+    setTimeout(()=>{
+      this.setState(this.getInitialState(), console.log(this.state, 'this is the new state'))
+    },300)
+  }
 
+  handleOutsideClick =(e)=>{
+  if(this.agentModal && this.agentModal.contains(e.target)){
+    return
+  }
+  this.setState({
+    submissionSuccess:false
+  })
   }
 
   setModalHeight = (height)=>{
@@ -66,8 +81,9 @@ class AgentModal extends Component {
   onFormSubmit = (e)=>{
   e.preventDefault();
    if(this.state.formValid){
-     this.setState(this.getInitialState());
-     setTimeout(()=>{this.setState({submissionSuccess:true})},500)
+    this.setState(this.getInitialState(),()=>console.log(this.state, 'this is the new state'))
+    this.setState({submissionSuccess:true})
+    setTimeout(()=>this.handleModalClose(),1800);
    }else{
      this.setState({
        submissionFailed:true
@@ -118,6 +134,7 @@ class AgentModal extends Component {
         borderColor:'red'
       }
     }
+    console.log(this.state,"this is the state")
     return(
       <CSSTransition
         in={this.props.appear}
@@ -137,7 +154,7 @@ class AgentModal extends Component {
             exitDone: 'agent-modal--exit-done'
         }}
       >
-        <div className = "agent-modal" onClick = {(e)=>{this.props.handleModalClick(e)}} style={{height:this.state.height +'px'}}>
+        <div ref={agentModal=> this.agentModal = agentModal} className = "agent-modal" onClick = {(e)=>{this.props.handleModalClick(e)}} style={{height:this.state.height +'px'}}>
           <span className = "agent-modal__ex-icon" onClick = {this.handleModalClose}> &#10005; </span>
             <AgentContactForm
               formData = {this.state}
@@ -148,7 +165,7 @@ class AgentModal extends Component {
               appear = {!this.state.submissionSuccess}
               setContainerHeight = {this.setModalHeight}
             />
-            <AgentFormSuccessPage agent = {this.props.agent} appear = {this.state.submissionSuccess}/>
+            <AgentFormSuccessPage agent ={this.props.agent} appear = {this.state.submissionSuccess} submissionSuccess = {this.state.submissionSuccess}/>
         </div>
       </CSSTransition>
     )

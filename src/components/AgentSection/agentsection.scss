@@ -1,4 +1,24 @@
 .agent-section{
   padding-top: 100px;
   width:100%;
+  text-align: center;
+
+
+
+ &__find-agent{
+  text-decoration: underline;
+  color:#555;
+  display:inline-block;
+  margin-bottom:22px;
+  transition: all .3s ease;
+
+  &:hover{
+    color:#3bc193;
+  }
+}
+
+.section-title{
+  margin-bottom: 22px;
+}
+
 }

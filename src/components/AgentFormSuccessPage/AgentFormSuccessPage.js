@@ -3,13 +3,13 @@ import './AgentFormSuccessPage.scss';
 import {CSSTransition} from 'react-transition-group';
 
 
-const AgentSuccessPage = (props)=> {
+const AgentFormSuccessPage = (props)=> {
 
   return(
     <CSSTransition
       in={props.appear}
       appear={true}
-      timeout={300}
+      timeout={400}
       unmountOnExit={true}
       classNames={{
           appear:'agent-success-page--appear',
@@ -25,6 +25,7 @@ const AgentSuccessPage = (props)=> {
       }}
     >
       <div className = "agent-success-page">
+        <img className = {`agent-success-page__image ${props.submissionSuccess ? 'agent-success-page__image--animated':null}`} src ="/images/logo-emblem.svg"/>
         <span className = "agent-success-page__title"> Your Message Has Been Sent! </span>
         <span className = "agent-success-page__description"> {`${props.agent.firstName} will contact you shortly!`} </span>
       </div>
@@ -33,4 +34,4 @@ const AgentSuccessPage = (props)=> {
 
 }
 
-export default AgentSuccessPage;
+export default AgentFormSuccessPage;

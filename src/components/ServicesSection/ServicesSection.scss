@@ -20,11 +20,13 @@
 
   &__card{
     width:100%;
+    max-width: 380px;
     display:flex;
     flex-wrap: wrap;
     justify-content: center;
     font-family: 'Roboto',sans-serif;
     margin-bottom: 80px;
+    padding:0 30px;
 
     &:last-child{
       margin-bottom:0;
@@ -71,6 +73,7 @@
         flex-basis: 29%;
         width:30%;
         margin-bottom:0;
+        padding:0 10px;
       }
   }
 

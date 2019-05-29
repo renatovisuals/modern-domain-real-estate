@@ -16,6 +16,7 @@ class AgentLandingPage extends Component {
     modalWindowOpen:false
   }
 
+
   agentData = data.agents.find((agent)=>{
     return agent.id === this.props.match.params.id;
   });
@@ -38,7 +39,7 @@ class AgentLandingPage extends Component {
     }
       return(
           <div>
-            <AgentModal toggleModal = {this.toggleModal} handleModalClick = {this.handleModalClick} appear = {this.state.modalWindowOpen} agent ={this.agentData}/>
+            <AgentModal toggleModal = {this.toggleModal} handleModalClick = {this.handleModalClick} appear = {this.state.modalWindowOpen} agent ={this.agentData} formSubmitSuccess = {this.state.formSubmitSuccess}/>
             <ModalBackdrop click = {this.toggleModal} hidden = {!this.state.modalWindowOpen}/>
           </div>
       )

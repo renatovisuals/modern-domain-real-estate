@@ -4,6 +4,7 @@ import Layout from './hoc/Layout/layout';
 import Home from './components/Home/home';
 import About from './components/About/about';
 import AgentLandingPage from './components/AgentLandingPage/AgentLandingPage';
+import MainAgentPage from './components/MainAgentPage/MainAgentPage';
 
 class Routes extends Component {
   render(){
@@ -13,6 +14,7 @@ class Routes extends Component {
             <Route exact path="/" exact component ={Home} />
             <Route exact path="/about/:id" exact component ={About} />
             <Route exact path="/agents/:agentName/:id" exact component ={AgentLandingPage} />
+            <Route exact path="/agents" exact component ={MainAgentPage} />
         </Switch>
       </Layout>
     )
