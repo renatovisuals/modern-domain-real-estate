@@ -13,7 +13,7 @@ class MainAgentPage extends Component {
       <div className="main-agent-page">
         <div className="main-agent-page__agent-filter">
         </div>
-        <Select className ="main-agent-page__select"> </Select>
+        <Select className="main-agent-page__select" size="small" border options={[{value:'fort worth',content:'fortworth'}]}> </Select>
       </div>
     )
   }

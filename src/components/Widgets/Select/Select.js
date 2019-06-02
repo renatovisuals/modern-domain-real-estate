@@ -3,16 +3,36 @@ import './Select.scss';
 
 
 const Select = (props)=> {
+  const defaultOptions = [
+    {
+      value:"false",
+      content:"Select a City"
+    },
+    {
+      value:"Fort Worth",
+      content:"Fort Worth"
+    },
+    {
+      value:"Dallas",
+      content:"Dallas"
+    }
+  ]
+
+  const options = props.options || defaultOptions;
+
+  const renderOptions = options.map((option)=>{
+    return(
+      <option value = {option.value}> {option.content} </option>
+    )
+  })
 
   return(
-    <div className = "select">
-      <select name="city">
-        <option value="0">Select a City</option>
-        <option value="Fort Worth">Fort Worth</option>
-        <option value="Dallas">Dallas</option>
-        <option value="Austin">Austin</option>
-        <option value="Houston">Houston</option>
-        <option value="Granbury">Granbury</option>
+    <div
+    className = {`select ${props.border ? 'select--border' : null} ${props.size === "small" ? 'select--small': null} ${props.className}`}
+    onChange = {props.onChange}
+    >
+      <select name={props.name}>
+        {renderOptions}
       </select>
     </div>
   )

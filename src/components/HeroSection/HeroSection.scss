@@ -7,7 +7,7 @@
   color:#fff;
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  background-image: url("/images/test-image.jpg");
+  background-image: url("/images/hero-image.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position:center;
@@ -54,11 +54,18 @@
     font-family: 'Roboto', sans-serif;
     color:#555;
     font-size:18px;
-  }
+    border: 1px solid #b1b1b1;
 
     &:focus{
       outline:none;
     }
+
+    &:hover{
+     border: 1px solid #3bc193;
+    }
+  }
+
+
 
   &__select{
     position:relative;
@@ -68,10 +75,15 @@
     flex-basis:100%;
     cursor:pointer;
     border-radius:5px;
+    box-sizing: border-box;
     margin: 5px 0px;
     -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.2);
     -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.2);
     box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.2);
+
+    &:hover{
+      //border: 1px solid #3bc193;
+    }
 
 
     &:-ms-expand {
@@ -82,6 +94,7 @@
       content:'';
       position: absolute;
       background:#3bc193;
+      //border:5px solid #3bc193;
       top:0;
       bottom:0;
       right:0;

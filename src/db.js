@@ -30,7 +30,7 @@
       {
           id: 1,
           buildingType:'Home',
-          city:'Fort Worth',
+          city:'Granbury',
           state:'Tx',
           street:'3536 Clubgate Dr',
           apt:null,
