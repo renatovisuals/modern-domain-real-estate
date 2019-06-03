@@ -1,0 +1,27 @@
+.agent-filter{
+  height:66px;
+  background:#f3f3f3;
+  border-bottom:1px solid #b1b1b1;
+  border-top: 1px solid #b1b1b1;
+  margin-bottom: 50px;
+
+&__input-container{
+  display:flex;
+  align-items: center;
+  height:100%;
+}
+
+&__text-input{
+  margin-right: 15px;
+  -webkit-box-shadow:none;
+  -moz-box-shadow:none;
+  box-shadow:none;
+}
+
+&__select{
+  -webkit-box-shadow:none;
+  -moz-box-shadow:none;
+  box-shadow:none;
+}
+
+}

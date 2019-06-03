@@ -31,33 +31,53 @@ render(){
         <h3 className = "hero-section__subtitle"> We provide access to the most upscale living spaces in Texas. </h3>
         <form action ="#">
 
-          <Select options = {options} className ="hero-section__select"> </Select>
-          {/*<div class = "hero-section__select">
-            <select name="city">
-              <option value="0">Select a City</option>
-              <option value="Fort Worth">Fort Worth</option>
-              <option value="Dallas">Dallas</option>
-              <option value="Austin">Austin</option>
-              <option value="Houston">Houston</option>
-              <option value="Granbury">Granbury</option>
-            </select>
-          </div>*/}
-          <div className ="hero-section__select hero-section__select--small">
-            <select name="bedrooms">
-              <option value="1">1+ bed</option>
-              <option value="2">2+ bed</option>
-              <option value="3">3+ bed</option>
-              <option value="4">4+ bed</option>
-            </select>
-          </div>
-          <div className ="hero-section__select hero-section__select--small">
-            <select name="bathrooms">
-              <option value="1">1+ bath</option>
-              <option value="2">2+ baths</option>
-              <option value="3">3+ baths</option>
-              <option value="4">4+ baths</option>
-            </select>
-          </div>
+          <Select options = {options} className ="hero-section__select" name="city" />
+          <Select
+            className ="hero-section__select--small"
+            options = {[
+              {
+                value:1,
+                content:"1+ bed"
+              },
+              {
+                value:2,
+                content:"2+ bed"
+              },
+              {
+                value:3,
+                content:"3+ bed"
+              },
+              {
+                value:4,
+                content:"4+ bed"
+              }
+            ]}
+            name="bedrooms"
+            />
+            
+          <Select
+            className ="hero-section__select--small"
+            options = {[
+              {
+                value:1,
+                content:"1+ bath"
+              },
+              {
+                value:2,
+                content:"2+ bath"
+              },
+              {
+                value:3,
+                content:"3+ bath"
+              },
+              {
+                value:4,
+                content:"4+ bath"
+              }
+            ]}
+            name="bathrooms"
+            />
+
           <button type="submit" className ="hero-section__submit-btn" onClick = {(e)=>{e.preventDefault()}}> Find Your Home!</button>
         </form>
       </ContentContainer>

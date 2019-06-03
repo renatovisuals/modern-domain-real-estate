@@ -5,7 +5,7 @@ import './ContentContainer.scss';
    console.log(props.children)
 
   return(
-    <div className = { props.narrow ? "content-container--narrow" : "content-container"}>
+    <div className = { `${props.narrow ? "content-container--narrow" : "content-container"} ${props.className}`}>
       {props.children}
     </div>
   )

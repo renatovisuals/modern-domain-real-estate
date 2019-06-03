@@ -7,9 +7,7 @@ import './AgentModal.scss';
 
 class AgentModal extends Component {
 
-  state={
-
-  }
+  state={}
 
   componentWillMount(){
     this.setState(this.getInitialState())

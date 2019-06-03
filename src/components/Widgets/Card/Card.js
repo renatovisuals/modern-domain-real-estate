@@ -11,7 +11,7 @@ const Card = (props) => {
     switch(props.type){
       case 'listing':
         return(
-          <div className = "card">
+          <div className = {`card ${props.className}`}>
             <div className = "card__image" style = {{backgroundImage:`url("./images/listings/${data.id}/${data.images[0]}")`}}></div>
             <div className = "card__details">
               <div className = "card__text-container">
@@ -33,7 +33,7 @@ const Card = (props) => {
         )
       case 'agent':
         return(
-            <div className = "card">
+            <div className = {`card ${props.className}`}>
               <div className="card__image" style={{backgroundImage:`url(./images/agents/${props.data.image})`}}></div>
               <div className = "card__details">
                 <div className = "card__text-container card__text-container--center">
@@ -49,7 +49,7 @@ const Card = (props) => {
 
 
     return (
-      <div className = "card">
+      <div className = {`card ${props.className}`}>
         <div className = "card__image" style = {{backgroundImage:`url("${props.image}")`}}></div>
         <div className = "card__details-container">
           {props.children}
