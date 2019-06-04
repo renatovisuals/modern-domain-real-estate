@@ -1,5 +1,4 @@
 .agent-filter{
-  height:66px;
   background:#f3f3f3;
   border-bottom:1px solid #b1b1b1;
   border-top: 1px solid #b1b1b1;
@@ -7,21 +6,57 @@
 
 &__input-container{
   display:flex;
+  flex-wrap: wrap;
   align-items: center;
   height:100%;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+&__text-input, &__select{
+  flex-basis:100%;
+  width:100%;
+  padding:0;
+  margin:0;
+  -webkit-box-shadow:none;
+  -moz-box-shadow:none;
+  box-shadow:none;
 }
 
 &__text-input{
-  margin-right: 15px;
-  -webkit-box-shadow:none;
-  -moz-box-shadow:none;
-  box-shadow:none;
+  padding-left: 15px;
+  margin-bottom: 20px;
+  width:100%;
+  flex-basis: 100%;
+  margin-right: 0;
 }
 
-&__select{
-  -webkit-box-shadow:none;
-  -moz-box-shadow:none;
-  box-shadow:none;
+@media screen and (min-width:768px){
+  height:66px;
+
+  &__input-container{
+    flex-wrap: nowrap;
+    padding-top:0;
+    padding-bottom:0;
+  }
+
+  &__text-input, &__select{
+    flex-basis:300px;
+    width:300px;
+    margin-bottom: 0;
+  }
+
+  &__text-input{
+    margin-right:15px;
+    margin-bottom: 0
+  }
+}
+
+@media screen and (min-width:992px){
+  &__menu--desktop{
+    font-size: 22px;
+    margin:0 15% 0 0;
+  }
 }
 
 }

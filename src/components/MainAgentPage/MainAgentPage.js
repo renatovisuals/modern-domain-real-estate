@@ -5,6 +5,7 @@ import AgentFilter from '../AgentFilter/AgentFilter';
 import Select from '../Widgets/Select/Select';
 import TextInput from '../Widgets/TextInput/TextInput';
 import Card from '../Widgets/Card/Card';
+import { Link } from 'react-router-dom';
 import data from '../../db';
 import './MainAgentPage.scss';
 
@@ -13,33 +14,54 @@ class MainAgentPage extends Component {
 
   state = {
     city:'',
-    agentName:'james'
+    agentName:'',
+    agentCity:'',
+    agentData:[]
   }
 
   handleUserInput = (e)=>{
-    console.log(e, "user input is being fired")
+    console.log(e.target.name, "this is the event")
     const name = e.target.name;
     const value = e.target.value;
     this.setState({
         [name]:value
+    },()=>this.filterData())
+  }
+
+  componentDidMount(){
+    this.setState({
+      agentData: data.agents
+    })
+  }
+
+  filterData = ()=>{
+    const agentName = this.state.agentName.toLowerCase();
+    const filteredData = data.agents.filter((agent)=>{
+      const nameMatch = (agent.firstName +' '+ agent.lastName).toLowerCase().indexOf(agentName) === 0 || agent.lastName.toLowerCase().indexOf(agentName) === 0 || this.state.agentName === '';
+      const cityMatch = agent.city === this.state.agentCity || this.state.agentCity === '';
+      return nameMatch && cityMatch;
+    })
+    this.setState({
+      agentData:filteredData
     })
   }
 
   renderAgents= ()=>{
     return(
-      data.agents.map((agent)=>{
+      this.state.agentData.map((agent)=>{
         return(
-          <Card className="main-agent-page__agent" type="agent" data={agent}/>
+          <Link to = {`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent.id}`}>
+            <Card className="main-agent-page__agent" type="agent" data={agent}/>
+          </Link>
         )
       })
     )
-    console.log(data.agents,"this is a test");
   }
 
   render(){
     return(
       <div className="main-agent-page">
-        <AgentFilter city = {this.state.city} agentName = {this.state.agentName} handleUserInput = {this.handleUserInput}/>
+        <AgentFilter city = {this.state.agentCity} agentName = {this.state.agentName} handleUserInput = {this.handleUserInput}/>
         <ContentContainer>
          <h1 className ="main-agent-page__title"> Find an Agent Near You </h1>
          <div className ="main-agent-page__agents">

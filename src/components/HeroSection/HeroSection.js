@@ -21,8 +21,6 @@ render(){
       content:city
     })
   })
-  console.log(options,"these are the options")
-
 
   return(
     <section className = "hero-section">
@@ -54,7 +52,7 @@ render(){
             ]}
             name="bedrooms"
             />
-            
+
           <Select
             className ="hero-section__select--small"
             options = {[
