@@ -1,16 +1,23 @@
 .agent-filter{
+  width:100%;
   background:#f3f3f3;
   border-bottom:1px solid #b1b1b1;
   border-top: 1px solid #b1b1b1;
-  margin-bottom: 50px;
+
+  &--sticky{
+    z-index:1000;
+    border-top:none;
+    position:fixed;
+    top:0;
+  }
 
 &__input-container{
   display:flex;
   flex-wrap: wrap;
   align-items: center;
   height:100%;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 &__text-input, &__select{
@@ -25,7 +32,7 @@
 
 &__text-input{
   padding-left: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   width:100%;
   flex-basis: 100%;
   margin-right: 0;
@@ -51,12 +58,4 @@
     margin-bottom: 0
   }
 }
-
-@media screen and (min-width:992px){
-  &__menu--desktop{
-    font-size: 22px;
-    margin:0 15% 0 0;
-  }
-}
-
 }

@@ -29,10 +29,12 @@ class MainAgentPage extends Component {
   }
 
   componentDidMount(){
+    window.scrollTo(0,0);
     this.setState({
       agentData: data.agents
     })
   }
+
 
   filterData = ()=>{
     const agentName = this.state.agentName.toLowerCase();
@@ -47,14 +49,21 @@ class MainAgentPage extends Component {
   }
 
   renderAgents= ()=>{
+    if (this.state.agentData.length === 0){
+      return(
+        <div className = "main-agent-page__filter-error"> No results were found. </div>
+      )
+    }
     return(
-      this.state.agentData.map((agent)=>{
-        return(
-          <Link to = {`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent.id}`}>
-            <Card className="main-agent-page__agent" type="agent" data={agent}/>
-          </Link>
-        )
-      })
+      <div className ="main-agent-page__agents">
+        {this.state.agentData.map((agent)=>{
+          return(
+            <Link to = {`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent.id}`}>
+              <Card className="main-agent-page__agent" type="agent" data={agent}/>
+            </Link>
+          )
+        })}
+      </div>
     )
   }
 
@@ -64,9 +73,8 @@ class MainAgentPage extends Component {
         <AgentFilter city = {this.state.agentCity} agentName = {this.state.agentName} handleUserInput = {this.handleUserInput}/>
         <ContentContainer>
          <h1 className ="main-agent-page__title"> Find an Agent Near You </h1>
-         <div className ="main-agent-page__agents">
-          {this.renderAgents()}
-         </div>
+         <p className = "main-agent-page__description"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+         {this.renderAgents()}
         </ContentContainer>
       </div>
     )
