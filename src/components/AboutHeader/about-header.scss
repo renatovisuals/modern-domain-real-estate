@@ -1,0 +1,42 @@
+.about-header{
+  height:600px;
+  width:100%;
+  background:url('/images/about/about-hero.jpg');
+  background-size: cover;
+  background-position:center;
+  position:relative;
+  display:flex;
+  align-items: center;
+
+
+  &__title{
+    font-size: 65px;
+    font-weight: 700;
+    color:#555;
+    padding:0;
+    margin:0;
+  }
+
+  &__description{
+    max-width:500px;
+    padding:0;
+    margin-top:15px;
+    color:#2b2b2b;
+  }
+
+  &__text-background{
+    background:#fff;
+    display:inline-block;
+    padding:40px;
+    background: rgba(255,255,255,0.7);
+    border-left: 7px solid #3bc193;
+  }
+
+  &__content-container{
+    width:100%;
+  }
+
+  span{
+    color:#3bc193;
+  }
+}

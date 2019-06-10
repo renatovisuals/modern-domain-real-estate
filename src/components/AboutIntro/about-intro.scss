@@ -1,0 +1,50 @@
+.about-intro{
+padding: 100px 0;
+
+&__quotation-mark{
+  font-size: 60px;
+  line-height: 30px;
+  padding:0;
+  margin:0;
+}
+
+&__title{
+  margin-top:80px;
+  margin-bottom:60px;
+}
+
+&__description{
+  color:#555;
+}
+
+&__quote {
+    font-family:'roboto' serif;
+    font-size: 30px;
+    font-style: italic;
+    max-width: 900px;
+    margin: 0 auto 100px auto;
+    padding: 0.35em 40px;
+    line-height: 1.45;
+    position: relative;
+    left:54px;
+    color: #3bc193;
+}
+
+&__quote:before {
+    display: block;
+    padding-left: 10px;
+    content: "\201C";
+    font-family: georgia,serif;
+    font-size: 80px;
+    position: absolute;
+    left: -20px;
+    top: -20px;
+    color: #3bc193;
+}
+
+&__horizontal-rule {
+  border:1px solid rgba(85,85,85,0.15);
+  width:80%;
+}
+
+}

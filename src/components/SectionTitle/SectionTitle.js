@@ -10,7 +10,7 @@ function SectionTitle(props) {
 
 
   return(
-    <h1 className="section-title" style = {style}> {props.children} </h1>
+    <h1 className={`section-title ${props.className}`} style = {style}> {props.children} </h1>
   )
 }
 

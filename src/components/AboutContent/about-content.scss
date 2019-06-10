@@ -1,0 +1,41 @@
+.about-content{
+
+  &__image{
+    width:400px;
+    height:400px;
+    flex-basis: 50%;
+    //flex-shrink: 1;
+    background:url("/images/about/longhorn.jpeg");
+    background-size:cover;
+    background-position: center;
+  }
+
+  &__content-container{
+    display:flex;
+    width:100%;
+    //background:green;
+  }
+
+  &__content-paragraph{
+    max-width:50%;
+    background:red;
+    width:50%;
+    padding:0;
+    margin:0;
+    margin-left:auto;
+  }
+
+  &__image-description{
+    flex-grow: 1;
+    padding:15px;
+    //background:orange;
+  }
+
+  &__content-title{
+    text-align: right;
+    border-right: 7px solid #3bc193;
+    padding-right:15px;
+    box-sizing: border-box;
+  }
+
+}
