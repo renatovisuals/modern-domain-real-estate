@@ -7,11 +7,6 @@ import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 
 class Header extends Component {
 
-  console = ()=>{
-    console.log('this was clicked');
-  }
-
-
 render(){
 
   return(

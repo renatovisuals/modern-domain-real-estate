@@ -59,7 +59,7 @@ class MainAgentPage extends Component {
         {this.state.agentData.map((agent)=>{
           return(
             <Link to = {`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent.id}`}>
-              <Card className="main-agent-page__agent" type="agent" data={agent}/>
+              <Card className="main-agent-page__agent" type="agent" data={agent} imagePath='./images/agents'/>
             </Link>
           )
         })}

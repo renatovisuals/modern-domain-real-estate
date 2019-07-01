@@ -32,13 +32,14 @@ const Card = (props) => {
           </div>
         )
       case 'agent':
+        const jobTitle = Array.isArray(props.data.qualifications) ? props.data.qualifications[0] : props.data.qualifications;
         return(
             <div className = {`card ${props.className}`}>
-              <div className="card__image" style={{backgroundImage:`url(./images/agents/${props.data.image})`}}></div>
+              <div className="card__image" style={{backgroundImage:`url(${props.imagePath}/${props.data.image})`}}></div>
               <div className = "card__details">
                 <div className = "card__text-container card__text-container--center">
                   <span className="card__title card__title--center"> {`${props.data.firstName} ${props.data.lastName}`} </span>
-                  <span className="card__card-text"> Realtor </span>
+                  <span className="card__card-text"> {jobTitle} </span>
                 </div>
               </div>
             </div>

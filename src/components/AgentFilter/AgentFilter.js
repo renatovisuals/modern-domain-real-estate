@@ -43,7 +43,10 @@ class AgentFilter extends Component{
       document.body.style.paddingTop = `${this.state.height}px`
       :
       document.body.style.paddingTop = 0;
-      console.log(this.state.height, "this is the height")
+  }
+
+  componentWillUnmount(){
+    document.body.style.paddingTop = 0;
   }
 
   handleScroll = ()=>{
