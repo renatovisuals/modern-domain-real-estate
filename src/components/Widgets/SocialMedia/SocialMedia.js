@@ -64,7 +64,7 @@ const SocialMedia = (props)=> {
     })
 
   return(
-    <div className = "social-media">
+    <div className = {`social-media ${props.centered ? 'social-media--centered' : null} ${props.className}`}>
       {renderedLinks}
     </div>
   )

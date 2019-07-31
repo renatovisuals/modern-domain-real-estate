@@ -1,4 +1,11 @@
 .social-media{
+  font-size: 0;
+
+  &--centered{
+  text-align: center;
+  margin-left:10px;
+}
+
   &__social-link{
     display:inline-block;
     background-color:#4b4b4b;
@@ -7,8 +14,9 @@
     position: relative;
     transition: all .3s ease;
     overflow:hidden;
+    font-size: 16px;
     margin-right:10px;
-    margin-bottom: 5px;
+    //margin-bottom: 5px;
     cursor:pointer;
 
     &:hover{
@@ -29,7 +37,10 @@
         transform-origin: center;
       }
   }
+
 }
+
+
 
 @keyframes socialIconSlide{
    0%{

@@ -19,13 +19,13 @@ class ServicesSection extends Component {
         image: `${url}texas-icon-square.png`,
         title:'Our Services are Local',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna',
-        linkTo: 'services'
+        linkTo: 'about/services'
       },
       {
-        image: `${url}inspection-icon-square.png`,
-        title:'High Quality Inspections',
+        image: `${url}trust-icon-square.png`,
+        title:'Trusted for 25 years',
         description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna',
-        linkTo: 'inspections'
+        linkTo: 'about/community'
       }
     ];
 

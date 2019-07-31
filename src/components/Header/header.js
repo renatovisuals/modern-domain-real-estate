@@ -22,7 +22,7 @@ render(){
           <ul className = "header__menu--desktop">
             <li><Link to = {'/'}>Home</Link></li>
             <li><Link to = {'/about'}>About</Link></li>
-            <li><Link to = {'/agents'}>Agents</Link></li>
+            <li><Link to = {'/agents'}>Find An Agent</Link></li>
           </ul>
         </ContentContainer>
       </nav>
