@@ -9,7 +9,7 @@ app.use(cors());
 app.get('/api',(reg,res)=>{
   axios.get('https://www.google.com/')
     .then(response=>{
-      console.log('retrieved data');
+      console.log('retrieved data', process.env.NODE_ENV);
       res.json({'user': 'hello'});
     })
     .catch(response=>{ console.log(response)})

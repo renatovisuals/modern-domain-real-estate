@@ -1,6 +1,9 @@
 {
 	"name": "cra-plus-express",
 	"version": "1.0.0",
+  "engines": {
+    "node": "10.13.0"
+  },
 	"scripts": {
 		"client": "cd client && npm run start",
 		"server": "nodemon server.js",
