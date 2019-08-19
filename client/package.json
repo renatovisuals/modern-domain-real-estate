@@ -12,6 +12,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.8.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "@material-ui/core": "^3.9.3",
+    "gifsicle": "^4.0.1",
     "i": "^0.3.6",
     "node-sass": "^4.11.0",
     "npm": "^6.9.0",
@@ -41,5 +42,5 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "proxy":"http://localhost:4000"
+  "proxy": "http://localhost:4000"
 }

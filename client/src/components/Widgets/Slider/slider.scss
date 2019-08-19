@@ -4,8 +4,11 @@ $slick-dot-color: rgba(0,0,0,.7);
 $slick-opacity-not-active: 0.2;
 $slick-opacity-on-hover:.75;
 
+$slick-font-path: "~slick-carousel/slick/fonts/";
+$slick-loader-path: "~slick-carousel/slick/";
+
 @import "~slick-carousel/slick/slick.scss";
-@import "~slick-carousel/slick/fix-slick.scss";
+@import "slick-carousel/slick/slick-theme.scss";
 
 
 .slick-slide, .slick-slide *{
@@ -18,7 +21,7 @@ $slick-opacity-on-hover:.75;
   bottom:-40px;
 }
 
-// css modules are broken are separated by each slide template
+// css modules are separated by each slide template
 .city-template{
   .page{
     width:100%;
