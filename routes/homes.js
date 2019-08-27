@@ -4,7 +4,7 @@ let Home = require('../models/home.model');
 router.route('/').get((req,res) => {
   console.log('retrieving users')
   Home.find()
-    .then(homes => res.json(users))
+    .then(homes => res.json(homes))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
