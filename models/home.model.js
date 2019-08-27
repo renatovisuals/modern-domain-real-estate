@@ -8,11 +8,11 @@ const homeSchema = new Schema({
   },
   bedrooms:{
     type: Number,
-    required: true
+    required: false
   },
   bathrooms:{
     type: Number,
-    required: true
+    required: false
   },
 }, {
   timestamps: true,

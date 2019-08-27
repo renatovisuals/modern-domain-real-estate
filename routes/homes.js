@@ -10,13 +10,11 @@ router.route('/').get((req,res) => {
 
 router.route('/add').post((req,res)=> {
   const hometype = req.body.hometype;
-  const bedrooms = Number(req.body.bedrooms);
-  const bathrooms = Number(req.body.bathrooms);
+  //const bedrooms = Number(req.body.bedrooms);
+  //const bathrooms = Number(req.body.bathrooms);
 
   const newHome = new Home({
-    hometype,
-    bedrooms,
-    bathrooms
+    hometype
   })
 
   newHome.save()

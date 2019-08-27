@@ -19,6 +19,7 @@ connection.once('open',()=> {
   console.log("MongoDB database connection established successfully");
 })
 
+/*
 app.get('/api',(reg,res)=>{
   axios.get('https://www.google.com/')
     .then(response=>{
@@ -27,10 +28,11 @@ app.get('/api',(reg,res)=>{
     })
     .catch(response=>{ console.log(response)})
 })
+*/
 
 const homesRouter = require('./routes/homes');
 
-app.use('/homes', homesRouter);
+app.use('/api/homes', homesRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static('client/build'));
