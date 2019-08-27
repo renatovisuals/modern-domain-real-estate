@@ -1,21 +1,23 @@
 {
 	"name": "cra-plus-express",
 	"version": "1.0.0",
-  "engines": {
-    "node": "10.13.0"
-  },
+	"engines": {
+		"node": "10.13.0"
+	},
 	"scripts": {
 		"client": "cd client && npm run start",
 		"server": "nodemon server.js",
 		"dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "cd client && npm install && npm run build",
-    "heroku-postinstall": "npm rebuild node-sass"
+		"heroku-postbuild": "cd client && npm install && npm run build",
+		"heroku-postinstall": "npm rebuild node-sass"
 	},
 	"dependencies": {
 		"axios": "^0.19.0",
 		"body-parser": "^1.18.3",
 		"cors": "^2.8.5",
-		"express": "^4.16.4"
+		"dotenv": "^8.1.0",
+		"express": "^4.16.4",
+		"mongoose": "^5.6.11"
 	},
 	"devDependencies": {
 		"concurrently": "^4.0.1"
