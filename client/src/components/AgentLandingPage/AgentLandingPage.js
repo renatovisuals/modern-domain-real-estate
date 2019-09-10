@@ -18,7 +18,8 @@ class AgentLandingPage extends Component {
 
 
   agentData = data.agents.find((agent)=>{
-    return agent.id === this.props.match.params.id;
+    //return agent.id === this.props.match.params.id;
+    return agent.id = 1;
   });
 
   toggleModal = ()=>{

@@ -6,10 +6,10 @@
   justify-content: center;
   align-items: center;
   display:flex;
-  //background-color: red;
 
   &__content{
     text-align: center;
+    min-width: 300px;
   }
 
   &__agent-name{

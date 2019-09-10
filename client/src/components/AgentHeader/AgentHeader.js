@@ -5,7 +5,7 @@ import './AgentHeader.scss';
 
 
 const AgentHeader = (props)=> {
-  console.log(props.data.image, 'this is the image');
+  console.log(props,"THESE ARE THE PROPS")
   const getQualifications = ()=>{
     let certs;
     if(props.data.qualifications.length === 1){

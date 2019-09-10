@@ -31,8 +31,10 @@ app.get('/api',(reg,res)=>{
 */
 
 const homesRouter = require('./routes/homes');
+const agentRouter = require('./routes/agents');
 
 app.use('/api/homes', homesRouter);
+app.use('/api/agents', agentRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static('client/build'));

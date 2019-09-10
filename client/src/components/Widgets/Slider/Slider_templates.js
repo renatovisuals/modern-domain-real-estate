@@ -35,11 +35,9 @@ const SliderTemplates = (props) => {
           })
           break;
         case('agent'):
-          console.log(props.data, "agents");
           template = props.data.map((agent,i) => {
-            console.log(agent.image)
             return(
-              <Link to={`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent.id}`} draggable="false">
+              <Link key ={agent._id} to={`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent._id}`} draggable="false">
                 <Card type = "agent" data ={agent} imagePath ="./images/agents"> </Card>
               </Link>
             )

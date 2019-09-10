@@ -18,7 +18,7 @@ router.route('/add').post((req,res)=> {
   })
 
   newHome.save()
-    .then(()=> res.json('User added!'))
+    .then(()=> res.json('house added!'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
