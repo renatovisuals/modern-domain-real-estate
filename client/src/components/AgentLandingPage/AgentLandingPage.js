@@ -8,18 +8,28 @@ import ModalBackdrop from '../ModalBackdrop/ModalBackdrop';
 import { Link } from 'react-router-dom';
 import data from '../../db';
 import './AgentLandingPage.scss';
+import axios from 'axios';
 
 
 class AgentLandingPage extends Component {
 
   state = {
-    modalWindowOpen:false
+    modalWindowOpen:false,
+    agentData:null
   }
 
+  componentDidMount(){
+    window.scrollTo(0,0);
+    const agentData = async () => {
+      let res = await axios.get(`/api/agents/${this.props.match.params.id}`);
+      this.setState({ agentData: res.data });
+    };
+    agentData()
+  }
 
   agentData = data.agents.find((agent)=>{
-    //return agent.id === this.props.match.params.id;
-    return agent.id = 1;
+    return agent.id === this.props.match.params.id;
+    //return agent.id = 1;
   });
 
   toggleModal = ()=>{
@@ -40,23 +50,22 @@ class AgentLandingPage extends Component {
     }
       return(
           <div>
-            <AgentModal toggleModal = {this.toggleModal} handleModalClick = {this.handleModalClick} appear = {this.state.modalWindowOpen} agent ={this.agentData} formSubmitSuccess = {this.state.formSubmitSuccess}/>
+            <AgentModal toggleModal = {this.toggleModal} handleModalClick = {this.handleModalClick} appear = {this.state.modalWindowOpen} agent ={this.state.agentData} formSubmitSuccess = {this.state.formSubmitSuccess}/>
             <ModalBackdrop click = {this.toggleModal} hidden = {!this.state.modalWindowOpen}/>
           </div>
       )
   }
 
-  componentDidMount(){
-    window.scrollTo(0,0);
-  }
-
   render(){
+    if(!this.state.agentData){
+      return null;
+    }
     return(
 
       <div className = "agent-landing-page">
         {this.renderModal()}
-        <AgentHeader data ={this.agentData} toggleModal = {this.toggleModal}/>
-        <AgentInfo data ={this.agentData} toggleModal = {this.toggleModal}/>
+        <AgentHeader data ={this.state.agentData} toggleModal = {this.toggleModal}/>
+        <AgentInfo data ={this.state.agentData} toggleModal = {this.toggleModal}/>
       </div>
     )
   }

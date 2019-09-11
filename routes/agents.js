@@ -15,6 +15,13 @@ router.route('/').get((req,res) => {
 
 });
 
+router.route('/:agentId').get((req,res) => {
+  const id = req.params.agentId
+  Agent.findById(id)
+    .then(agent => res.json(agent))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
 router.route('/add').post((req,res)=> {
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
