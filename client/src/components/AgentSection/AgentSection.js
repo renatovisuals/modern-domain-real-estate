@@ -17,7 +17,7 @@ class AgentSection extends Component {
 
   componentDidMount(){
     const getFeaturedAgents = async () => {
-      let res = await axios.get("http://localhost:4000/api/agents");
+      let res = await axios.get("/api/agents");
       const agents = Array.from(res.data);
       this.setState({
         agents
