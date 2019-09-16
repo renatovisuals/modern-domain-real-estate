@@ -6,6 +6,7 @@ import Select from '../Widgets/Select/Select';
 import TextInput from '../Widgets/TextInput/TextInput';
 import Card from '../Widgets/Card/Card';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import data from '../../db';
 import './MainAgentPage.scss';
 
@@ -20,7 +21,6 @@ class MainAgentPage extends Component {
   }
 
   handleUserInput = (e)=>{
-    console.log(e.target.name, "this is the event")
     const name = e.target.name;
     const value = e.target.value;
     this.setState({
@@ -30,15 +30,20 @@ class MainAgentPage extends Component {
 
   componentDidMount(){
     window.scrollTo(0,0);
+    const agentData = async () => {
+      let res = await axios.get(`/api/agents`);
+      this.setState({ agentData: res.data });
+    };
+    agentData()
     this.setState({
-      agentData: data.agents
+      agentData
     })
   }
 
 
   filterData = ()=>{
     const agentName = this.state.agentName.toLowerCase();
-    const filteredData = data.agents.filter((agent)=>{
+    const filteredData = this.state.agentData.filter((agent)=>{
       const nameMatch = (agent.firstName +' '+ agent.lastName).toLowerCase().indexOf(agentName) === 0 || agent.lastName.toLowerCase().indexOf(agentName) === 0 || this.state.agentName === '';
       const cityMatch = agent.city === this.state.agentCity || this.state.agentCity === '';
       return nameMatch && cityMatch;
@@ -58,7 +63,7 @@ class MainAgentPage extends Component {
       <div className ="main-agent-page__agents">
         {this.state.agentData.map((agent)=>{
           return(
-            <Link to = {`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent.id}`}>
+            <Link to = {`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent._id}`}>
               <Card className="main-agent-page__agent" type="agent" data={agent} imagePath='./images/agents'/>
             </Link>
           )
