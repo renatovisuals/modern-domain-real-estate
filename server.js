@@ -30,10 +30,10 @@ app.get('/api',(reg,res)=>{
 })
 */
 
-const homesRouter = require('./routes/homes');
+const listingsRouter = require('./routes/listings');
 const agentRouter = require('./routes/agents');
 
-app.use('/api/homes', homesRouter);
+app.use('/api/listings', listingsRouter);
 app.use('/api/agents', agentRouter);
 
 if (process.env.NODE_ENV === "production") {

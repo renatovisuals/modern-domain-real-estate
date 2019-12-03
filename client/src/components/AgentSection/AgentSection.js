@@ -29,6 +29,7 @@ class AgentSection extends Component {
 
   render(){
     const agents = this.state.agents;
+    let dragging = false;
     const featuredAgents = agents.filter((agent)=>{
       return agent.featured
     })

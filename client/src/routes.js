@@ -8,6 +8,7 @@ import MainAgentPage from './components/MainAgentPage/MainAgentPage';
 import ExpertisePage from './components/ExpertisePage/ExpertisePage';
 import ServicesPage from './components/ServicesPage/ServicesPage';
 import CommunityPage from './components/CommunityPage/CommunityPage';
+import MainListingPage from './components/MainListingPage/MainListingPage';
 
 class Routes extends Component {
   render(){
@@ -21,6 +22,7 @@ class Routes extends Component {
             <Route exact path="/about/expertise" exact component ={ExpertisePage} />
             <Route exact path="/about/services" exact component ={ServicesPage} />
             <Route exact path="/about/community" exact component ={CommunityPage} />
+            <Route exact path="/listings" exact component ={MainListingPage} />
         </Switch>
       </Layout>
     )

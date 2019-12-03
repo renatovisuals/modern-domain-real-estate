@@ -65,6 +65,8 @@ const agentSchema = new Schema({
   timestamps: true,
 });
 
+
+
 const Agent = mongoose.model('Agent', agentSchema);
 
 module.exports = Agent;

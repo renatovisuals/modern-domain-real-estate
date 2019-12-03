@@ -7,6 +7,23 @@ import Select from '../Widgets/Select/Select';
 
 class HeroSection extends Component {
 
+  state = {
+    bedrooms:0,
+    bathrooms:0,
+    city:''
+  }
+
+  handleChange = (key,value)=>{
+    this.setState({
+      [key]:value
+    },()=>console.log(this.state,"this is the new state"))
+  }
+
+  handleSubmit = (e)=>{
+    e.preventDefault();
+    window.location.href=`/listings?bedrooms=${this.state.bedrooms}&bathrooms=${this.state.bathrooms}&city=${this.state.city}`
+  }
+
 
 render(){
   const arr = []
@@ -29,9 +46,10 @@ render(){
         <h3 className = "hero-section__subtitle"> We provide access to the most upscale living spaces in Texas. </h3>
         <form action ="#">
 
-          <Select options = {options} className ="hero-section__select" name="city" />
+          <Select options = {options} className ="hero-section__select" name="city" onChange = {this.handleChange}/>
           <Select
             className ="hero-section__select--small"
+            onChange = {this.handleChange}
             options = {[
               {
                 value:1,
@@ -55,6 +73,7 @@ render(){
 
           <Select
             className ="hero-section__select--small"
+            onChange = {this.handleChange}
             options = {[
               {
                 value:1,
@@ -76,7 +95,7 @@ render(){
             name="bathrooms"
             />
 
-          <button type="submit" className ="hero-section__submit-btn" onClick = {(e)=>{e.preventDefault()}}> Find Your Home!</button>
+          <button type="submit" className ="hero-section__submit-btn" onClick = {(e)=>{this.handleSubmit(e)}}> Find Your Home!</button>
         </form>
       </ContentContainer>
     </section>
