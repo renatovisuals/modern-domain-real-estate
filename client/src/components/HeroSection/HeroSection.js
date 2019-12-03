@@ -95,7 +95,7 @@ render(){
             name="bathrooms"
             />
 
-          <button type="submit" className ="hero-section__submit-btn" onClick = {(e)=>{this.handleSubmit(e)}}> Find Your Home!</button>
+          <button className ="hero-section__submit-btn" onClick = {(e)=>{this.handleSubmit(e)}}> Find Your Home!</button>
         </form>
       </ContentContainer>
     </section>
