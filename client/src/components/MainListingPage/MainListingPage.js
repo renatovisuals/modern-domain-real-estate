@@ -3,7 +3,7 @@ import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import Select from '../Widgets/Select/Select';
 import TextInput from '../Widgets/TextInput/TextInput';
 import Card from '../Widgets/Card/Card';
-import queryString from 'query-string';
+//import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import './MainListingPage.scss';
 
@@ -20,11 +20,11 @@ class MainListingPage extends Component {
 
   componentDidMount(){
     window.scrollTo(0,0);
-    const string = this.props.location.search;
-    const parsed = queryString.parse(string);
-    this.setState({
-      queries:parsed
-    })
+    //const string = this.props.location.search;
+    // parsed = queryString.parse(string);
+    //this.setState({
+    //  queries:parsed
+    //})
   }
 
 
@@ -33,9 +33,9 @@ class MainListingPage extends Component {
     return(
       <div className="main-listing-page">
         hello, this is the main listing page!<br/>
-        bedrooms:{this.state.queries.bedrooms}<br/>
-        bathrooms:{this.state.queries.bathrooms}<br/>
-        city:{this.state.queries.city}<br/>
+        //bedrooms:{this.state.queries.bedrooms}<br/>
+        //bathrooms:{this.state.queries.bathrooms}<br/>
+        //city:{this.state.queries.city}<br/>
       </div>
     )
   }
