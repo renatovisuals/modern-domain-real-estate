@@ -3,6 +3,7 @@ import ContentContainer from '../../hoc/ContentContainer/ContentContainer'
 import './HeroSection.scss';
 import data from '../../db';
 import Select from '../Widgets/Select/Select';
+import {Link} from 'react-router-dom';
 
 
 class HeroSection extends Component {
@@ -20,8 +21,7 @@ class HeroSection extends Component {
   }
 
   handleSubmit = (e)=>{
-    e.preventDefault();
-    window.location.href=`/listings`
+    window.location.href=`/listings?bedrooms=${this.state.bedrooms}&bathrooms=${this.state.bathrooms}&city=${this.state.city}`
   }
 
 
@@ -95,7 +95,7 @@ render(){
             name="bathrooms"
             />
 
-          <button type="submit" className ="hero-section__submit-btn" onClick = {(e)=>{this.handleSubmit(e)}}> Find Your Home!</button>
+          <Link className ="hero-section__submit-btn" onClick = {(e)=>{this.handleSubmit(e)}}> Find Your Home!</Link>
         </form>
       </ContentContainer>
     </section>
