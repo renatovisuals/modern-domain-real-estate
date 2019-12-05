@@ -21,7 +21,7 @@ class HeroSection extends Component {
 
   handleSubmit = (e)=>{
     e.preventDefault();
-    window.location.href=`/listings?bedrooms=${this.state.bedrooms}&bathrooms=${this.state.bathrooms}&city=${this.state.city}`
+    window.location.href=`/listings`
   }
 
 
@@ -95,7 +95,7 @@ render(){
             name="bathrooms"
             />
 
-          <button className ="hero-section__submit-btn" onClick = {(e)=>{this.handleSubmit(e)}}> Find Your Home!</button>
+          <button type="submit" className ="hero-section__submit-btn" onClick = {(e)=>{this.handleSubmit(e)}}> Find Your Home!</button>
         </form>
       </ContentContainer>
     </section>
