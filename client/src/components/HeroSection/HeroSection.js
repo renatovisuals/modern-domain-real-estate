@@ -21,7 +21,7 @@ class HeroSection extends Component {
   }
 
   handleSubmit = (e)=>{
-    window.location.href=`/listings`
+    window.location.href=`/listings?bedrooms=${this.state.bedrooms}&bathrooms=${this.state.bathrooms}&city=${this.state.city}`
   }
 
 

@@ -16,13 +16,13 @@ class Routes extends Component {
       <Layout>
         <Switch>
             <Route exact path="/" exact component ={Home} />
+            <Route exact path="/listings" exact component ={MainListingPage} />
             <Route exact path="/about" exact component ={About} />
             <Route exact path="/agents/:agentName/:id" exact component ={AgentLandingPage} />
             <Route exact path="/agents" exact component ={MainAgentPage} />
             <Route exact path="/about/expertise" exact component ={ExpertisePage} />
             <Route exact path="/about/services" exact component ={ServicesPage} />
             <Route exact path="/about/community" exact component ={CommunityPage} />
-            <Route exact path="/listings" exact component ={MainListingPage} />
         </Switch>
       </Layout>
     )
