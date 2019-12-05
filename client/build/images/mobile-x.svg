@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="31px" height="32px" viewBox="0 0 31 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>mobile-x</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="iPhone-7" transform="translate(-246.000000, -34.000000)" fill="#555555">
+            <g id="Header">
+                <g id="Nav">
+                    <g id="mobile-x" transform="translate(246.000000, 34.000000)">
+                        <rect id="Rectangle" transform="translate(15.500000, 16.000000) rotate(45.000000) translate(-15.500000, -16.000000) " x="-4" y="14" width="39" height="4"></rect>
+                        <rect id="Rectangle" transform="translate(15.500000, 16.202796) rotate(-45.000000) translate(-15.500000, -16.202796) " x="-4" y="14.2027958" width="39" height="4"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
