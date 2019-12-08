@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import Select from '../Widgets/Select/Select';
-import TextInput from '../Widgets/TextInput/TextInput';
-import Card from '../Widgets/Card/Card';
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import './MainListingPage.scss';
+import markerData from '../../maphomesdb';
+import Listing from '../Listing/Listing';
+import Map from '../Map/Map';
+import { mapStyles } from '../../utils';
 
 
 class MainListingPage extends Component {
 
-  state = {
-    queries:{},
-    city:'FortWorth',
-    agentName:'',
-    agentCity:'',
-    agentData:[]
+  constructor(props){
+    super(props)
+    this.state = {
+      markerData:markerData(),
+      showCurrentListing:false,
+      currentListingData:null
+    }
+    this.getListingData = this.getListingData.bind(this);
+    this.closeListing = this.closeListing.bind(this);
   }
 
   componentDidMount(){
@@ -23,19 +28,42 @@ class MainListingPage extends Component {
     const string = this.props.location.search;
     const parsed = queryString.parse(string);
     this.setState({
-      queries:parsed
+
     })
   }
 
+  closeListing(){
+        this.setState({
+            showCurrentListing:false
+        })
+        console.log('listing is closed')
+    }
+
+    getListingData(marker){
+        let listingData = this.state.markerData.filter((data)=>{
+            return data.id === marker.id
+        })
+        this.setState({
+            currentListingData:listingData[0],
+            showCurrentListing:true
+        })
+    }
 
   render(){
-    console.log(this.props,"listing page props")
+
+    const mapOptions = {
+        center:{lat:32.7547,lng:-97.3614},
+        zoom: 8,
+        styles: mapStyles()
+      }
+
     return(
-      <div className="main-listing-page">
-        hello, this is the main listing page!<br/>
-        bedrooms:{this.state.queries.bedrooms}<br/>
-        bathrooms:{this.state.queries.bathrooms}<br/>
-        city:{this.state.queries.city}<br/>
+      <div className="App">
+            {this.state.showCurrentListing
+              ? <Listing listingData = {this.state.currentListingData} handleClose = {this.closeListing}/>
+              : null
+            }
+            <Map id="myMap" options={mapOptions} data = {this.state.markerData} getListing = {this.getListingData}/>
       </div>
     )
   }
