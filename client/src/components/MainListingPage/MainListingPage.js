@@ -52,18 +52,20 @@ class MainListingPage extends Component {
   render(){
 
     const mapOptions = {
-        center:{lat:32.7547,lng:-97.3614},
-        zoom: 8,
-        styles: mapStyles()
-      }
+      center:{lat:32.7547,lng:-97.3614},
+      zoom: 8,
+      styles: mapStyles(),
+    }
 
     return(
       <div className="App">
-            {this.state.showCurrentListing
-              ? <Listing listingData = {this.state.currentListingData} handleClose = {this.closeListing}/>
-              : null
-            }
-            <Map id="myMap" options={mapOptions} data = {this.state.markerData} getListing = {this.getListingData}/>
+        {this.state.showCurrentListing
+          ? <Listing listingData = {this.state.currentListingData} handleClose = {this.closeListing}/>
+          : null
+        }
+        <div className = "map-container">
+          <Map id="myMap" options={mapOptions} data = {this.state.markerData} getListing = {this.getListingData}/>
+        </div>
       </div>
     )
   }

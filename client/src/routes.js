@@ -9,11 +9,13 @@ import ExpertisePage from './components/ExpertisePage/ExpertisePage';
 import ServicesPage from './components/ServicesPage/ServicesPage';
 import CommunityPage from './components/CommunityPage/CommunityPage';
 import MainListingPage from './components/MainListingPage/MainListingPage';
+import { withRouter } from 'react-router';
+const LayoutWithRouter = withRouter(Layout);
 
 class Routes extends Component {
   render(){
     return(
-      <Layout>
+      <LayoutWithRouter>
         <Switch>
             <Route exact path="/" exact component ={Home} />
             <Route exact path="/listings" exact component ={MainListingPage} />
@@ -24,7 +26,7 @@ class Routes extends Component {
             <Route exact path="/about/services" exact component ={ServicesPage} />
             <Route exact path="/about/community" exact component ={CommunityPage} />
         </Switch>
-      </Layout>
+      </LayoutWithRouter>
     )
   }
 }

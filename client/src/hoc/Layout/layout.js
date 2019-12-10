@@ -16,6 +16,9 @@ class Layout extends Component {
   }
 
 render(){
+  const {location} = this.props;
+  const showFooter = location.pathname === "/listings";
+  console.log(showFooter,"this is showFooter",location.pathname);
   return(
     <div className = "app-container">
       <Header
@@ -24,7 +27,7 @@ render(){
         onOpenNav = {() => this.toggleSidenav(true)}
       />
       {this.props.children}
-      <Footer/>
+      {!showFooter && <Footer/>}
     </div>
   )
 }

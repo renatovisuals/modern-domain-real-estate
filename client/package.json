@@ -15,6 +15,7 @@
     "axios": "^0.19.0",
     "gifsicle": "^4.0.1",
     "i": "^0.3.6",
+    "materialize-css": "^1.0.0-rc.2",
     "node-sass": "^4.11.0",
     "npm": "^6.9.0",
     "query-string": "^6.9.0",
