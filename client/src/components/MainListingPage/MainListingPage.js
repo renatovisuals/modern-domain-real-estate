@@ -4,10 +4,11 @@ import Select from '../Widgets/Select/Select';
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import './MainListingPage.scss';
-import markerData from '../../maphomesdb';
+//import markerData from '../../maphomesdb';
 import Listing from '../Listing/Listing';
 import Map from '../Map/Map';
 import { mapStyles } from '../../utils';
+import axios from 'axios';
 
 
 class MainListingPage extends Component {
@@ -15,57 +16,115 @@ class MainListingPage extends Component {
   constructor(props){
     super(props)
     this.state = {
-      markerData:markerData(),
+      markerData:'',
       showCurrentListing:false,
-      currentListingData:null
+      currentListingData:null,
+      mapHeight:null,
+      mapIsVisible:false
     }
     this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
   }
 
-  componentDidMount(){
-    window.scrollTo(0,0);
-    const string = this.props.location.search;
-    const parsed = queryString.parse(string);
+  updateMapHeight = ()=>{
+    const navHeight =document.getElementById('nav').clientHeight;
+    let mapHeight = window.innerHeight-(navHeight || 0);
     this.setState({
-
+      mapHeight
     })
   }
 
-  closeListing(){
-        this.setState({
-            showCurrentListing:false
-        })
-        console.log('listing is closed')
-    }
+  mapIsVisible = ()=>{
+    this.setState({
+      mapIsVisible:window.innerWidth>768
+    })
+  }
 
-    getListingData(marker){
-        let listingData = this.state.markerData.filter((data)=>{
-            return data.id === marker.id
-        })
-        this.setState({
-            currentListingData:listingData[0],
-            showCurrentListing:true
-        })
+  renderMap = ()=>{
+    if(this.state.mapIsVisible){
+      return(
+        null
+      )
     }
+  }
+
+  onMapMove = (map)=>{
+    console.log("MOUSE UPPP")
+
+  }
+
+  componentDidMount(){
+    window.scrollTo(0,0);
+    const queryParams = this.props.location.search;
+    const test = this.props.match.params;
+    console.log(test,"these arte the params")
+
+
+    const getListings = async () => {
+      let res = await axios.get(`/api/listings${queryParams}`);
+      this.setState({
+        markerData: res.data,
+      }, ()=> console.log(this.state, "component mounted"));
+    };
+    getListings();
+    this.updateMapHeight();
+    this.mapIsVisible();
+    window.addEventListener("resize",this.updateMapHeight);
+    window.addEventListener("resize",this.mapIsVisible);
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener("resize",this.updateMapHeight);
+    window.removeEventListener("resize",this.mapIsVisible);
+  }
+
+  componentWillUpdate(){
+    console.log("map was updated")
+  }
+
+
+  closeListing(){
+      this.setState({
+          showCurrentListing:false
+      })
+      console.log('listing is closed')
+  }
+
+  getListingData(marker){
+      let listingData = this.state.markerData.filter((data)=>{
+          return data.id === marker.id
+      })
+      this.setState({
+          currentListingData:listingData[0],
+          showCurrentListing:true
+      })
+  }
 
   render(){
-
+    const mapCoords = this.props.match.params.mapCoords;
+    console.log(mapCoords,"this is the map center")
     const mapOptions = {
-      center:{lat:32.7547,lng:-97.3614},
-      zoom: 8,
-      styles: mapStyles(),
+      center:{lat:40.7128,lng:-74.0060},
+      //zoom: 8,
+      styles: mapStyles()
+    }
+    if(mapCoords){
+      const center = mapCoords.split(",")
+      mapOptions.center = {lat:parseInt(center[0]),lng:parseInt(center[1])}
     }
 
     return(
-      <div className="App">
+      <div className="listing-page">
         {this.state.showCurrentListing
           ? <Listing listingData = {this.state.currentListingData} handleClose = {this.closeListing}/>
           : null
         }
-        <div className = "map-container">
-          <Map id="myMap" options={mapOptions} data = {this.state.markerData} getListing = {this.getListingData}/>
-        </div>
+        {this.state.mapIsVisible && this.state.markerData
+          ? <div className = "listing-page__map-container" style = {{height:`${this.state.mapHeight}px`}}>
+            <Map id="myMap" options={mapOptions} data = {this.state.markerData} getListing = {this.getListingData} onMapMove = {this.onMapMove}/>
+            </div>
+          :null
+        }
       </div>
     )
   }

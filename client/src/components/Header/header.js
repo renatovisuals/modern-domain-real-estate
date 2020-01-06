@@ -13,7 +13,7 @@ render(){
     <div>
       <MobileNav onHideNav = {this.props.onHideNav} showNav = {this.props.showNav}/>
       {this.props.showNav ? <ModalBackdrop click = {this.props.onHideNav}/> : null}
-      <nav className = "header">
+      <nav id = "nav" className = "header">
           <img className = "header__hamburger" src = "/images/hamburger.svg" onClick = {this.props.onOpenNav}/>
           <Link to={'/'}>
             <img className = "header__logo" src ="/images/logo.svg"/>

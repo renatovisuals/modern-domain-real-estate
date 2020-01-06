@@ -11,6 +11,7 @@ class Map extends Component {
         this.viewListing = this.viewListing.bind(this)
         this.state = {
           map:null,
+          zoom:12,
           markers:[],
           activeMarker:null,
           infowWindow:null
@@ -19,13 +20,21 @@ class Map extends Component {
 
   viewListing(){
       this.props.getListing(this.state.activeMarker)
-      console.log("listing is being viewed")
   }
 
   onScriptLoad() {
+      const mapOptions = {
+        zoom: this.state.zoom,
+        mapTypeControlOptions: {
+        mapTypeIds:[]
+      },
+        ...this.props.options
+      }
+
+
       let map = new window.google.maps.Map(
         document.getElementById(this.props.id),
-        this.props.options)
+        mapOptions)
 
       map.addListener('click',()=>{
           if(this.state.infoWindow){
@@ -36,11 +45,19 @@ class Map extends Component {
           }
       })
 
+      map.addListener("bounds_changed",()=> this.props.onMapMove(map))
+
+      window.google.maps.event.addListenerOnce(map,'bounds_changed',(e)=>{
+        if (map.getZoom()>this.state.zoom){
+          map.setZoom(this.state.zoom)
+        }
+      })
+        map.addListener('mouseup',()=> this.props.onMapMove())
+        window.google.maps.event.clearListeners(map, 'bounds_changed')
+        
       this.setState({
         map
-      })
-
-      this.onMapLoad(this.state.map)
+      }, ()=> this.onMapLoad(this.state.map))
   }
 
   createInfoWindow(e, map) {
@@ -101,12 +118,18 @@ class Map extends Component {
               }
           })
 
+          if(!this.props.options.center){
+            const bounds = new window.google.maps.LatLngBounds();
+            bounds.extend(marker.position);
+            map.fitBounds(bounds)
+          }
+
           this.setState((prevState) => ({
               markers:[marker, ...prevState.markers]
-          }), ()=>console.log(this.state));
+          }));
 
           marker.addListener('click', e => {
-              this.onMapLoad(this.state.map)
+              //this.onMapLoad(this.state.map)
               if(this.state.infoWindow){
                   this.state.infoWindow.close()
                   this.setState({
@@ -137,11 +160,13 @@ class Map extends Component {
               })
           })
       })
+
   }
 
 //Prepending Google Maps Api Script before the React JS script in order to make full use of
 //Google Maps api, rather than using the Google Maps React library which is very limited in customizability.
   componentDidMount() {
+    console.log("the map was mounted")
     if (!window.google) {
         var s = document.createElement('script');
         s.type = 'text/javascript';
@@ -156,6 +181,10 @@ class Map extends Component {
     } else {
         this.onScriptLoad()
     }
+  }
+
+
+  componentWillUnmount(){
   }
 
   render() {

@@ -3,7 +3,7 @@ let Listing = require('../models/listing.model');
 
 router.route('/').get((req,res) => {
   query = {}
-  if(req.query.city) query.city = req.query.city;
+  if(req.query.location) query.queryString = req.query.location;
   if(req.query.price) query.price = req.query.price;
   if(req.query.minbedrooms) query.bedrooms = {$gte:req.query.minbedrooms};
   if(req.query.minbathrooms) query.bathrooms = {$gte:req.query.minbathrooms};
@@ -11,7 +11,7 @@ router.route('/').get((req,res) => {
   Listing.find(query)
     .then(listings => {
       if(req.query){
-        console.log("this is the query")
+        //console.log("query")
       }
       return res.json(listings)
     })
@@ -27,8 +27,8 @@ router.route('/:city/:bedrooms/:bathrooms').get((req,res) => {
 
 router.route('/add').post((req,res)=> {
   const buildingtype = req.body.buildingtype;
-  const city = req.body.city;
-  const state = req.body.state;
+  const city = req.body.city.toLowerCase();
+  const state = req.body.state.toLowerCase();
   const street = req.body.street;
   const apt = req.body.apt;
   const zip = req.body.zip;
@@ -48,6 +48,12 @@ router.route('/add').post((req,res)=> {
   const imagepath = req.body.imagepath;
   const images = req.body.images;
   const description = req.body.description;
+  //const queryString =req.body.queryString;
+
+  const locationQueryStr = ()=>{
+    const cityQuery = city.replace(" ","%20")
+    return cityQuery + "%20" + state;
+  }
   //const bedrooms = Number(req.body.bedrooms);
   //const bathrooms = Number(req.body.bathrooms);
 
@@ -73,7 +79,8 @@ router.route('/add').post((req,res)=> {
     pricepersqft,
     imagepath,
     images,
-    description
+    description,
+    locationQueryStr:locationQueryStr()
   })
 
   newListing.save()

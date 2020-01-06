@@ -85,6 +85,10 @@ const listingSchema = new Schema({
     type: Array,
     required: true
   },
+  locationQuery:{
+    type:String,
+    required: false
+  },
   description:{
     type: String,
     required: true

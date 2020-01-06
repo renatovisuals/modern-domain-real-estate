@@ -1,8 +1,15 @@
-.main-landing-page{
-  color:red;
-}
-.map-container{
-  width:50%;
-  height:calc(100vh - 60px);
-  position:relative;
+.listing-page{
+  font-size: 0;
+
+  &__map-container{
+    position:relative;
+    width:60%;
+    display:none;
+  }
+
+  @media screen and (min-width:768px){
+    &__map-container{
+      display:inline-block;
+    }
+  }
 }
