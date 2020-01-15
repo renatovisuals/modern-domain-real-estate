@@ -10,6 +10,7 @@ class Map extends Component {
         this.onScriptLoad = this.onScriptLoad.bind(this)
         this.viewListing = this.viewListing.bind(this)
         this.state = {
+          markerData:this.props.data,
           map:null,
           zoom:12,
           markers:[],
@@ -31,33 +32,43 @@ class Map extends Component {
         ...this.props.options
       }
 
-
       let map = new window.google.maps.Map(
         document.getElementById(this.props.id),
         mapOptions)
 
-      map.addListener('click',()=>{
-          if(this.state.infoWindow){
-            this.state.infoWindow.close(this.state.map)
-            this.setState({
-                infoWindow:null
-            })
-          }
-      })
 
-      map.addListener("bounds_changed",()=> this.props.onMapMove(map))
+
 
       window.google.maps.event.addListenerOnce(map,'bounds_changed',(e)=>{
         if (map.getZoom()>this.state.zoom){
           map.setZoom(this.state.zoom)
         }
       })
-        map.addListener('mouseup',()=> this.props.onMapMove())
-        window.google.maps.event.clearListeners(map, 'bounds_changed')
-        
-      this.setState({
-        map
-      }, ()=> this.onMapLoad(this.state.map))
+      window.google.maps.event.addListenerOnce(map,'idle',(e)=>{
+        this.setState({
+          map
+        }, ()=> this.onMapLoad(this.state.map))
+      })
+
+  }
+
+  getMapBounds(map){
+    const bounds = map.getBounds()
+    return ({
+      north:bounds.getNorthEast().lat(),
+      east:bounds.getNorthEast().lng(),
+      south:bounds.getSouthWest().lat(),
+      west:bounds.getSouthWest().lng()
+    })
+  }
+  static getDerivedStateFromProps(nextProps, prevState){
+    console.log("Hello")
+    if(prevState.markerData !== nextProps.data){
+      return {
+        markerData: nextProps.data
+      }
+    }
+    return null
   }
 
   createInfoWindow(e, map) {
@@ -99,74 +110,92 @@ class Map extends Component {
   activeMarker.setZIndex(100)
   }
 
+
+
   onMapLoad(map){
 
+      map.addListener('dragend',()=> this.props.onMapMove(this.getMapBounds(map)))
+      map.addListener('zoom_changed',()=> this.props.onMapMove(this.getMapBounds(map)))
+
+      map.addListener('click',()=>{
+         if(this.state.infoWindow){
+           this.state.infoWindow.close(this.state.map)
+           this.setState({
+               infoWindow:null
+           })
+         }
+     })
       this.clearMarkers()
+      this.renderMarkers(map)
+  }
 
-      this.props.data.forEach(house => {
-          const shorthandPrice = abbreviatePrice(house.price)
-          let marker = new window.google.maps.Marker({
-              map:map,
-              position:house.position,
-              name:house.name,
-              id:house.id,
-              cursor:'pointer',
-              icon:{
-                  url: house.icon || icon({text:shorthandPrice}),
-                  scaledSize: new window.google.maps.Size(60, 60),
-                  anchor:new window.google.maps.Point(30,30)
-              }
-          })
+  renderMarkers(map){
+    let bounds = new window.google.maps.LatLngBounds();
+    console.log("rendermarkers called")
+    this.state.markerData.forEach(house => {
+        console.log(house.position,"position")
+        const shorthandPrice = abbreviatePrice(house.price)
+        let marker = new window.google.maps.Marker({
+            map:map,
+            position:house.position,
+            name:house.name,
+            id:house.id,
+            cursor:'pointer',
+            icon:{
+                url: house.icon || icon({text:shorthandPrice}),
+                scaledSize: new window.google.maps.Size(60, 60),
+                anchor:new window.google.maps.Point(30,30)
+            }
+        })
 
-          if(!this.props.options.center){
-            const bounds = new window.google.maps.LatLngBounds();
-            bounds.extend(marker.position);
-            map.fitBounds(bounds)
-          }
+        if(!this.props.options.center){
+          //console.log("no center")
+          bounds.extend(marker.position);
+          map.fitBounds(bounds)
+        }
 
-          this.setState((prevState) => ({
-              markers:[marker, ...prevState.markers]
-          }));
+        this.setState((prevState) => ({
+            markers:[marker, ...prevState.markers]
+        }));
 
-          marker.addListener('click', e => {
-              //this.onMapLoad(this.state.map)
-              if(this.state.infoWindow){
-                  this.state.infoWindow.close()
-                  this.setState({
-                      infoWindow:null
-                  })
-              }
-              this.createInfoWindow(e,map)
-          })
+        marker.addListener('click', e => {
+            //this.onMapLoad(this.state.map)
+            if(this.state.infoWindow){
+                this.state.infoWindow.close()
+                this.setState({
+                    infoWindow:null
+                })
+            }
+            this.createInfoWindow(e,map)
+        })
 
-          marker.addListener('mouseover', e => {
-              marker.setIcon({
-                url:icon({center:'2ee1ff', color:'2ee1ff', text:shorthandPrice}),
-                scaledSize: new window.google.maps.Size(60,60),
-                anchor: new window.google.maps.Point(30,30)
-              })
-              this.setState({
-                  activeMarker:marker
-              })
-              this.correctZIndex(marker)
-          })
+        marker.addListener('mouseover', e => {
+            marker.setIcon({
+              url:icon({center:'2ee1ff', color:'2ee1ff', text:shorthandPrice}),
+              scaledSize: new window.google.maps.Size(60,60),
+              anchor: new window.google.maps.Point(30,30)
+            })
+            this.setState({
+                activeMarker:marker
+            })
+            this.correctZIndex(marker)
+        })
 
-          marker.addListener('mouseout', e => {
-              let closeInfoWindowWithTimeout;
-              marker.setIcon({
-                url:icon({center:'3cc194', text:shorthandPrice}),
-                scaledSize: new window.google.maps.Size(60,60),
-                anchor: new window.google.maps.Point(30,30)
-              })
-          })
-      })
+        marker.addListener('mouseout', e => {
+            let closeInfoWindowWithTimeout;
+            marker.setIcon({
+              url:icon({center:'3cc194', text:shorthandPrice}),
+              scaledSize: new window.google.maps.Size(60,60),
+              anchor: new window.google.maps.Point(30,30)
+            })
+        })
+    })
 
   }
 
 //Prepending Google Maps Api Script before the React JS script in order to make full use of
 //Google Maps api, rather than using the Google Maps React library which is very limited in customizability.
   componentDidMount() {
-    console.log("the map was mounted")
     if (!window.google) {
         var s = document.createElement('script');
         s.type = 'text/javascript';
@@ -183,11 +212,24 @@ class Map extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps,nextState){
+    if(this.state.markerData === nextState.markerData){
+      return false
+    }else{
+      return true
+    }
+  }
 
-  componentWillUnmount(){
+  componentDidUpdate(){
+    console.log("updating")
+    this.clearMarkers()
+    this.renderMarkers(this.state.map)
+    console.log(this.state,"this is the state")
+
   }
 
   render() {
+    console.log("map being rendered")
     return (
       <div id={this.props.id} />
     );

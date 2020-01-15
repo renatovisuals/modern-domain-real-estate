@@ -20,7 +20,8 @@ class MainListingPage extends Component {
       showCurrentListing:false,
       currentListingData:null,
       mapHeight:null,
-      mapIsVisible:false
+      mapIsVisible:false,
+      map:2
     }
     this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
@@ -48,23 +49,20 @@ class MainListingPage extends Component {
     }
   }
 
-  onMapMove = (map)=>{
-    console.log("MOUSE UPPP")
-
+  onMapMove = (mapBounds)=>{
+    let boundsString = JSON.stringify(mapBounds)
+    window.history.pushState({'listings':5},"listings",`/listings/${boundsString}${window.location.search}`)
   }
 
   componentDidMount(){
     window.scrollTo(0,0);
     const queryParams = this.props.location.search;
     const test = this.props.match.params;
-    console.log(test,"these arte the params")
-
-
     const getListings = async () => {
       let res = await axios.get(`/api/listings${queryParams}`);
       this.setState({
         markerData: res.data,
-      }, ()=> console.log(this.state, "component mounted"));
+      });
     };
     getListings();
     this.updateMapHeight();
@@ -78,16 +76,11 @@ class MainListingPage extends Component {
     window.removeEventListener("resize",this.mapIsVisible);
   }
 
-  componentWillUpdate(){
-    console.log("map was updated")
-  }
-
 
   closeListing(){
       this.setState({
           showCurrentListing:false
       })
-      console.log('listing is closed')
   }
 
   getListingData(marker){
@@ -101,16 +94,10 @@ class MainListingPage extends Component {
   }
 
   render(){
-    const mapCoords = this.props.match.params.mapCoords;
-    console.log(mapCoords,"this is the map center")
     const mapOptions = {
-      center:{lat:40.7128,lng:-74.0060},
-      //zoom: 8,
+      //center:{lat:40.7128,lng:-74.0060},
+      zoom:8,
       styles: mapStyles()
-    }
-    if(mapCoords){
-      const center = mapCoords.split(",")
-      mapOptions.center = {lat:parseInt(center[0]),lng:parseInt(center[1])}
     }
 
     return(

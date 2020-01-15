@@ -8,6 +8,87 @@ export function abbreviatePrice(price){
     }
 }
 
+export const parseURL = (url)=>{
+  const unStringifyNumber = (price)=>{
+  if(typeof price !== "string"){
+    throw new TypeError("string value required for unStringifyNumber");
+  }else{
+    const regex = /\d{1,}[km]/gi
+    if(regex.test(price)){
+      const units = {
+        k:1000,
+        m:1000000
+      }
+      const unit = price.charAt(price.length-1).toLowerCase()
+      price = parseFloat(price.substring(0,price.length-1))
+      price = price*units[unit]
+      return price
+    }
+  }
+  return parseFloat(price);
+}
+
+  const convertToObject = (u)=>{
+    let obj = new Object
+    const regex = /\/$/g
+    //removing last back slash, if there is one
+    u = regex.test(u) ? u.substring(0,u.length-1) : u;
+    //replacing all spaces, then converting to array form
+    u = u.replace("%20"," ")
+      .split("/")
+      .map(keyValue=>keyValue.split("="))
+
+    for(let i=0; i<u.length; i++){
+      const regex = /^[a-z]*\.(max|min)$/gi;
+      if(regex.test(u[i][0])){
+        const arr = u[i][0].split(".")
+        const [object,key] = arr;
+         obj[object] = new Object
+         obj[object][key] = unStringifyNumber(u[i][1])
+
+      }else{
+        obj[u[i][0]] = u[i][1]
+      }
+    }
+    return obj
+  }
+
+  let params = {
+    ...convertToObject(url)
+  }
+
+// reformatting param values
+
+  for(let i in params){
+    let regex;
+    switch(i) {
+      case "mapview":
+        params[i] = params[i].split(",")
+        params[i] = params[i].map(val=>parseFloat(val));
+        break;
+      case "price":
+        params[i] = params[i].split("-").map(p=>unStringifyNumber(p))
+        break;
+      case "beds":
+        if (typeof params[i] === "string"){
+          const [minimum,maximum] = params[i].split("-").map(num=>unStringifyNumber(num))
+          params[i] = {};
+          params[i].min = minimum;
+          params[i].max = maximum;
+        }
+        break;
+      case "property-type":
+      case "listing-type":
+        params[i] = params[i].split(",")
+
+      default:
+
+    }
+}
+  return params
+}
+
+
 export function icon(options){
     const defaultOptions = {
         outerRing:'3cc194',
