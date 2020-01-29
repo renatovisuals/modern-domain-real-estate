@@ -51,15 +51,16 @@ class MainListingPage extends Component {
 
   onMapMove = (mapBounds)=>{
     let boundsString = JSON.stringify(mapBounds)
-    window.history.pushState({'listings':5},"listings",`/listings/${boundsString}${window.location.search}`)
   }
 
   componentDidMount(){
     window.scrollTo(0,0);
-    const queryParams = this.props.location.search;
+    const queryParams = this.props.location
     const test = this.props.match.params;
+    console.log(this.props.match,"test")
+    console.log(this.props,"these are the props")
     const getListings = async () => {
-      let res = await axios.get(`/api/listings${queryParams}`);
+      let res = await axios.get(`/api/listings`);
       this.setState({
         markerData: res.data,
       });

@@ -4,7 +4,7 @@ import './HeroSection.scss';
 import data from '../../db';
 import Select from '../Widgets/Select/Select';
 import axios from 'axios';
-import queryString from 'query-string';
+import { Redirect } from 'react-router-dom';
 
 
 class HeroSection extends Component {
@@ -12,8 +12,10 @@ class HeroSection extends Component {
   state = {
     bedrooms:0,
     bathrooms:0,
+    paramStr:'',
+    listingData:[],
     location:'',
-    listingData:[]
+    redirect:false
   }
 
   componentDidMount(){
@@ -27,6 +29,12 @@ class HeroSection extends Component {
       getListings()
   }
 
+  renderRedirect = () =>{
+    if(this.state.redirect){
+      return <Redirect to={`/listings/for-sale/${this.state.location || '_map'}/${this.state.paramStr}`} />
+    }
+  }
+
   handleChange = (key,value)=>{
     this.setState({
       [key]:value
@@ -35,13 +43,20 @@ class HeroSection extends Component {
 
   handleSubmit = (e)=>{
     e.preventDefault();
+    let paramStr="";
     const params = {
-      ...(this.state.bedrooms ? {minbedrooms:this.state.bedrooms} :{}),
-      ...(this.state.bathrooms ? {minbathrooms:this.state.bathrooms} :{}),
-      ...(this.state.location ? {location:this.state.location} :{})
+    //  ...(this.state.location ? {location:this.state.location} :{}),
+      ...(this.state.bedrooms ? {'bedrooms.min':this.state.bedrooms} :{}),
+      ...(this.state.bathrooms ? {'bathrooms.min':this.state.bathrooms} :{})
     }
-    const query = queryString.stringify(params)
-    window.location.href=`/listings?${query}`
+    for(let param in params){
+      paramStr += param + "=" + params[param] + "/"
+    }
+    console.log(paramStr, "param string")
+    this.setState({
+      paramStr,
+      redirect:true
+    },()=>console.log(this.state,"this is the state"))
   }
 
   removeDuplicatesFrom = (data)=>{
@@ -77,9 +92,11 @@ class HeroSection extends Component {
 
 
 render(){
+
   const options = this.getCitySelectOptions()
   return(
     <section className = "hero-section">
+      {this.renderRedirect()}
       <ContentContainer>
         <h1 className = "hero-section__title"> Find Your Perfect Texas Home. </h1>
         <h3 className = "hero-section__subtitle"> We provide access to the most upscale living spaces in Texas. </h3>

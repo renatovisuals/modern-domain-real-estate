@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import InfoWindow from '../InfoWindow/InfoWindow';
+import MarkerClusterer from "@google/markerclusterer";
 import { render } from 'react-dom';
 import { icon, abbreviatePrice } from '../../utils'
 import './map.css';
@@ -129,6 +130,51 @@ class Map extends Component {
       this.renderMarkers(map)
   }
 
+  loadClusters(map){
+    const options = {
+      imagePath:'http://localhost:3000/images/m',
+      //imageExtension:'png',
+      minimumClusterSize:0,
+      gridSize:150,
+      zoomOnClick:true,
+      //averageCenter:true,
+      //zIndex:1000
+      styles:[
+        {
+          url:"http://localhost:3000/images/m1.png",
+          textColor:"#ffffff",
+          textSize:13,
+          height:35,
+          width:35
+        },
+        {
+          url:"http://localhost:3000/images/m1.png",
+          height:35,
+          width:35
+        },
+        {
+          url:"http://localhost:3000/images/m1.png",
+          height:35,
+          width:35
+        },
+        {
+          url:"http://localhost:3000/images/m1.png",
+          height:35,
+          width:35
+        },
+        {
+          url:"http://localhost:3000/images/m1.png",
+          height:35,
+          width:35
+        }
+
+      ]
+    }
+  //  console.log(this.state.markers,"markers")
+    const markerCluster = new MarkerClusterer(map,this.state.markers,options);
+    console.log(markerCluster,"this is the cluster")
+  }
+
   renderMarkers(map){
     let bounds = new window.google.maps.LatLngBounds();
     console.log("rendermarkers called")
@@ -156,7 +202,7 @@ class Map extends Component {
 
         this.setState((prevState) => ({
             markers:[marker, ...prevState.markers]
-        }));
+        }),()=>this.loadClusters(map))
 
         marker.addListener('click', e => {
             //this.onMapLoad(this.state.map)
@@ -190,6 +236,10 @@ class Map extends Component {
             })
         })
     })
+
+    //markerCluster.map=map;
+    //markerCluster.markers_=this.state.markers;
+    //console.log(markerCluster,"marker object")
 
   }
 

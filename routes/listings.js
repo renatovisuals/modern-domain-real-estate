@@ -8,7 +8,7 @@ router.route('/').get((req,res) => {
   if(req.query.minbedrooms) query.bedrooms = {$gte:req.query.minbedrooms};
   if(req.query.minbathrooms) query.bathrooms = {$gte:req.query.minbathrooms};
 
-  Listing.find(query)
+  Listing.find()
     .then(listings => {
       if(req.query){
         //console.log("query")
@@ -16,6 +16,15 @@ router.route('/').get((req,res) => {
       return res.json(listings)
     })
     .catch(err => res.status(400).json('Error: ' + err));
+    //Listing.aggregate([
+    //  { $group: { _id:{city:"$city",street:"$street"} } }
+    //]).exec(function(err,result){
+    //  console.log(result,"this is the result")
+    //  return res.json(result)
+    //})
+
+
+
 });
 
 router.route('/:city/:bedrooms/:bathrooms').get((req,res) => {
