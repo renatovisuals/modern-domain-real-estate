@@ -16,6 +16,8 @@ router.route('/').get((req,res) => {
       return res.json(listings)
     })
     .catch(err => res.status(400).json('Error: ' + err));
+
+     
     //Listing.aggregate([
     //  { $group: { _id:{city:"$city",street:"$street"} } }
     //]).exec(function(err,result){

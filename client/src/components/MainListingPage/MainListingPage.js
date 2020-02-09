@@ -21,7 +21,7 @@ class MainListingPage extends Component {
       currentListingData:null,
       mapHeight:null,
       mapIsVisible:false,
-      map:2
+      map:2,
     }
     this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
@@ -53,12 +53,15 @@ class MainListingPage extends Component {
     let boundsString = JSON.stringify(mapBounds)
   }
 
+  parseURL = (path)=>{
+    
+  }
+
   componentDidMount(){
     window.scrollTo(0,0);
-    const queryParams = this.props.location
-    const test = this.props.match.params;
-    console.log(this.props.match,"test")
-    console.log(this.props,"these are the props")
+    //full path: props.location.pathname shortened path: this.props.match.url
+    const path = (this.props.location.pathname).replace(this.props.match.url,"")
+    this.parseURL(path)
     const getListings = async () => {
       let res = await axios.get(`/api/listings`);
       this.setState({
