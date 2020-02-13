@@ -1,102 +1,114 @@
+const mysql = require('mysql');
+const db = require("../db.js");
 const router = require('express').Router();
-let Listing = require('../models/listing.model');
+const axios = require('axios');
 
-router.route('/').get((req,res) => {
-  query = {}
-  if(req.query.location) query.queryString = req.query.location;
-  if(req.query.price) query.price = req.query.price;
-  if(req.query.minbedrooms) query.bedrooms = {$gte:req.query.minbedrooms};
-  if(req.query.minbathrooms) query.bathrooms = {$gte:req.query.minbathrooms};
 
-  Listing.find()
-    .then(listings => {
-      if(req.query){
-        //console.log("query")
-      }
-      return res.json(listings)
+router.route('/').get((req,res)=>{
+  connection = db.createConnection()
+  connection.connect((err)=>{
+    if(err){
+      throw err
+    }
+    const sql = "SELECT * FROM zoo"
+    connection.query(sql,(err,result) => {
+      if(err) throw err;
+      res.json(result);
+      console.log(result)
     })
-    .catch(err => res.status(400).json('Error: ' + err));
-
-     
-    //Listing.aggregate([
-    //  { $group: { _id:{city:"$city",street:"$street"} } }
-    //]).exec(function(err,result){
-    //  console.log(result,"this is the result")
-    //  return res.json(result)
-    //})
-
-
-
-});
-
-router.route('/:city/:bedrooms/:bathrooms').get((req,res) => {
-  console.log('retrieving users')
-  Listing.find()
-    .then(listings => res.json(listings))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
-router.route('/add').post((req,res)=> {
-  const buildingtype = req.body.buildingtype;
-  const city = req.body.city.toLowerCase();
-  const state = req.body.state.toLowerCase();
-  const street = req.body.street;
-  const apt = req.body.apt;
-  const zip = req.body.zip;
-  const position = req.body.position;
-  const price = req.body.price;
-  const estpayment = req.body.estpayment;
-  const bedrooms = req.body.bedrooms;
-  const bathrooms = req.body.bathrooms;
-  const sqft = req.body.sqft;
-  const type = req.body.type;
-  const yearbuilt = req.body.yearbuilt;
-  const heating = req.body.heating;
-  const cooling = req.body.cooling;
-  const parking = req.body.parking;
-  const lot = req.body.lot;
-  const pricepersqft = req.body.pricepersqft;
-  const imagepath = req.body.imagepath;
-  const images = req.body.images;
-  const description = req.body.description;
-  //const queryString =req.body.queryString;
-
-  const locationQueryStr = ()=>{
-    const cityQuery = city.replace(" ","%20")
-    return cityQuery + "%20" + state;
-  }
-  //const bedrooms = Number(req.body.bedrooms);
-  //const bathrooms = Number(req.body.bathrooms);
-
-  const newListing = new Listing({
-    buildingtype,
-    city,
-    state,
-    street,
-    apt,
-    zip,
-    position,
-    price,
-    estpayment,
-    bedrooms,
-    bathrooms,
-    sqft,
-    type,
-    yearbuilt,
-    heating,
-    cooling,
-    parking,
-    lot,
-    pricepersqft,
-    imagepath,
-    images,
-    description,
-    locationQueryStr:locationQueryStr()
+    connection.end()
   })
 
-  newListing.save()
-    .then(()=> res.json('listing added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
+  //db.end()
+})
+
+
+router.route('/add').post((req,res)=>{
+  let listing = {
+    building_type:req.body.buildingtype,
+    city:req.body.city,
+    state:req.body.state,
+    street:req.body.street,
+    apt:req.body.apt,
+    zipcode:req.body.zip,
+    price:req.body.price,
+    est_payment:req.body.estpayment,
+    bedrooms:req.body.bedrooms,
+    bathrooms:req.body.bathrooms,
+    sqft:req.body.sqft,
+    listing_type:req.body.type,
+    year_built:req.body.yearbuilt,
+    heating:req.body.heating,
+    cooling:req.body.cooling,
+    parking:req.body.parking,
+    lot_unit:req.body.lot.unit,
+    lot_quantity:req.body.lot.quantity,
+    price_per_sqft:req.body.pricepersqft,
+    description:req.body.description
+  }
+  const nameTypes = {
+    street_number:"street_number",
+    political:"political",
+    administrative_area_level_2:"county",
+    administrative_area_level_1:"state",
+    country:"country",
+    route:"route",
+    locality:"city",
+    postal_code:"zipcode"
+  }
+  const { city,state,street,apt,zipcode } = listing
+  const address = encodeURIComponent(`${street} ${listing.apt ? "apt "+listing.apt+" " :''}${city} ${state}`)
+  let locationData = {}
+
+  const formatData = (data)=>{
+  let formattedData = {
+    locations:[],
+    formatted_address:'',
+    lat_long:{
+      lat:null,
+      long:null
+    }
+  }
+  let a = data[0].address_components;
+  a.forEach((location)=>{
+    let name_id;
+    let type = nameTypes[location.types[0]]
+      formattedData.locations.push({
+        type:type,
+        short_name:location.short_name,
+        long_name:location.long_name
+      })
+  })
+  for(let i = 0; i < formattedData.locations.length; i++){
+    let loc = formattedData.locations[i];
+    if(loc.type === "city"){
+      loc.name_id = `${loc.long_name.toLowerCase().replace(" ","-")}-${listing.state.toLowerCase()}`;
+    }
+  }
+  return formattedData
+}
+
+  axios.get("https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyAGgm00r51Xpx2wUfWvvKUMNWd6GrjV6Ck")
+  .then((res)=>{
+    locationData = formatData(res.data.results)
+    console.log(locationData,"location data")
+    postData()
+  })
+  .catch((err)=>console.log(err))
+
+  const postData = ()=>{
+    connection = db.createConnection()
+    connection.connect((err)=>{
+      if(err){
+        throw err
+      }
+      res.send("hello")
+      connection.end()
+    })
+  }
+
+})
+
+  //db.end(()=> console.log("connection ended"))
 
 module.exports = router;

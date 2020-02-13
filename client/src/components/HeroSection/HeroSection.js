@@ -20,11 +20,15 @@ class HeroSection extends Component {
 
   componentDidMount(){
     const getListings = async () => {
-      let res = await axios.get(`/api/listings`);
-      this.setState({
-        listingData: res.data,
-        location:this.getCitySelectOptions(res.data)[0].value
-      });
+      //let res = await axios.get(`/api/listings`);
+      //this.setState({
+      //  listingData: res.data,
+      //  location:this.getCitySelectOptions(res.data)[0].value
+      //});
+
+      await axios.get('/api/listings')
+      .then((res)=>console.log(res))
+      .catch((err)=>console.error(err))
     };
       getListings()
   }
