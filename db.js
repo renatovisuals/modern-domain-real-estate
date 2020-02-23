@@ -1,3 +1,13 @@
+require('dotenv').config();
+const mysql = require('mysql');
+const mysqlSettings = require('./dbsettings.js');
+const pool  = mysql.createPool({mysqlSettings});
+
+module.exports.pool = pool.getConnection;
+
+
+
+/*
 const mysql = require('mysql');
 const mysqlSettings = require('./dbsettings.js');
 
@@ -11,3 +21,4 @@ connectDatabase.prototype.createConnection = function(){
 }
 
 module.exports = new connectDatabase(mysqlSettings)
+*/

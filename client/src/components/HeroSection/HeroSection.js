@@ -15,19 +15,18 @@ class HeroSection extends Component {
     paramStr:'',
     listingData:[],
     location:'',
-    redirect:false
+    redirect:false,
+    cities:null
   }
 
   componentDidMount(){
     const getListings = async () => {
-      //let res = await axios.get(`/api/listings`);
-      //this.setState({
-      //  listingData: res.data,
-      //  location:this.getCitySelectOptions(res.data)[0].value
-      //});
-
-      await axios.get('/api/listings')
-      .then((res)=>console.log(res))
+      await axios.get('/api/locations/get/?type=city')
+      .then((res)=>{
+        this.setState({
+          cities:res.data
+        },()=>this.getCitySelectOptions())
+      })
       .catch((err)=>console.error(err))
     };
       getListings()
@@ -63,41 +62,25 @@ class HeroSection extends Component {
     },()=>console.log(this.state,"this is the state"))
   }
 
-  removeDuplicatesFrom = (data)=>{
-    data = data.filter((location, index, self) =>
-      index === self.findIndex((t) => (
-        t.city.toLowerCase() === location.city.toLowerCase() && t.queryString.toLowerCase() === location.queryString.toLowerCase()
-      ))
-    )
-    return data
-  }
 
-  getCitiesAndStates = (data)=>{
-    const simplifiedData = data.map((home)=>{
-      return({
-        city:home.city,
-        queryString:home.queryString
-      })
-    })
-    return(this.removeDuplicatesFrom(simplifiedData))
-  };
 
   getCitySelectOptions = (data)=>{
-    const dataSet = data || this.state.listingData
-    const citiesAndStates = this.getCitiesAndStates(dataSet);
-    const options = citiesAndStates.map((location)=>{
+    const cities = data || this.state.cities
+    const options = cities.map((location)=>{
       return({
-        value:location.queryString,
-        content:location.city
+        value:location.name,
+        content:`${location.name}, ${location.parents[1].name}`
       })
     })
-    return options
+    this.setState({
+      options
+    })
   }
 
 
 render(){
 
-  const options = this.getCitySelectOptions()
+  //const options = this.getCitySelectOptions()
   return(
     <section className = "hero-section">
       {this.renderRedirect()}
@@ -106,7 +89,7 @@ render(){
         <h3 className = "hero-section__subtitle"> We provide access to the most upscale living spaces in Texas. </h3>
         <form action ="#">
 
-          <Select options = {options} className ="hero-section__select" name="location" onChange = {this.handleChange}/>
+          <Select options = {this.state.options} className ="hero-section__select" name="location" onChange = {this.handleChange}/>
           <Select
             className ="hero-section__select--small"
             onChange = {this.handleChange}
