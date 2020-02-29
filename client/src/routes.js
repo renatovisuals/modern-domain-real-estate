@@ -10,16 +10,14 @@ import ServicesPage from './components/ServicesPage/ServicesPage';
 import CommunityPage from './components/CommunityPage/CommunityPage';
 import MainListingPage from './components/MainListingPage/MainListingPage';
 import { withRouter } from 'react-router';
-const LayoutWithRouter = withRouter(Layout);
 
 class Routes extends Component {
   render(){
     return(
-      <LayoutWithRouter>
         <Switch>
             <Route exact path="/" exact component ={Home} />
             <Route path="/listings/:searchType/_map" component ={MainListingPage} />
-            <Route path="/listings/:searchType/:city" component ={MainListingPage} />
+            <Route path="/listings/:searchType/:location" component ={MainListingPage} />
             <Route exact path="/about" exact component ={About} />
             <Route exact path="/agents/:agentName/:id" exact component ={AgentLandingPage} />
             <Route exact path="/agents" exact component ={MainAgentPage} />
@@ -27,7 +25,6 @@ class Routes extends Component {
             <Route exact path="/about/services" exact component ={ServicesPage} />
             <Route exact path="/about/community" exact component ={CommunityPage} />
         </Switch>
-      </LayoutWithRouter>
     )
   }
 }

@@ -9,7 +9,8 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = {
   card: {
-    maxWidth: 345,
+    maxWidth: 500,
+    width:250
   },
   media: {
     height: 0,
@@ -20,7 +21,7 @@ const styles = {
 function InfoWindow(props) {
   const { classes, marker, data } = props;
   const infoWindowData = data.filter((house)=>{
-    return house.id === marker.id;
+    return house.listing_id === marker.id;
   })
 
   return (
@@ -28,7 +29,7 @@ function InfoWindow(props) {
       <Card className={classes.card}>
         <CardMedia
           className={classes.media}
-          image={`./images/houses/${marker.id}/main.jpg`}
+          image={`/images/listings/${marker.id}/1.jpg`}
           title="Contemplative Reptile"
         />
         <CardContent>
@@ -36,7 +37,7 @@ function InfoWindow(props) {
             {`$${infoWindowData[0].price}`}
           </Typography>
           <Typography component="p">
-            {infoWindowData[0].address}
+            {infoWindowData[0].formatted_address}
           </Typography>
           <Typography component="p">
             {`${infoWindowData[0].bedrooms} bd, ${infoWindowData[0].bathrooms} ba, ${infoWindowData[0].sqft} sqft`}

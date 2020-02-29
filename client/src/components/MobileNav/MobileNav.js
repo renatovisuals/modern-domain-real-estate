@@ -18,7 +18,7 @@ import './mobile-nav.scss';
 
   return(
     <div className = "mobile-nav" style = {style}>
-      <img className = "mobile-nav__x" src = "/images/mobile-x.svg" onClick = {props.onHideNav}/>
+      <img className = "mobile-nav__x" src = "/images/mobile-x.svg" onClick = {props.hideNav}/>
       <ul className = "mobile-nav__menu">
         <li><Link to = {'/'}>Home</Link></li>
         <li><Link to = {'/about/1'}>About</Link></li>

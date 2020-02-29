@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import NavWithSearch from '../NavWithSearch/NavWithSearch'
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import Select from '../Widgets/Select/Select';
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import './MainListingPage.scss';
-//import markerData from '../../maphomesdb';
 import Listing from '../Listing/Listing';
 import Map from '../Map/Map';
 import { mapStyles } from '../../utils';
@@ -22,9 +22,31 @@ class MainListingPage extends Component {
       mapHeight:null,
       mapIsVisible:false,
       map:2,
+      searchQuery:'',
+      searchResults:[]
     }
     this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
+  }
+
+  handleSearchInput = (e)=>{
+    this.setState({
+      searchQuery:e.target.value,
+      searchResults:[]
+    })
+    if(e.target.value.length>=2)this.getSearchResults(e)
+  }
+
+  getSearchResults = async (e)=>{
+    let res = await axios.get(`/api/locations/get?searchQuery=${e.target.value}`);
+    this.setState({
+      searchResults:res.data
+    })
+  }
+
+  handleLocationClick = (locationId)=>{
+    this.getListingsByLocationId(locationId)
+    console.log(locationId,"THIS IS THE LOCATION ID");
   }
 
   updateMapHeight = ()=>{
@@ -53,22 +75,39 @@ class MainListingPage extends Component {
     let boundsString = JSON.stringify(mapBounds)
   }
 
-  parseURL = (path)=>{
-    
+  getListingsByLocationNameId = async (nameId)=>{
+    let res = await axios.get(`/api/listings/getbylocationnameid/${nameId}`);
+    this.setState({
+      markerData: res.data
+    });
+    return res.data
+  }
+
+  getListingsByLocationId = async (id)=>{
+    let res = await axios.get(`/api/listings/getbylocationid/${id}`);
+    this.setState({
+      markerData: res.data
+    });
+    console.log(res.data,"this is the response")
+    return res.data
+  }
+
+  getAllListings = async ()=>{
+    let res = await axios.get(`/api/listings/get/`);
+    this.setState({
+      markerData: res.data
+    });
+    return res.data
   }
 
   componentDidMount(){
     window.scrollTo(0,0);
-    //full path: props.location.pathname shortened path: this.props.match.url
-    const path = (this.props.location.pathname).replace(this.props.match.url,"")
-    this.parseURL(path)
-    const getListings = async () => {
-      let res = await axios.get(`/api/listings`);
-      this.setState({
-        markerData: res.data,
-      });
-    };
-    getListings();
+    if(this.props.match.params.location){
+      this.getListingsByLocationNameId(this.props.match.params.location)
+    }else{
+      this.getAllListings()
+    }
+
     this.updateMapHeight();
     this.mapIsVisible();
     window.addEventListener("resize",this.updateMapHeight);
@@ -106,12 +145,18 @@ class MainListingPage extends Component {
 
     return(
       <div className="listing-page">
+        <NavWithSearch
+          handleSearchInput = {(e)=> this.handleSearchInput(e)}
+          searchQuery = {this.state.searchQuery}
+          results = {this.state.searchResults}
+          handleLocationClick = {(locationId)=>this.handleLocationClick(locationId)}
+        />
         {this.state.showCurrentListing
           ? <Listing listingData = {this.state.currentListingData} handleClose = {this.closeListing}/>
           : null
         }
         {this.state.mapIsVisible && this.state.markerData
-          ? <div className = "listing-page__map-container" style = {{height:`${this.state.mapHeight}px`}}>
+          ? <div className = "listing-page__map-container" style={{height:`${this.state.mapHeight}px`}}>
             <Map id="myMap" options={mapOptions} data = {this.state.markerData} getListing = {this.getListingData} onMapMove = {this.onMapMove}/>
             </div>
           :null

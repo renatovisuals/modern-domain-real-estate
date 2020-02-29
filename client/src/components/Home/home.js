@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Nav from '../Nav/Nav'
 import HeroSection from '../HeroSection/HeroSection';
 import ServicesSection from '../ServicesSection/ServicesSection';
 import CitySection from '../CitySection/CitySection';
@@ -16,11 +17,13 @@ componentDidMount(){
 render(){
   return(
     <div>
+      <Nav />
       <HeroSection />
       <ServicesSection />
       <CitySection />
       <AgentSection />
       <NewestListingSection />
+      <Footer />
     </div>
   )
 }

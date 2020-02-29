@@ -15,9 +15,12 @@ app.use(express.json());
 
 const locationsRoutes = require('./routes/locations');
 const listingsRoutes = require('./routes/listings')
+const searchRoutes = require('./routes/listings')
 
 app.use('/api/locations',locationsRoutes);
 app.use('/api/listings',listingsRoutes);
+app.use('/api/search',searchRoutes);
+
 
 
 if (process.env.NODE_ENV === "production") {

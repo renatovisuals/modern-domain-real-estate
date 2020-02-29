@@ -62,9 +62,11 @@ class Map extends Component {
       west:bounds.getSouthWest().lng()
     })
   }
+
   static getDerivedStateFromProps(nextProps, prevState){
-    console.log("Hello")
     if(prevState.markerData !== nextProps.data){
+      console.log("DATA CHANGED")
+
       return {
         markerData: nextProps.data
       }
@@ -101,6 +103,7 @@ class Map extends Component {
       this.setState({
         markers
       })
+      console.log("clearmarkers called")
   }
 
   correctZIndex(activeMarker){
@@ -170,22 +173,23 @@ class Map extends Component {
 
       ]
     }
-  //  console.log(this.state.markers,"markers")
     const markerCluster = new MarkerClusterer(map,this.state.markers,options);
-    console.log(markerCluster,"this is the cluster")
   }
 
   renderMarkers(map){
     let bounds = new window.google.maps.LatLngBounds();
-    console.log("rendermarkers called")
+    console.log(this.state.markers,this.state.markerData,"THESE ARE THE MARKERS")
     this.state.markerData.forEach(house => {
-        console.log(house.position,"position")
         const shorthandPrice = abbreviatePrice(house.price)
+        const position = {
+          lat:house.pos_lat,
+          lng:house.pos_lng
+        }
         let marker = new window.google.maps.Marker({
             map:map,
-            position:house.position,
+            position:position,
             name:house.name,
-            id:house.id,
+            id:house.listing_id,
             cursor:'pointer',
             icon:{
                 url: house.icon || icon({text:shorthandPrice}),
@@ -194,15 +198,28 @@ class Map extends Component {
             }
         })
 
+        //if center exists in options, override the marker based map positioning
         if(!this.props.options.center){
-          //console.log("no center")
           bounds.extend(marker.position);
+
+          //if only one marker on map, extend the bounds to zoom further out
+          if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+            var extendPoint1 = new window.google.maps.LatLng(bounds.getNorthEast().lat() + 0.01, bounds.getNorthEast().lng() + 0.01);
+            var extendPoint2 = new window.google.maps.LatLng(bounds.getNorthEast().lat() - 0.01, bounds.getNorthEast().lng() - 0.01);
+            bounds.extend(extendPoint1);
+            bounds.extend(extendPoint2);
+          }
+
           map.fitBounds(bounds)
         }
 
+
+
+        map.fitBounds(bounds)
+
         this.setState((prevState) => ({
             markers:[marker, ...prevState.markers]
-        }),()=>this.loadClusters(map))
+        }))
 
         marker.addListener('click', e => {
             //this.onMapLoad(this.state.map)
@@ -212,6 +229,10 @@ class Map extends Component {
                     infoWindow:null
                 })
             }
+            console.log(this.state.activeMarker,"activeMarker")
+            this.setState({
+              activeMarker:marker
+            })
             this.createInfoWindow(e,map)
         })
 
@@ -237,6 +258,8 @@ class Map extends Component {
         })
     })
 
+    console.log(this.state.markers,"STATE MARKERS")
+
     //markerCluster.map=map;
     //markerCluster.markers_=this.state.markers;
     //console.log(markerCluster,"marker object")
@@ -246,6 +269,7 @@ class Map extends Component {
 //Prepending Google Maps Api Script before the React JS script in order to make full use of
 //Google Maps api, rather than using the Google Maps React library which is very limited in customizability.
   componentDidMount() {
+    console.log(this.state.markerData,"mounted")
     if (!window.google) {
         var s = document.createElement('script');
         s.type = 'text/javascript';

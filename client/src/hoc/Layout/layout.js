@@ -1,3 +1,4 @@
+/*
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../../components/Header/header';
@@ -42,3 +43,4 @@ render(){
 }
 
 export default Layout;
+*/

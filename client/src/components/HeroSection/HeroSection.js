@@ -12,11 +12,10 @@ class HeroSection extends Component {
   state = {
     bedrooms:0,
     bathrooms:0,
-    paramStr:'',
-    listingData:[],
     location:'',
     redirect:false,
-    cities:null
+    cities:null,
+    paramStr:''
   }
 
   componentDidMount(){
@@ -34,21 +33,27 @@ class HeroSection extends Component {
 
   renderRedirect = () =>{
     if(this.state.redirect){
-      return <Redirect to={`/listings/for-sale/${this.state.location || '_map'}/${this.state.paramStr}`} />
+      const location = this.state.cities.filter((city)=>{
+        return city.location_id === parseFloat(this.state.location)
+      })
+      return <Redirect to={{
+        pathname:`/listings/for-sale/${location[0].name_id || '_map'}/${this.state.paramStr}`,
+        state: {location:location}
+      }} />
     }
   }
 
   handleChange = (key,value)=>{
+    console.log(key,value,"KEY VALUE")
     this.setState({
       [key]:value
-    })
+    },()=> console.log(this.state, "STATE VALUES"))
   }
 
   handleSubmit = (e)=>{
     e.preventDefault();
     let paramStr="";
     const params = {
-    //  ...(this.state.location ? {location:this.state.location} :{}),
       ...(this.state.bedrooms ? {'bedrooms.min':this.state.bedrooms} :{}),
       ...(this.state.bathrooms ? {'bathrooms.min':this.state.bathrooms} :{})
     }
@@ -68,19 +73,20 @@ class HeroSection extends Component {
     const cities = data || this.state.cities
     const options = cities.map((location)=>{
       return({
-        value:location.name,
+        value:location.location_id,
         content:`${location.name}, ${location.parents[1].name}`
       })
     })
+
     this.setState({
+      location:cities[0].location_id,
       options
     })
+    console.log(options,"OPTIONS")
   }
 
 
 render(){
-
-  //const options = this.getCitySelectOptions()
   return(
     <section className = "hero-section">
       {this.renderRedirect()}

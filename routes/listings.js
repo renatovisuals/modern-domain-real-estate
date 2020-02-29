@@ -4,10 +4,47 @@ const axios = require('axios');
 const mysqlSettings = require('../dbsettings')
 const pool = mysql.createPool(mysqlSettings)
 
-router.route('/get').get((req,res)=>{
-  res.send("hello")
-  //db.end()
+router.route('/getbylocationid/:locationid').get((req,res)=>{
+  const id = req.params.locationid;
+  const sql = "SELECT listing.* \
+               FROM locations_listings \
+               INNER JOIN listing \
+               ON listing.listing_id = locations_listings.listing_id \
+               WHERE location_id = ?"
+
+  pool.query(sql,id, function (error, results, fields) {
+    if (error) throw error;
+    res.json(results)
+  });
 })
+
+router.route('/getbylocationnameid/:locationnameid').get((req,res)=>{
+  const id = req.params.locationnameid;
+  const sql = "SELECT listing.* \
+               FROM locations_listings \
+               INNER JOIN listing \
+               ON listing.listing_id = locations_listings.listing_id \
+               INNER JOIN location \
+               ON location.location_id = locations_listings.location_id \
+               WHERE location.name_id = ?"
+
+  pool.query(sql,id, function (error, results, fields) {
+    if (error) throw error;
+    res.json(results)
+  });
+})
+
+router.route('/get').get((req,res)=>{
+  const id = req.params.locationnameid;
+  const sql = "SELECT * FROM listing"
+
+  pool.query(sql, function (error, results, fields) {
+    if (error) throw error;
+    res.json(results)
+  });
+})
+
+
 
 
 router.route('/add').post((req,res)=>{
@@ -209,7 +246,7 @@ router.route('/add').post((req,res)=>{
                     })
                   }
                   zipcodeId = results[1][0].location_id;
-                  locations_listings.push([neighborhoodId,listingId])
+                  locations_listings.push([zipcodeId,listingId])
 
                   sql = "INSERT IGNORE INTO location SET ?; SELECT location_id FROM location WHERE name_id = ?;";
                   locationData.locations.route.parent_id = cityId;

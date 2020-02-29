@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import {CSSTransition} from 'react-transition-group';
+import Nav from '../Nav/Nav';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import AgentFilter from '../AgentFilter/AgentFilter';
 import Select from '../Widgets/Select/Select';
 import TextInput from '../Widgets/TextInput/TextInput';
 import Card from '../Widgets/Card/Card';
+import Footer from '../Footer/Footer';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import data from '../../db';
@@ -75,12 +77,14 @@ class MainAgentPage extends Component {
   render(){
     return(
       <div className="main-agent-page">
+        <Nav/>
         <AgentFilter city = {this.state.agentCity} agentName = {this.state.agentName} handleUserInput = {this.handleUserInput}/>
         <ContentContainer>
          <h1 className ="main-agent-page__title"> Find an Agent Near You </h1>
          <p className = "main-agent-page__description"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
          {this.renderAgents()}
         </ContentContainer>
+        <Footer/>
       </div>
     )
   }

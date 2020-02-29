@@ -1,20 +1,36 @@
 import React, { Component } from 'react';
-import './header.scss';
+import './nav.scss';
 import { Link } from 'react-router-dom';
 import MobileNav from '../MobileNav/MobileNav';
 import ModalBackdrop from '../ModalBackdrop/ModalBackdrop';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 
-class Header extends Component {
+class Nav extends Component {
+
+state = {
+  showMobileNav:false
+}
+
+hideNav = ()=>{
+  this.setState({
+    showMobileNav:false
+  })
+}
+
+openNav = ()=>{
+  this.setState({
+    showMobileNav:true
+  })
+}
 
 render(){
 
   return(
     <div>
-      <MobileNav onHideNav = {this.props.onHideNav} showNav = {this.props.showNav}/>
-      {this.props.showNav ? <ModalBackdrop click = {this.props.onHideNav}/> : null}
+      <MobileNav hideNav = {this.hideNav} showNav = {this.state.showMobileNav}/>
+      {this.state.showMobileNav ? <ModalBackdrop click = {this.hideNav}/> : null}
       <nav id = "nav" className = "header">
-          <img className = "header__hamburger" src = "/images/hamburger.svg" onClick = {this.props.onOpenNav}/>
+          <img className = "header__hamburger" src = "/images/hamburger.svg" onClick = {this.openNav}/>
           <Link to={'/'}>
             <img className = "header__logo" src ="/images/logo.svg"/>
           </Link>
@@ -32,4 +48,4 @@ render(){
 
 }
 
-export default Header;
+export default Nav;
