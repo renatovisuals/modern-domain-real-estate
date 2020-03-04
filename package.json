@@ -20,7 +20,8 @@
 		"fuse.js": "^3.4.6",
 		"materialize-css": "^1.0.0-rc.2",
 		"mongoose": "^5.6.11",
-		"mysql": "^2.18.1"
+		"mysql": "^2.18.1",
+		"mysql2": "^2.1.0"
 	},
 	"devDependencies": {
 		"concurrently": "^4.0.1"

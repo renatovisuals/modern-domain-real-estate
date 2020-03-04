@@ -59,18 +59,18 @@ router.route('/get/:type').get((req,res)=>{
 router.route('/get/').get((req,res)=>{
     const conditions = buildConditions(req.query);
     const sql = 'SELECT * FROM location_parents WHERE ' + conditions.where
+    const limit = parseFloat(req.query.limit) || 10;
 
-
+    console.log(limit,"this is the limit")
 
     pool.query(sql,conditions.values, function (error, results, fields) {
       if (error) throw error;
       const data = mapLocationParents(results)
       if(req.query.searchQuery){
         const fuse = new Fuse(data,fuseOptions)
-        console.log(req.query.searchQuery)
         const result = fuse.search(req.query.searchQuery)
-        console.log(result)
-        res.json(result)
+        const resultLimited = result.slice(0,limit)
+        res.json(resultLimited)
       }else{
         res.json(data)
       }

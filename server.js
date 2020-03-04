@@ -12,16 +12,17 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-
 const locationsRoutes = require('./routes/locations');
-const listingsRoutes = require('./routes/listings')
-const searchRoutes = require('./routes/listings')
+const listingsRoutes = require('./routes/listings');
+const listingRoutes = require('./routes/listing');
+const searchRoutes = require('./routes/listings');
+const agentRoutes = require('./routes/agents');
 
 app.use('/api/locations',locationsRoutes);
 app.use('/api/listings',listingsRoutes);
 app.use('/api/search',searchRoutes);
-
-
+app.use('/api/listing',listingRoutes);
+app.use('/api/agents',agentRoutes)
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static('client/build'));
