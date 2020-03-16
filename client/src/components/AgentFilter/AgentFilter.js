@@ -3,33 +3,32 @@ import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import Select from '../Widgets/Select/Select';
 import TextInput from '../Widgets/TextInput/TextInput';
 import './AgentFilter.scss';
-import data from '../../db';
+import axios from 'axios';
+//import data from '../../db';
 
 
 class AgentFilter extends Component{
    state = {
      top:'',
      height:'',
-     scroll:''
+     scroll:'',
+     citySelectOptions:[]
    }
 
-   getCityOptions = ()=>{
-    const arr = []
-    for(let i =0; i<data.agents.length; i++){
-     const agent = data.agents[i];
-     arr.push(agent.city)
-    }
-    const cities = [...new Set(arr)];
-    const options = cities.map((city)=>{
+   getCityOptions = async ()=>{
+    let res = await axios.get('/api/agents/getcities');
+    let { data } = res
+    const citySelectOptions = data.map((city)=>{
       return({
-        value:city,
-        content:city
+        value:city.city,
+        content:city.city
       })
     })
-    return options;
+    this.setState({citySelectOptions})
   }
 
   componentDidMount(){
+    this.getCityOptions()
     const filter = document.getElementById('agent-filter');
     this.setState({
       top:filter.offsetTop,
@@ -55,6 +54,10 @@ class AgentFilter extends Component{
     })
   }
 
+  handleChange = (e)=>{
+    console.log(e, "this is the event")
+  }
+
     render(){
       return(
           <div className={`agent-filter ${this.state.scroll > this.state.top ? 'agent-filter--sticky' : null}`} id="agent-filter">
@@ -64,7 +67,7 @@ class AgentFilter extends Component{
                 placeholder="filter by agent name"
                 className="agent-filter__text-input"
                 size="small"
-                handleUserInput={this.props.handleUserInput}
+                onChange={this.props.handleUserInput}
                 value={this.props.agentName}
                 border
               />
@@ -73,7 +76,7 @@ class AgentFilter extends Component{
                 name ="agentCity"
                 className="agent-filter__select"
                 border size="small"
-                options={[{value:'',content:'All Cities'},...this.getCityOptions()]}
+                options={[{value:'',content:'All Cities'},...this.state.citySelectOptions]}
                 onChange={this.props.handleUserInput}
                 value={this.props.city}
               />

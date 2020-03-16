@@ -23,18 +23,8 @@ const buildConditions = ((params)=>{
   let values = [];
   let conditionsStr
 
-  if(params.type){
-    conditions.push("location_type = ?")
-    values.push(params.type)
-  }
-
-  if(params.name){
-    conditions.push("name = ?")
-    values.push(params.name)
-  }
-
   if(params.id){
-    conditions.push("location_id = ?")
+    conditions.push("agent.agent_id = ?")
     values.push(params.id)
   }
 
@@ -47,17 +37,69 @@ const buildConditions = ((params)=>{
 
 
 router.route('/get/').get((req,res)=>{
-  const limit = parseFloat(req.query.limit) || 10;
-  const searchQuery = req.params.searchQuery
-  let sql = 'SELECT * FROM agent'
-  pool.query(sql)
-  .then((agentResults)=>{
-    const fuse = new Fuse(agentResults[0],fuseOptions)
-    const result = fuse.search(req.query.searchQuery)
-    const resultLimited = result.slice(0,limit)
-    res.json(resultLimited)
-  })
+  const getAgents = async ()=>{
+    const limit = parseFloat(req.query.limit) || 10;
+    const searchQuery = req.params.search_query
+    conditions = buildConditions(req.query)
+    let sql = `SELECT *, GROUP_CONCAT(qualification.type) qualifications\
+    FROM agent\
+    INNER JOIN agents_qualifications\
+    ON agent.agent_id = agents_qualifications.agent_id\
+    INNER JOIN qualification\
+    ON qualification.qualification_id = agents_qualifications.qualification_id\
+    WHERE ${conditions.where}\
+    GROUP BY agent.agent_id`
+    const agentData = await pool.query(sql,[conditions.values])
+    agentData[0].forEach((agent)=>{
+    agent.qualifications = agent.qualifications.split(",")
+    })
+    res.json(agentData[0])
+  }
+  getAgents()
 })
+
+router.route('/getcities/').get((req,res)=>{
+  const getAgentCities = async ()=>{
+    const limit = parseFloat(req.query.limit) || 10;
+    const searchQuery = req.params.search_query
+    let sql = 'SELECT city FROM agent'
+    const agentCities = await pool.query(sql)
+    res.json(agentCities[0])
+  }
+  getAgentCities()
+})
+
+router.route('/getall/').get((req,res)=>{
+  const getAgentCities = async ()=>{
+    const limit = parseFloat(req.query.limit) || 10;
+    const searchQuery = req.params.search_query
+    let sql = 'SELECT * FROM agent'
+    const agentCities = await pool.query(sql)
+    res.json(agentCities[0])
+  }
+  getAgentCities()
+})
+
+router.route('/get-qualifications/:agentId').get((req,res)=>{
+  const getQualifications = async ()=>{
+    const limit = parseFloat(req.query.limit) || 10;
+    const searchQuery = req.params.search_query
+    conditions = buildConditions(req.query)
+    let sql = `SELECT qualification.type,qualification.qualification_id\
+    FROM agent\
+    INNER JOIN agents_qualifications\
+    ON agent.agent_id = agents_qualifications.agent_id\
+    INNER JOIN qualification\
+    ON qualification.qualification_id = agents_qualifications.qualification_id\
+    WHERE agent.agent_id = ${req.params.agentId}`
+    const qualifications = await pool.query(sql,[conditions.values])
+
+    res.json(qualifications[0])
+  }
+  getQualifications()
+})
+
+
 
 
 router.route('/add/').post((req,res)=>{

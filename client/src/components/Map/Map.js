@@ -12,6 +12,7 @@ class Map extends Component {
         this.viewListing = this.viewListing.bind(this)
         this.state = {
           markerData:this.props.data,
+          markerCluster:null,
           map:null,
           zoom:12,
           markers:[],
@@ -65,7 +66,6 @@ class Map extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if(prevState.markerData !== nextProps.data){
-      console.log("DATA CHANGED")
 
       return {
         markerData: nextProps.data
@@ -94,16 +94,21 @@ class Map extends Component {
       this.state.infoWindow.open(map)
   }
 
-  clearMarkers(){
-      let markers = this.state.markers;
+  clearMarkers(callback){
+      let markers = [...this.state.markers]
       markers.forEach((marker)=>{
-          marker.setMap(null)
+          marker.setMap(null);
+          marker = null;
       })
-      markers = []
       this.setState({
         markers
+      },()=>{
+        this.setState({
+          markers:[]
+        },()=>callback())
       })
-      console.log("clearmarkers called")
+
+
   }
 
   correctZIndex(activeMarker){
@@ -129,19 +134,20 @@ class Map extends Component {
            })
          }
      })
-      this.clearMarkers()
-      this.renderMarkers(map)
+
+      this.clearMarkers(()=>this.renderMarkers(map))
+
   }
 
-  loadClusters(map){
+  loadClusters(map,markers){
     const options = {
       imagePath:'http://localhost:3000/images/m',
       //imageExtension:'png',
-      minimumClusterSize:0,
-      gridSize:150,
+      minimumClusterSize:2,
+      gridSize:500,
       zoomOnClick:true,
-      //averageCenter:true,
-      //zIndex:1000
+      averageCenter:true,
+      zIndex:1000,
       styles:[
         {
           url:"http://localhost:3000/images/m1.png",
@@ -173,12 +179,28 @@ class Map extends Component {
 
       ]
     }
-    const markerCluster = new MarkerClusterer(map,this.state.markers,options);
+
+    MarkerClusterer.prototype.onRemove = function () {
+    this.setReady_(true);
+    };
+
+    if(this.state.markerCluster){
+      this.state.markerCluster.clearMarkers()
+      this.state.markerCluster.setMap(null)
+      this.setState({
+        markerCluster:null
+      })
+    }
+
+    this.setState({
+      markerCluster: new MarkerClusterer(map,markers,options)
+    })
+
   }
 
   renderMarkers(map){
+    const markers = []
     let bounds = new window.google.maps.LatLngBounds();
-    console.log(this.state.markers,this.state.markerData,"THESE ARE THE MARKERS")
     this.state.markerData.forEach(house => {
         const shorthandPrice = abbreviatePrice(house.price)
         const position = {
@@ -201,7 +223,6 @@ class Map extends Component {
         //if center exists in options, override the marker based map positioning
         if(!this.props.options.center){
           bounds.extend(marker.position);
-
           //if only one marker on map, extend the bounds to zoom further out
           if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
             var extendPoint1 = new window.google.maps.LatLng(bounds.getNorthEast().lat() + 0.01, bounds.getNorthEast().lng() + 0.01);
@@ -209,27 +230,17 @@ class Map extends Component {
             bounds.extend(extendPoint1);
             bounds.extend(extendPoint2);
           }
-
           map.fitBounds(bounds)
         }
-
-
-
         map.fitBounds(bounds)
 
-        this.setState((prevState) => ({
-            markers:[marker, ...prevState.markers]
-        }))
-
         marker.addListener('click', e => {
-            //this.onMapLoad(this.state.map)
             if(this.state.infoWindow){
                 this.state.infoWindow.close()
                 this.setState({
                     infoWindow:null
                 })
             }
-            console.log(this.state.activeMarker,"activeMarker")
             this.setState({
               activeMarker:marker
             })
@@ -256,20 +267,21 @@ class Map extends Component {
               anchor: new window.google.maps.Point(30,30)
             })
         })
+
+        markers.push(marker)
     })
 
-    console.log(this.state.markers,"STATE MARKERS")
-
-    //markerCluster.map=map;
-    //markerCluster.markers_=this.state.markers;
-    //console.log(markerCluster,"marker object")
+    this.setState((prevState)=>({
+      markers
+    }),()=>{
+      this.loadClusters(map,this.state.markers)
+    })
 
   }
 
 //Prepending Google Maps Api Script before the React JS script in order to make full use of
 //Google Maps api, rather than using the Google Maps React library which is very limited in customizability.
   componentDidMount() {
-    console.log(this.state.markerData,"mounted")
     if (!window.google) {
         var s = document.createElement('script');
         s.type = 'text/javascript';
@@ -295,15 +307,13 @@ class Map extends Component {
   }
 
   componentDidUpdate(){
-    console.log("updating")
-    this.clearMarkers()
-    this.renderMarkers(this.state.map)
-    console.log(this.state,"this is the state")
-
+    console.log("UPDATED")
+    this.clearMarkers(()=>this.renderMarkers(this.state.map))
+    console.log(this.state.markers,"markers in update function")
+    this.loadClusters(this.state.map,this.state.markers);
   }
 
   render() {
-    console.log("map being rendered")
     return (
       <div id={this.props.id} />
     );

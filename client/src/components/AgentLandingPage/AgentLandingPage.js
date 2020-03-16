@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Nav from '../Nav/Nav';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import SliderTemplates from'../Widgets/Slider/Slider_templates';
 import AgentHeader from '../AgentHeader/AgentHeader';
@@ -21,14 +22,15 @@ class AgentLandingPage extends Component {
   componentDidMount(){
     window.scrollTo(0,0);
     const agentData = async () => {
-      let res = await axios.get(`/api/agents/${this.props.match.params.id}`);
-      this.setState({ agentData: res.data });
+      let res = await axios.get(`/api/agents/get/?id=${this.props.match.params.id}`);
+      console.log(res.data,"this is the res")
+      this.setState({ agentData: res.data[0] });
     };
     agentData()
   }
 
   agentData = data.agents.find((agent)=>{
-    return agent.id === this.props.match.params.id;
+    return agent.agent_id === this.props.match.params.id;
     //return agent.id = 1;
   });
 
@@ -63,6 +65,7 @@ class AgentLandingPage extends Component {
     return(
 
       <div className = "agent-landing-page">
+        <Nav/>
         {this.renderModal()}
         <AgentHeader data ={this.state.agentData} toggleModal = {this.toggleModal}/>
         <AgentInfo data ={this.state.agentData} toggleModal = {this.toggleModal}/>

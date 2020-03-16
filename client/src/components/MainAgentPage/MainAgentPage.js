@@ -19,12 +19,11 @@ class MainAgentPage extends Component {
     city:'',
     agentName:'',
     agentCity:'',
-    agentData:[]
+    agentData:[],
+    agents:[]
   }
 
-  handleUserInput = (e)=>{
-    const name = e.target.name;
-    const value = e.target.value;
+  handleUserInput = (name,value)=>{
     this.setState({
         [name]:value
     },()=>this.filterData())
@@ -33,39 +32,44 @@ class MainAgentPage extends Component {
   componentDidMount(){
     window.scrollTo(0,0);
     const agentData = async () => {
-      let res = await axios.get(`/api/agents`);
-      this.setState({ agentData: res.data });
+      let res = await axios.get(`/api/agents/get`);
+      this.setState({
+        agentData: res.data,
+        agents:res.data
+      },()=>console.log(this.state.agentData,"Agent Data"));
+      console.log(res,"res")
     };
     agentData()
-    this.setState({
-      agentData
-    })
   }
 
 
   filterData = ()=>{
-    const agentName = this.state.agentName.toLowerCase();
+    const agentName = this.state.agentName.toLowerCase().trim();
     const filteredData = this.state.agentData.filter((agent)=>{
-      const nameMatch = (agent.firstName +' '+ agent.lastName).toLowerCase().indexOf(agentName) === 0 || agent.lastName.toLowerCase().indexOf(agentName) === 0 || this.state.agentName === '';
-      const cityMatch = agent.city === this.state.agentCity || this.state.agentCity === '';
-      return nameMatch && cityMatch;
+    const fullName = agent.first_name + ' ' + agent.last_name;
+    const regex = new RegExp(`^${agentName}|\\s${agentName}`,'gi')
+    let nameMatch = fullName.match(regex)
+    //nameMatch = true;
+    const cityMatch = agent.city === this.state.agentCity || this.state.agentCity === '';
+    return nameMatch && cityMatch;
     })
     this.setState({
-      agentData:filteredData
+      agents:filteredData
     })
   }
 
   renderAgents= ()=>{
-    if (this.state.agentData.length === 0){
+    console.log(this.state.agents)
+    if (this.state.agents.length === 0){
       return(
         <div className = "main-agent-page__filter-error"> No results were found. </div>
       )
     }
     return(
       <div className ="main-agent-page__agents">
-        {this.state.agentData.map((agent)=>{
+        {this.state.agents.map((agent)=>{
           return(
-            <Link to = {`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent._id}`}>
+            <Link to = {`/agents/${agent.first_name.toLowerCase()}-${agent.last_name.toLowerCase()}/${agent.agent_id}`}>
               <Card className="main-agent-page__agent" type="agent" data={agent} imagePath='./images/agents'/>
             </Link>
           )

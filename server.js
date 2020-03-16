@@ -15,7 +15,7 @@ app.use(express.json());
 const locationsRoutes = require('./routes/locations');
 const listingsRoutes = require('./routes/listings');
 const listingRoutes = require('./routes/listing');
-const searchRoutes = require('./routes/listings');
+const searchRoutes = require('./routes/search');
 const agentRoutes = require('./routes/agents');
 
 app.use('/api/locations',locationsRoutes);

@@ -24,14 +24,14 @@ class AgentContactForm extends Component{
         }}
       >
         <div className="agent-contact-form" id="agent-form">
-          <div className = "agent-contact-form__form-title"> {`Work with ${this.props.agent.firstName} ${this.props.agent.lastName}`} </div>
+          <div className = "agent-contact-form__form-title"> {`Work with ${this.props.agent.first_name} ${this.props.agent.last_name}`} </div>
           <form autocomplete="on" onSubmit ={(e)=>{this.props.submitForm(e)}}>
             <div className={`agent-contact-form__input-container--narrow ${ !firstNameValid && submissionFailed ? 'agent-contact-form__input-error' : null }`}>
-              <input name="firstName" placeholder="First Name" type ="text"  value={this.props.formData.firstName} onChange={(e)=>{this.props.handleUserInput(e)}}/>
+              <input name="firstName" placeholder="First Name" type ="text"  value={this.props.formData.first_name} onChange={(e)=>{this.props.handleUserInput(e)}}/>
               <p className="agent-contact-form__input-error-text"> {inputErrors.firstName} </p>
             </div>
             <div className={`agent-contact-form__input-container--narrow ${ !lastNameValid && submissionFailed ? 'agent-contact-form__input-error' : null}`}>
-              <input name="lastName" placeholder="Last Name" type ="text" value={this.props.formData.lastName} onChange={(e)=>{this.props.handleUserInput(e)}}/>
+              <input name="lastName" placeholder="Last Name" type ="text" value={this.props.formData.last_name} onChange={(e)=>{this.props.handleUserInput(e)}}/>
               <p className="agent-contact-form__input-error-text"> {inputErrors.lastName} </p>
             </div>
             <div className={`agent-contact-form__input-container ${ !emailValid && submissionFailed ? 'agent-contact-form__input-error' : null}`}>

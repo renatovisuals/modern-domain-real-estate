@@ -38,7 +38,7 @@ const Card = (props) => {
               <div className="card__image" style={{backgroundImage:`url(${props.imagePath}/${props.data.image})`}}></div>
               <div className = "card__details">
                 <div className = "card__text-container card__text-container--center">
-                  <span className="card__title card__title--center"> {`${props.data.firstName} ${props.data.lastName}`} </span>
+                  <span className="card__title card__title--center"> {`${props.data.first_name} ${props.data.last_name}`} </span>
                   <span className="card__card-text"> {jobTitle} </span>
                 </div>
               </div>

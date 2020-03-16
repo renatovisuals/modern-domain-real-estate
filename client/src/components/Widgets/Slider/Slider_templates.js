@@ -40,7 +40,7 @@ const SliderTemplates = (props) => {
         case('agent'):
           template = props.data.map((agent,i) => {
             return(
-              <Link key ={agent._id} to={`/agents/${agent.firstName.toLowerCase()}-${agent.lastName.toLowerCase()}/${agent._id}`} draggable="false" onClick={(e)=> dragging && e.preventDefault()}>
+              <Link key ={agent._id} to={`/agents/${agent.first_name.toLowerCase()}-${agent.last_name.toLowerCase()}/${agent.agent_id}`} draggable="false" onClick={(e)=> dragging && e.preventDefault()}>
                 <Card type = "agent" data ={agent} imagePath ="./images/agents"> </Card>
               </Link>
             )

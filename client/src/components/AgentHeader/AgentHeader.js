@@ -5,6 +5,7 @@ import './AgentHeader.scss';
 
 
 const AgentHeader = (props)=> {
+  console.log(props.data,"DATAAA")
   const getQualifications = ()=>{
     let certs;
     if(props.data.qualifications.length === 1){
@@ -27,12 +28,12 @@ const AgentHeader = (props)=> {
         <div className = "agent-header__content">
           <div className = "agent-header__image" style={{background:`url('/images/agents/${props.data.image}')`, backgroundSize:'cover'}}> </div>
           <div className = "agent-header__description">
-            <span className = "agent-header__agent-name"> {`${props.data.firstName} ${props.data.lastName}`} </span>
+            <span className = "agent-header__agent-name"> {`${props.data.first_name} ${props.data.last_name}`} </span>
             <span className = "agent-header__agent-phone"> {`${props.data.phone}`} </span>
             <div className = "agent-header__agent-qualifications"> {getQualifications()} </div>
           </div>
           <button className = "agent-header__btn" onClick = {()=> props.toggleModal()}>
-            Work With {`${props.data.firstName} ${props.data.lastName}`}
+            Work With {`${props.data.first_name} ${props.data.last_name}`}
           </button>
         </div>
       </ContentContainer>

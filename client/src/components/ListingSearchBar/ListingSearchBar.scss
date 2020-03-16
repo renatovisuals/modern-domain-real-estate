@@ -1,12 +1,13 @@
 .listing-search-bar{
-  height:40px;
-  margin-top: 10px;
+  height:35px;
+  //margin-top: 10px;
   box-sizing: border-box;
   width:100%;
   font-size:16px;
   padding-left: 10px;
   border-radius: 5px 0 0 5px;
   border: 1px solid #b1b1b1;
+  //background:blue;
 
   &:hover{
     border: 1px solid #3bc193;
@@ -18,14 +19,16 @@
 
   &__input-container{
     display:flex;
+    //background:blue;
   }
 
   &__search-btn{
     width:50px;
-    height:40px;
-    margin-top:10px;
+    height:35px;
+    //margin-top:10px;
     background:#3bc193;
     border-radius: 0 5px 5px 0;
+    font-size: 20px;
   }
 
   &__location-header{
@@ -50,6 +53,7 @@
     display:block;
     background:#fff;
     position:relative;
+    cursor:pointer;
 
     &:hover{
       background-color:#f5f5f5;
@@ -61,6 +65,9 @@
     -webkit-box-shadow: 0px 1px 5px 0px rgba(143,143,143,0.8);
     -moz-box-shadow: 0px 1px 5px 0px rgba(143,143,143,0.8);
     box-shadow: 0px 1px 5px 0px rgba(143,143,143,0.8);
+    position:absolute;
+    width:350px;
+    background-color:#fff;
   }
 
   &__result-title,&__result-subtitle{
@@ -83,10 +90,15 @@
   }
 
   &__wrapper{
-    width:350px;
-    height:100px;
+    width:360px;
     z-index:1000;
     margin-left: 30px;
+
+    &--mobile{
+      .listing_search-bar__wrapper{
+        margin-left: 0;
+      }
+    }
   }
 
 }

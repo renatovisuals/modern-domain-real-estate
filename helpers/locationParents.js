@@ -34,7 +34,6 @@ const mapParentData = (data)=>{
         })
       }
     }
-
     return loc
   })
 

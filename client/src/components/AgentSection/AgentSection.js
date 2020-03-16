@@ -17,11 +17,12 @@ class AgentSection extends Component {
 
   componentDidMount(){
     const getFeaturedAgents = async () => {
-      let res = await axios.get("/api/agents");
-      const agents = Array.from(res.data);
+      let res = await axios.get("/api/agents/get");
+      //const agents = Array.from(res.data);
+      console.log(res.data,"agents from agent section")
       this.setState({
-        agents
-      })
+        agents:res.data
+      },()=>console.log(this.state.agents,"new state agents"))
     };
     getFeaturedAgents();
   }
@@ -33,6 +34,7 @@ class AgentSection extends Component {
     const featuredAgents = agents.filter((agent)=>{
       return agent.featured
     })
+    console.log(featuredAgents,"Featured Agents!")
     const sliderSettings = {
       slidesToShow:4,
       autoplay:false,

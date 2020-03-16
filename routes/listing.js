@@ -6,10 +6,10 @@ const axios = require('axios');
 
 router.route('/getbylocationid/:locationid').get((req,res)=>{
   const id = req.params.locationid;
-  const sql = "SELECT listing.* \
+  const sql = "SELECT listing_address.* \
                FROM locations_listings \
-               INNER JOIN listing \
-               ON listing.listing_id = locations_listings.listing_id \
+               INNER JOIN listing_address \
+               ON listing_address.listing_id = locations_listings.listing_id \
                WHERE location_id = ?"
 
   pool.query(sql,id)
@@ -21,14 +21,14 @@ router.route('/getbylocationid/:locationid').get((req,res)=>{
 
 router.route('/getbylocationnameid/:locationnameid').get((req,res)=>{
   const id = req.params.locationnameid;
-  let sql = "SELECT listing.* \
+  let sql = "SELECT listing_address.* \
                FROM locations_listings \
-               INNER JOIN listing \
-               ON listing.listing_id = locations_listings.listing_id \
+               INNER JOIN listing_address \
+               ON listing_address.listing_id = locations_listings.listing_id \
                INNER JOIN location \
                ON location.location_id = locations_listings.location_id \
                WHERE location.name_id = ?";
-  sql = 'SELECT * FROM listing'
+  //sql = 'SELECT * FROM listing'
   pool.query(sql,id)
   .then((results)=>res.json(results[0]))
   .catch((err)=>{
@@ -38,7 +38,7 @@ router.route('/getbylocationnameid/:locationnameid').get((req,res)=>{
 
 router.route('/get').get((req,res)=>{
   const id = req.params.locationnameid;
-  const sql = "SELECT * FROM listing"
+  const sql = "SELECT * FROM listing_address"
 
   pool.query(sql, function (error, results, fields) {
     if (error) throw error;
@@ -51,11 +51,12 @@ router.route('/get').get((req,res)=>{
 router.route('/add').post((req,res)=>{
   let listing = {
     building_type:req.body.buildingtype,
-    city:req.body.city,
-    state:req.body.state,
-    street:req.body.street,
-    apt:req.body.apt,
-    zipcode:req.body.zip,
+    address_id:null,
+    //city:req.body.city,
+    //state:req.body.state,
+    //street:req.body.street,
+    //apt:req.body.apt,
+    //zipcode:req.body.zip,
     price:req.body.price,
     est_payment:req.body.estpayment,
     bedrooms:req.body.bedrooms,
@@ -70,9 +71,9 @@ router.route('/add').post((req,res)=>{
     lot_quantity:req.body.lot.quantity,
     price_per_sqft:req.body.pricepersqft,
     description:req.body.description,
-    formatted_address:'',
     pos_lat:'',
     pos_lng:''
+    //formattedAddress:''
   }
   const nameTypes = {
     street_number:"street_number",
@@ -83,6 +84,14 @@ router.route('/add').post((req,res)=>{
     locality:"city",
     postal_code:"zipcode",
     neighborhood:"neighborhood"
+  }
+  const addressData = {
+    formatted_address:null,
+    city:req.body.city,
+    street:req.body.street,
+    apartment:req.body.apt,
+    state:req.body.state,
+    zipcode:req.body.zip
   }
   const { city,state,street,apt,zip } = req.body
   const address = encodeURIComponent(`${street} ${listing.apt ? "apt "+listing.apt+" " :''}${city} ${state} ${zip}`)
@@ -99,7 +108,7 @@ router.route('/add').post((req,res)=>{
     }
   }
 
-  listing.formatted_address = data[0].formatted_address.replace(/,\s[A-Z]+$/,"")
+  addressData.formatted_address = data[0].formatted_address.replace(/,\s[A-Z]+$/,"")
   listing.pos_lat = data[0].geometry.location.lat,
   listing.pos_lng = data[0].geometry.location.lng
 
@@ -182,12 +191,26 @@ router.route('/add').post((req,res)=>{
     const connection = await pool.getConnection()
     try{
       await connection.beginTransaction()
+      //Inserting address components
+      sql = 'INSERT IGNORE INTO address SET ?'
+      await connection.query(sql,addressData)
+      let addressValues;
+      if(!addressData.apartment){
+        sql = 'SELECT address_id FROM address WHERE formatted_address = ? AND apartment IS NULL'
+        addressValues = addressData.formatted_address
+      }else{
+        sql = 'SELECT address_id FROM address WHERE formatted_address = ? AND apartment = ?'
+        addressValues = [addressData.formatted_address,addressData.apartment]
+      }
+      const addressResult = await connection.query(sql,addressValues)
+      addressId = addressResult[0][0].address_id;
       //Inserting listing
+      listing.address_id = addressId
       sql = 'INSERT IGNORE INTO listing SET ?;'
-      await connection.query(sql,listing)
-      sql = 'SELECT listing_id FROM listing WHERE formatted_address = ?;'
-      const listingData = await connection.query(sql,listing.formatted_address)
-      listingId = listingData[0][0].listing_id
+      const listingResult = await connection.query(sql,listing)
+      sql = 'SELECT listing_id FROM listing WHERE address_id = ?'
+      listingData = await connection.query(sql,addressId)
+      listingId = listingData[0][0].listing_id;
       //Inserting state location
       await insertLocation(connection,data.locations.state)
       stateId = await getLocationByNameID(connection,data.locations.state.name_id)
@@ -227,14 +250,15 @@ router.route('/add').post((req,res)=>{
       req.body.images.forEach((image)=>{
         imagePaths.push([image,listingId])
       })
-      sql = 'INSERT INTO imagepath (image_path,listing_listing_id) VALUES ?;';
+      sql = 'INSERT IGNORE INTO imagepath (image_path,listing_listing_id) VALUES ?;';
       await connection.query(sql,[imagePaths])
+
+      res.status(200).send('listing submitted')
 
       connection.commit(connection.release())
     } catch(err) {
       //res.send(err)
       res.status(400).send(`error: ${err.message}`)
-      console.error(err)
       throw err
       connection.rollback(()=>connection.release())
     }

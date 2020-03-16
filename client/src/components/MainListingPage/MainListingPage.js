@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NavWithSearch from '../NavWithSearch/NavWithSearch'
+import ListingPageNav from '../ListingPageNav/ListingPageNav';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import Select from '../Widgets/Select/Select';
 import queryString from 'query-string';
@@ -38,19 +38,26 @@ class MainListingPage extends Component {
   }
 
   getSearchResults = async (e)=>{
-    let res = await axios.get(`/api/locations/get?searchQuery=${e.target.value}`);
+    let res = await axios.get(`/api/search/get?search_query=${e.target.value}`);
     this.setState({
       searchResults:res.data
     })
   }
 
-  handleLocationClick = (locationId)=>{
-    this.getListingsByLocationId(locationId)
-    console.log(locationId,"THIS IS THE LOCATION ID");
+  handleResultClick = (result)=>{
+    console.log(`result type of ${result.type} was clicked`)
+    if(result.type === "location"){
+      this.getListingsByLocationId(result.id)
+      console.log(result.id,"THIS IS THE LOCATION ID");
+    }else if(result.type ==="agent"){
+      console.log("retreiving agent info")
+    }
   }
 
   updateMapHeight = ()=>{
-    const navHeight =document.getElementById('nav').clientHeight;
+    const navHeight =document.getElementById('nav').getBoundingClientRect().height;
+    const nav = document.getElementById('nav');
+    console.log(nav,navHeight,"NAV AND NAV HEIGHT")
     let mapHeight = window.innerHeight-(navHeight || 0);
     this.setState({
       mapHeight
@@ -145,11 +152,11 @@ class MainListingPage extends Component {
 
     return(
       <div className="listing-page">
-        <NavWithSearch
+        <ListingPageNav
           handleSearchInput = {(e)=> this.handleSearchInput(e)}
           searchQuery = {this.state.searchQuery}
           results = {this.state.searchResults}
-          handleLocationClick = {(locationId)=>this.handleLocationClick(locationId)}
+          handleResultClick = {(result)=>this.handleResultClick(result)}
         />
         {this.state.showCurrentListing
           ? <Listing listingData = {this.state.currentListingData} handleClose = {this.closeListing}/>
