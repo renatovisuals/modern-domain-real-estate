@@ -4,6 +4,7 @@ import MarkerClusterer from "@google/markerclusterer";
 import { render } from 'react-dom';
 import { icon, abbreviatePrice } from '../../utils'
 import './map.css';
+import { arraysMatch } from '../../utils'
 
 class Map extends Component {
     constructor(props) {
@@ -37,9 +38,6 @@ class Map extends Component {
       let map = new window.google.maps.Map(
         document.getElementById(this.props.id),
         mapOptions)
-
-
-
 
       window.google.maps.event.addListenerOnce(map,'bounds_changed',(e)=>{
         if (map.getZoom()>this.state.zoom){
@@ -142,7 +140,6 @@ class Map extends Component {
   loadClusters(map,markers){
     const options = {
       imagePath:'http://localhost:3000/images/m',
-      //imageExtension:'png',
       minimumClusterSize:2,
       gridSize:500,
       zoomOnClick:true,
@@ -186,7 +183,6 @@ class Map extends Component {
 
     if(this.state.markerCluster){
       this.state.markerCluster.clearMarkers()
-      this.state.markerCluster.setMap(null)
       this.setState({
         markerCluster:null
       })
@@ -306,11 +302,13 @@ class Map extends Component {
     }
   }
 
-  componentDidUpdate(){
-    console.log("UPDATED")
-    this.clearMarkers(()=>this.renderMarkers(this.state.map))
-    console.log(this.state.markers,"markers in update function")
-    this.loadClusters(this.state.map,this.state.markers);
+  componentDidUpdate(prevProps,prevState){
+    if(!arraysMatch(prevState.markerData,this.state.markerData)){
+      console.log("UPDATED",prevState.markerData,this.state.markerData)
+      this.clearMarkers(()=>this.renderMarkers(this.state.map))
+      console.log(this.state.markers,"markers in update function")
+      this.loadClusters(this.state.map,this.state.markers);
+    }
   }
 
   render() {

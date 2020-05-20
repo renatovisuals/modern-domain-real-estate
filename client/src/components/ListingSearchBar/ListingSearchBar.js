@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
 import './ListingSearchBar.scss';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 
 class ListingSearchBar extends Component {
 
-  state = {
-    value:'',
-    resultsVisible:true
+  constructor(){
+    super()
+    this.state = {
+      value:'',
+      resultsVisible:true,
+      active:false,
+    }
   }
 
   handleChange = (e)=>{
@@ -22,12 +31,86 @@ class ListingSearchBar extends Component {
     }
   }
 
+  handleFocus = (e)=>{
+    this.setState({
+      active:true
+    })
+  }
+
+  getMatchedText = (result)=>{
+    if(result.matches){
+      const matchedText = result.matches[0].value.substring(result.matches[0].indices[0][0],result.matches[0].indices[0][1]+1)
+      const regText = result.matches[0].value.substring(result.matches[0].indices[0][1]+1,result.matches[0].value.length)
+      return(
+        <div>
+          <span className = "listing-search-bar__result-title listing-search-bar__result-title--bold">{matchedText}</span>
+          <span className = "listing-search-bar__result-title">{regText}</span>
+        </div>
+      )
+    }
+  }
+
+  getAgentMatchedText = (agent) =>{
+    if(agent.matches){
+      let matchedText = agent.matches[0].value.substring(agent.matches[0].indices[0][0],agent.matches[0].indices[0][1]+1)
+      console.log(matchedText,agent.matches[0].indices[0][1], "MATCHED")
+      if(agent.matches[0].key === "first_name"){
+        let regText = agent.item.first_name.substring(agent.matches[0].indices[0][1]+1,agent.item.first_name.length) + " " + agent.item.last_name;
+        return(
+          <div>
+            <span className = "listing-search-bar__result-title listing-search-bar__result-title--bold">{matchedText}</span>
+            <span className = "listing-search-bar__result-title">{regText}</span>
+          </div>
+        )
+      }else if(agent.matches[0].key === "last_name"){
+        let regText = agent.matches[0].value.substring(agent.matches[0].indices[0][1]+1,agent.matches[0].value.length)
+        return(
+          <div>
+            <span className = "listing-search-bar__result-title">{`${agent.item.first_name} `}</span>
+            <span className = "listing-search-bar__result-title listing-search-bar__result-title--bold">{matchedText}</span>
+            <span className = "listing-search-bar__result-title">{regText}</span>
+          </div>
+        )
+      }
+    }
+  }
+
+  handleBlur = (e)=>{
+    if(e && e.relatedTarget && e.relatedTarget.id){
+      console.log(e.relatedTarget.id)
+      e.preventDefault()
+      return
+    }
+    if(window.innerWidth>=650){
+      this.setState({
+        active:false,
+        resultsVisible:false
+      })
+    }
+  }
+
+  hideResults = ()=>{
+    this.setState({
+      resultsVisible:false
+    })
+  }
+
   componentDidMount(){
-    document.addEventListener('click',this.hideSearchResults)
+    //this.isMobileWidth()
+    window.addEventListener('resize',this.isMobileWidth)
+    window.addEventListener('keydown',(e)=>{
+      if(e.keyCode == 13){
+        this.props.handlePressEnter()
+        //console.log(this.props,"THIS")
+      }
+    })
   }
 
   componentWillUnmount(){
-    document.removeEventListener('click',this.hideSearchResults)
+    window.removeEventListener('resize',this.isMobileWidth)
+    //document.removeEventListener('click',this.hideSearchResults)
+    console.log(this.props,"THESE ARE THE PROPS!!")
+    this.props.clearSearch()
   }
 
   handleClick = ()=>{
@@ -37,36 +120,30 @@ class ListingSearchBar extends Component {
   }
 
   formatLocationResults = (result)=>{
-    if(result.location_type === "city"){
+    if(result.item.location_type === "city"){
       return(
           <div className = "listing-search-bar__result-text">
-            <span className = "listing-search-bar__result-title">
-            {result.name}
-            </span>
+            {this.getMatchedText(result)}
             <span className = "listing-search-bar__result-subtitle">
-            {result.parents[1].name}
+            {result.item.parents[1].name}
             </span>
           </div>
       )
-    }else if(result.location_type === "county"){
+    }else if(result.item.location_type === "county"){
       return(
           <div className = "listing-search-bar__result-text">
-            <span className = "listing-search-bar__result-title">
-            {result.name}
-            </span>
+            {this.getMatchedText(result)}
             <span className = "listing-search-bar__result-subtitle">
-            {result.parents[0].name}
+            {result.item.parents[0].name}
             </span>
           </div>
       )
-    }else if (result.location_type === "neighborhood" || result.location_type === "route" || result.location_type === "zipcode"){
+    }else if (result.itemlocation_type === "neighborhood" || result.item.location_type === "route" || result.item.location_type === "zipcode"){
       return(
           <div className = "listing-search-bar__result-text">
-            <span className = "listing-search-bar__result-title">
-            {result.name}
-            </span>
+            {this.getMatchedText(result)}
             <span className = "listing-search-bar__result-subtitle">
-            {`${result.parents[0].name}, ${result.parents[2].name}`}
+            {`${result.item.parents[0].name}, ${result.item.parents[2].name}`}
             </span>
           </div>
       )
@@ -79,20 +156,21 @@ class ListingSearchBar extends Component {
     return(
         <div className = "listing-search-bar__result-text">
           <span className = "listing-search-bar__result-title">
-          {`${result.first_name} ${result.last_name}`}
+          {this.getAgentMatchedText(result)}
           </span>
           <span className = "listing-search-bar__result-subtitle">
-          {`${result.city}, ${result.state}`}
+          {`${result.item.city}, ${result.item.state}`}
           </span>
         </div>
     )
   }
 
   formatAddressResults = (result)=>{
+    console.log(result, "ADDRESS RESULT")
     return(
         <div className = "listing-search-bar__result-text">
           <span className = "listing-search-bar__result-title">
-          {`${result.formatted_address}`}
+          {`${result.item.formatted_address}`}
           </span>
         </div>
     )
@@ -106,7 +184,7 @@ class ListingSearchBar extends Component {
         if(this.props.data.locations){
           locations = this.props.data.locations.map((result)=>{
             return (
-              <div key = {result.location_id} className = "listing-search-bar__type-ahead-result" onClick = {()=> this.props.handleResultClick({type:'location', id:result.location_id})}>
+              <div key = {result.location_id} tabIndex="0" id="type-ahead-result" className = "listing-search-bar__type-ahead-result" onClick = {()=> {this.props.handleResultClick({type:'location', id:result.item.location_id}); this.handleBlur()}}>
                 {this.formatLocationResults(result)}
               </div>
             )
@@ -114,6 +192,9 @@ class ListingSearchBar extends Component {
           return(
             <div>
               <div className = "listing-search-bar__location-header">
+                <div className = "listing-search-bar__icon-container">
+                  <FontAwesomeIcon icon = {faMapMarkerAlt} size = "lg"/>
+                </div>
                 <span className = "listing-search-bar__location-header-title">
                   Places
                 </span>
@@ -126,9 +207,9 @@ class ListingSearchBar extends Component {
       //getting agent results and formatting them
       const getAgents = ()=> {
         if(this.props.data.agents){
-          addresses = this.props.data.agents.map((result)=>{
+          agents = this.props.data.agents.map((result)=>{
             return (
-              <div key = {result.location_id} className = "listing-search-bar__type-ahead-result" onClick = {()=> this.props.handleResultClick({type:'agent', id:result.agent_id})}>
+              <div key = {result.location_id} className = "listing-search-bar__type-ahead-result" onClick = {()=> this.props.handleResultClick({type:'agent', id:result.item.agent_id})}>
                 {this.formatAgentResults(result)}
               </div>
             )
@@ -136,6 +217,9 @@ class ListingSearchBar extends Component {
           return(
             <div>
               <div className = "listing-search-bar__location-header">
+                <div className = "listing-search-bar__icon-container">
+                  <FontAwesomeIcon icon = {faUserTie} size = "lg"/>
+                </div>
                 <span className = "listing-search-bar__location-header-title">
                   Agents
                 </span>
@@ -150,7 +234,7 @@ class ListingSearchBar extends Component {
         if(this.props.data.addresses){
            addresses = this.props.data.addresses.map((result)=>{
             return (
-              <div key = {result.address_id} className = "listing-search-bar__type-ahead-result" onClick = {()=> this.props.handleResultClick({type:'address', id:result.address_id})}>
+              <div key = {result.address_id} className = "listing-search-bar__type-ahead-result" onClick = {()=> this.props.handleResultClick({type:'address', id:result.itam.address_id})}>
                 {this.formatAddressResults(result)}
               </div>
             )
@@ -158,6 +242,9 @@ class ListingSearchBar extends Component {
           return(
             <div>
               <div className = "listing-search-bar__location-header">
+                <div className = "listing-search-bar__icon-container">
+                  <FontAwesomeIcon icon = {faHome} size = "lg"/>
+                </div>
                 <span className = "listing-search-bar__location-header-title">
                   Adresses
                 </span>
@@ -170,7 +257,7 @@ class ListingSearchBar extends Component {
 
 
       return (
-        <div>
+        <div id = "listing-search-bar__results" className = "listing-search-bar__type-ahead-container">
           {getLocations()}
           {getAgents()}
           {getAddresses()}
@@ -182,20 +269,26 @@ class ListingSearchBar extends Component {
 
 render(){
   return(
-    <div className = {`listing-search-bar__wrapper--mobile ${this.props.className}`}>
-      <div className = "listing-search-bar__input-container">
-        <input autoComplete="off"
-               id = "listing-search-bar"
-               className = "listing-search-bar listing-search-bar--mobile"
-               type="text" value={this.props.searchQuery}
-               onClick={(e)=>this.handleClick(e)}
-               onChange = {(e)=>this.props.handleChange(e)}
-               placeholder = "City, Neighborhood, Address, ZIP, Agent"
-        />
-        <div className = "listing-search-bar__search-btn"> </div>
-      </div>
-      <div id = "listing-search-bar-results" className = "listing-search-bar__type-ahead-container">
-        {this.state.resultsVisible ? this.renderResults() : null}
+    <div className = {`listing-search-bar ${this.state.active ? "active": ""} ${this.props.isMobile ? "mobile" : ""} ${this.props.className}`}>
+      <div className = "listing-search-bar__mobile-search-container ">
+        <div className = "listing-search-bar__input-container">
+          <button className = "listing-search-bar__back-btn" id = "back-btn" onClick = {this.handleBlur}> 	<FontAwesomeIcon className = "listing-search-bar__back-btn-icon" icon = {faArrowLeft} size = "lg"/> </button>
+          <input id = "listing-search-bar"
+                 autoComplete="off"
+                 className = "listing-search-bar__input"
+                 type="text"
+                 value={this.props.searchQuery}
+                 onClick={(e)=>this.handleClick(e)}
+                 onChange = {(e)=>this.props.handleChange(e)}
+                 onFocus = {(e)=>this.handleFocus(e)}
+                 onBlur = {(e)=>this.handleBlur(e)}
+                 placeholder = {this.props.placeHolder}
+          />
+          <div className = "listing-search-bar__search-btn"> </div>
+        </div>
+
+        {this.state.resultsVisible && this.props.searchQuery.length>=2 ? this.renderResults() : null}
+
       </div>
     </div>
   )

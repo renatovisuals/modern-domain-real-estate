@@ -28,11 +28,24 @@ router.route('/getbylocationnameid/:locationnameid').get((req,res)=>{
                INNER JOIN location \
                ON location.location_id = locations_listings.location_id \
                WHERE location.name_id = ?";
-  //sql = 'SELECT * FROM listing'
   pool.query(sql,id)
   .then((results)=>res.json(results[0]))
   .catch((err)=>{
     res.status(400).send(`error: ${err.message}`)
+  })
+})
+
+router.route('/getbyaddressid/:addressid').get((req,res)=>{
+  const id = req.params.addressid;
+  console.log(id,"this is the id")
+  let sql = "SELECT * \
+               FROM listing \
+               WHERE address_id = ?";
+  pool.query(sql,id)
+  .then((results)=>res.json(results[0]))
+  .catch((err)=>{
+    console.log("ERROR!")
+    //res.status(400).send(`error: ${err.message}`)
   })
 })
 
@@ -185,8 +198,6 @@ router.route('/add').post((req,res)=>{
   const postData = async (data)=>{
     let sql,listingId,stateId,countyId,cityId,neighborhoodId,routeId,zipcodeId,addressId;
     let locations_listings = [];
-
-
 
     const connection = await pool.getConnection()
     try{

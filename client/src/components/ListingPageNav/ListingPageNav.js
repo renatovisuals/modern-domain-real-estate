@@ -11,7 +11,8 @@ class ListingPageNav extends Component {
 state = {
   showMobileNav:false,
   results:[],
-  isMobileWidth:false
+  isMobileWidth:false,
+  mobileWidth:650
 }
 
 hideNav = ()=>{
@@ -28,7 +29,7 @@ openNav = ()=>{
 
 isMobileWidth = ()=>{
   this.setState({
-    isMobileWidth:window.innerWidth<650
+    isMobileWidth:window.innerWidth<this.state.mobileWidth
   })
 }
 
@@ -42,6 +43,7 @@ componentWillUnmount(){
 }
 
 render(){
+  const placeHolder = this.state.isMobileWidth ? "City, Address, Agent" : "City, Neighborhood, Address, ZIP, Agent"
   const renderLogo = ()=>{
     if(!this.state.isMobileWidth){
       return(
@@ -55,11 +57,32 @@ render(){
   const renderMobileSearch = ()=>{
     if(this.state.isMobileWidth){
       return(
-        <ListingSearchBar
+        <ListingSearchBar className = "listing-page-nav__mobile-search"
           handleChange = {(e)=> this.props.handleSearchInput(e)}
           searchQuery = {this.props.searchQuery}
           data ={this.props.results}
           handleResultClick = {(result)=>this.props.handleResultClick(result)}
+          handlePressEnter = {this.props.handlePressEnter}
+          clearSearch = {this.props.clearSearch}
+          placeHolder = {placeHolder}
+          mobileWidth = {this.state.mobileWidth}
+        />
+      )
+    }
+  }
+
+  const renderDesktopSearch = ()=>{
+    if(!this.state.isMobileWidth){
+      return(
+        <ListingSearchBar className = "listing-page-nav__desktop-search"
+          handleChange = {(e)=> this.props.handleSearchInput(e)}
+          searchQuery = {this.props.searchQuery}
+          data ={this.props.results}
+          handleResultClick = {(result)=>this.props.handleResultClick(result)}
+          handlePressEnter = {this.props.handlePressEnter}
+          clearSearch = {this.props.clearSearch}
+          placeHolder = {placeHolder}
+          mobileWidth = {this.state.mobileWidth}
         />
       )
     }
@@ -83,12 +106,7 @@ render(){
           </ul>
         </div>
         <div className = "test">
-          <ListingSearchBar className = "listing-page-nav__search-bar"
-            handleChange = {(e)=> this.props.handleSearchInput(e)}
-            searchQuery = {this.props.searchQuery}
-            data ={this.props.results}
-            handleResultClick = {(result)=>this.props.handleResultClick(result)}
-          />
+          {renderDesktopSearch()}
         </div>
       </nav>
     </div>

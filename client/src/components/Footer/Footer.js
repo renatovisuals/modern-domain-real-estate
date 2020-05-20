@@ -53,7 +53,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
       </ContentContainer>
       <div className ="footer__copyright-container">
         <ContentContainer>
-          <span className = "footer__copyright"> 	<FontAwesomeIcon icon = {faCopyright} size = "sm"/> 2019 Modern Domain llc. </span>
+          <span className = "footer__copyright"> 	<FontAwesomeIcon icon = {faCopyright} size = "sm"/> 2020 Modern Domain llc. </span>
         </ContentContainer>
       </div>
     </div>

@@ -11,8 +11,9 @@ const fuseOptions = {
   threshold: 0.3,
   location: 0,
   distance: 100,
-  maxPatternLength: 32,
-  minMatchCharLength: 1,
+  includeScore:true,
+  useExtendedSearch: true,
+  includeMatches:true,
   keys: [
     "name",
     "first_name",
@@ -49,11 +50,12 @@ router.route('/get').get((req,res)=>{
       const addressFuse = new Fuse(address,fuseOptions)
 
       //Searching for data relevant to search query and appending it to searchResults
-      let locationResults = locationFuse.search(req.query.search_query)
+      let locationResults = locationFuse.search(`^${req.query.search_query}`)
+      console.log(locationResults,"location results");
       locationResults = locationResults.slice(0,limit)
       if(locationResults.length>0) searchResults.locations = locationResults;
 
-      let agentResults = agentFuse.search(req.query.search_query)
+      let agentResults = agentFuse.search(`^${req.query.search_query}`)
       agentResults = agentResults.slice(0,limit)
       if(agentResults.length>0) searchResults.agents = agentResults;
 
