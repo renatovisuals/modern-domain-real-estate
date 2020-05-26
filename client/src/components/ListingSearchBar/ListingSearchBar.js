@@ -138,7 +138,7 @@ class ListingSearchBar extends Component {
             </span>
           </div>
       )
-    }else if (result.itemlocation_type === "neighborhood" || result.item.location_type === "route" || result.item.location_type === "zipcode"){
+    }else if (result.item.location_type === "neighborhood" || result.item.location_type === "route" || result.item.location_type === "zipcode"){
       return(
           <div className = "listing-search-bar__result-text">
             {this.getMatchedText(result)}

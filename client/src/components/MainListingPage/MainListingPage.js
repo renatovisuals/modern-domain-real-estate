@@ -6,6 +6,7 @@ import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import './MainListingPage.scss';
 import Listing from '../Listing/Listing';
+import Listings from '../Listings/Listings';
 import Map from '../Map/Map';
 import { mapStyles } from '../../utils';
 import axios from 'axios';
@@ -18,6 +19,7 @@ class MainListingPage extends Component {
     super(props)
     this.state = {
       markerData:'',
+      markersInBounds:[],
       showCurrentListing:false,
       currentListingData:null,
       mapHeight:null,
@@ -25,11 +27,26 @@ class MainListingPage extends Component {
       map:2,
       searchQuery:'',
       searchResults:[],
-      search:false
+      search:false,
+      listingsToShow:[],
+      mobileWidth:768
     }
     this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
   }
+
+  setMarkersInBounds = (markersInBounds)=>{
+    this.setState({
+      markersInBounds
+    })
+  }
+
+  //getListingsToShow = ()=>{
+  //  const listingsToShow = this.state.markersInBounds.map((marker)=>marker.listingData)
+  //  this.setState({
+  //    listingsToShow
+  //  }, console.log(this.state.listingsToShow, "Showing current listings"))
+  //}
 
   handleSearchInput = (e)=>{
     this.setState({
@@ -40,7 +57,7 @@ class MainListingPage extends Component {
   }
 
   handlePressEnter = ()=>{
-    if(this.state.searchQuery.length>=1){
+    if(this.state.searchQuery.trim().length>=1){
       this.setState({
         search:true
       },this.handleSearch())
@@ -53,8 +70,28 @@ class MainListingPage extends Component {
         this.setState({
           search:false
         })
-        //return <Redirect to = {`/listings/for-sale/${this.state.searchResults.locations[0].item.name_id}`}/>
+        return <Redirect to = {`/listings/for-sale/${this.state.searchResults.locations[0].item.name_id}`}/>
       }
+      else if(this.state.searchResults.addresses && this.state.searchResults.addresses.length>0){
+        this.setState({
+          search:false
+        })
+        const listings = this.getListingsByAddressId(this.state.searchResults.addresses[0].item.address_id)
+        listings.then((res)=>{
+          this.setState({
+            markerData:res
+          },()=>console.log(this.state.markerData,"marker data"))
+        })
+      }
+      else if(this.state.searchResults.agents && this.state.searchResults.agents.length>0){
+        this.setState({
+          search:false
+        })
+        const {first_name,last_name} = this.state.searchResults.agents[0].item;
+        const nameQuery = `${first_name.toLowerCase()}-${last_name.toLowerCase()}`
+        return <Redirect to = {`/agents/${nameQuery}/${this.state.searchResults.agents[0].item.agent_id}`}/>
+      }
+      console.log("your search matched no results")
     }
   }
 
@@ -111,7 +148,7 @@ class MainListingPage extends Component {
 
   mapIsVisible = ()=>{
     this.setState({
-      mapIsVisible:window.innerWidth>768
+      mapIsVisible:window.innerWidth>this.state.mobileWidth
     })
   }
 
@@ -145,10 +182,11 @@ class MainListingPage extends Component {
   }
 
   getListingsByAddressId = async (id)=>{
-    let res = await axios.get(`/api/listing/getbyaddressid/${id}`);
-    //this.setState({
-    //  markerData: res.data
-    //});
+    let res = await axios.get(`/api/listings/getbyaddressid/${id}`);
+    const test = res.data
+    this.setState({
+      markerData:test
+    });
     console.log(res.data,"this is the response for address")
     return res.data
   }
@@ -206,7 +244,7 @@ class MainListingPage extends Component {
 
     return(
       <div className="listing-page">
-        {/*this.handleSearch()*/}
+        {this.handleSearch()}
         <ListingPageNav
           handleSearchInput = {(e)=> this.handleSearchInput(e)}
           searchQuery = {this.state.searchQuery}
@@ -219,12 +257,24 @@ class MainListingPage extends Component {
           ? <Listing listingData = {this.state.currentListingData} handleClose = {this.closeListing}/>
           : null
         }
-        {this.state.mapIsVisible && this.state.markerData
-          ? <div className = "listing-page__map-container" style={{height:`${this.state.mapHeight}px`}}>
-            <Map id="myMap" options={mapOptions} data = {this.state.markerData} getListing = {this.getListingData} onMapMove = {this.onMapMove}/>
-            </div>
-          :null
-        }
+        <div className = "listing-page__map-container" style={{height:`${this.state.mapHeight}px`}}>
+          {this.state.mapIsVisible && this.state.markerData
+            ? <Map
+                id="myMap"
+                options={mapOptions}
+                data = {this.state.markerData}
+                getListing = {this.getListingData}
+                onMapMove = {this.onMapMove}
+                markersInBounds = {this.state.markersInBounds}
+                setMarkersInBounds = {(markersInBounds)=>this.setMarkersInBounds(markersInBounds)}
+              />
+            : null
+          }
+        </div>
+
+        <div className = "listing-page__listing-container" style={{height:`${this.state.mapHeight}px`}}>
+          <Listings markerData = {this.state.markerData} markersInBounds = {this.state.markersInBounds}/>
+        </div>
       </div>
     )
   }

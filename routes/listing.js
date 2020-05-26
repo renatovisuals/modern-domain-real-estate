@@ -45,7 +45,7 @@ router.route('/getbyaddressid/:addressid').get((req,res)=>{
   .then((results)=>res.json(results[0]))
   .catch((err)=>{
     console.log("ERROR!")
-    //res.status(400).send(`error: ${err.message}`)
+    res.status(400).send(`error: ${err.message}`)
   })
 })
 

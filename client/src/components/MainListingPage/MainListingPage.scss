@@ -3,8 +3,19 @@
 
   &__map-container{
     position:relative;
-    width:60%;
+    width:50%;
     display:none;
+    float:left;
+  }
+
+  &__listing-container{
+    width:50%;
+    height:100vh;
+    //background:red;
+    float:left;
+    //position:absolute;
+    display:inline-block;
+    //right:0;
   }
 
   @media screen and (min-width:768px){

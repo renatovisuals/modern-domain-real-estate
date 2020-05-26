@@ -18,7 +18,7 @@ class Map extends Component {
           zoom:12,
           markers:[],
           activeMarker:null,
-          infowWindow:null
+          infoWindow:null
         }
   }
 
@@ -123,6 +123,8 @@ class Map extends Component {
 
       map.addListener('dragend',()=> this.props.onMapMove(this.getMapBounds(map)))
       map.addListener('zoom_changed',()=> this.props.onMapMove(this.getMapBounds(map)))
+      map.addListener('center_changed', this.getMarkersInBounds)
+      map.addListener('zoom_changed',this.getMarkersInBounds)
 
       map.addListener('click',()=>{
          if(this.state.infoWindow){
@@ -194,6 +196,17 @@ class Map extends Component {
 
   }
 
+  getMarkersInBounds = ()=>{
+    console.log("testing")
+    const markersInBounds = []
+    for(let i=0; i< this.state.markers.length; i++){
+      if(this.state.map.getBounds().contains(this.state.markers[i].getPosition())){
+        markersInBounds.push(this.state.markers[i])
+      }
+    }
+    this.props.setMarkersInBounds(markersInBounds)
+  }
+
   renderMarkers(map){
     const markers = []
     let bounds = new window.google.maps.LatLngBounds();
@@ -215,6 +228,8 @@ class Map extends Component {
                 anchor:new window.google.maps.Point(30,30)
             }
         })
+
+        marker.listingData = house;
 
         //if center exists in options, override the marker based map positioning
         if(!this.props.options.center){
@@ -271,6 +286,8 @@ class Map extends Component {
       markers
     }),()=>{
       this.loadClusters(map,this.state.markers)
+      this.getMarkersInBounds()
+      console.log(this.state.markers,"these are the markers")
     })
 
   }
