@@ -80,7 +80,7 @@ class MainListingPage extends Component {
         listings.then((res)=>{
           this.setState({
             markerData:res
-          },()=>console.log(this.state.markerData,"marker data"))
+          })
         })
       }
       else if(this.state.searchResults.agents && this.state.searchResults.agents.length>0){
@@ -91,7 +91,6 @@ class MainListingPage extends Component {
         const nameQuery = `${first_name.toLowerCase()}-${last_name.toLowerCase()}`
         return <Redirect to = {`/agents/${nameQuery}/${this.state.searchResults.agents[0].item.agent_id}`}/>
       }
-      console.log("your search matched no results")
     }
   }
 
@@ -99,11 +98,9 @@ class MainListingPage extends Component {
     const {locations,agents,addresses} = this.state.searchResults;
     //console.log(addresses,"addresses")
     if(this.state.search){
-      console.log("working")
       if(locations && locations.length>0){
         this.getListingsByLocationNameId(this.state.searchResults.locations[0].item.name_id)
       }else if(addresses && addresses.length>0){
-        console.log(this.state.searchResults.addresses,"ADRESSES")
         this.getListingsByAddressId(this.state.searchResults.addresses[0].item.address_id)
         //this.getListingsByLocationNameId(this.state.searchResults.addresses[0].item.name_id)
       }
@@ -121,19 +118,16 @@ class MainListingPage extends Component {
   }
 
   clearSearch = ()=>{
-    console.log("search cleared!!")
     this.setState({
       searchQuery:''
     })
   }
 
   handleResultClick = (result)=>{
-    console.log(`handle result called`)
     if(result.type === "location"){
       this.getListingsByLocationId(result.id)
-      console.log(result.id,"THIS IS THE LOCATION ID");
     }else if(result.type ==="agent"){
-      console.log("retreiving agent info")
+      
     }
   }
 
@@ -165,38 +159,63 @@ class MainListingPage extends Component {
   }
 
   getListingsByLocationNameId = async (nameId)=>{
-    let res = await axios.get(`/api/listings/getbylocationnameid/${nameId}`);
+    axios.get(`/api/listing/getbylocationnameid/${nameId}`).then((res)=>{
+      this.setState({
+        markerData:res.data
+      })
+    });
+
+    //return res.data
+    /*let res = await axios.get(`/api/listing/getbylocationnameid/${nameId}`);
     this.setState({
       markerData: res.data
     });
-    return res.data
+    return res.data*/
   }
 
   getListingsByLocationId = async (id)=>{
-    let res = await axios.get(`/api/listings/getbylocationid/${id}`);
+    axios.get(`/api/listing/getbylocationid/${id}`).then((res)=>{
+      this.setState({
+        markerData:res.data
+      })
+    })
+
+    //console.log(res.data,"this is the response")
+    //return res.data
+
+    /*let res = await axios.get(`/api/listings/getbylocationid/${id}`);
     this.setState({
       markerData: res.data
     });
     console.log(res.data,"this is the response")
-    return res.data
+    return res.data */
   }
 
   getListingsByAddressId = async (id)=>{
-    let res = await axios.get(`/api/listings/getbyaddressid/${id}`);
-    const test = res.data
+    axios.get(`/api/listing/getbyaddressid/${id}`).then((res)=>{
+    console.log(res.data,"THIS IS THE DATA")
     this.setState({
-      markerData:test
-    });
-    console.log(res.data,"this is the response for address")
-    return res.data
+        markerData:res.data
+      },console.log(this.state.markerData,"new data"));
+      //return res.data
+    })
+    //const test = res.data
+
+    //console.log(res.data,"this is the response for address")
+
   }
 
   getAllListings = async ()=>{
-    let res = await axios.get(`/api/listings/get/`);
-    this.setState({
-      markerData: res.data
+    axios.get(`/api/listing/get/`).then((res)=>{
+      const test = res.data;
+      console.log(test,"test")
+        this.setState({
+          markerData: res.data
+        });
+
     });
-    return res.data
+
+    //return res.data
   }
 
   componentDidMount(){

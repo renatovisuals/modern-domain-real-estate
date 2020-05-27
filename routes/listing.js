@@ -39,7 +39,7 @@ router.route('/getbyaddressid/:addressid').get((req,res)=>{
   const id = req.params.addressid;
   console.log(id,"this is the id")
   let sql = "SELECT * \
-               FROM listing \
+               FROM listing_address \
                WHERE address_id = ?";
   pool.query(sql,id)
   .then((results)=>res.json(results[0]))
@@ -51,7 +51,7 @@ router.route('/getbyaddressid/:addressid').get((req,res)=>{
 
 router.route('/get').get((req,res)=>{
   const id = req.params.locationnameid;
-  const sql = "SELECT * FROM listing_address"
+  const sql = "SELECT * FROM listing"
 
   pool.query(sql, function (error, results, fields) {
     if (error) throw error;

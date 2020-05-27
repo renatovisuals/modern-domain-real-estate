@@ -7,6 +7,7 @@ import './map.css';
 import { arraysMatch } from '../../utils'
 
 class Map extends Component {
+  _isMounted = false;
     constructor(props) {
         super(props);
         this.onScriptLoad = this.onScriptLoad.bind(this)
@@ -45,9 +46,9 @@ class Map extends Component {
         }
       })
       window.google.maps.event.addListenerOnce(map,'idle',(e)=>{
-        this.setState({
-          map
-        }, ()=> this.onMapLoad(this.state.map))
+          this.setState({
+            map
+          }, ()=> this.onMapLoad(this.state.map))
       })
 
   }
@@ -197,7 +198,6 @@ class Map extends Component {
   }
 
   getMarkersInBounds = ()=>{
-    console.log("testing")
     const markersInBounds = []
     for(let i=0; i< this.state.markers.length; i++){
       if(this.state.map.getBounds().contains(this.state.markers[i].getPosition())){
@@ -213,8 +213,8 @@ class Map extends Component {
     this.state.markerData.forEach(house => {
         const shorthandPrice = abbreviatePrice(house.price)
         const position = {
-          lat:house.pos_lat,
-          lng:house.pos_lng
+          lat:parseFloat(house.pos_lat),
+          lng:parseFloat(house.pos_lng)
         }
         let marker = new window.google.maps.Marker({
             map:map,
@@ -287,7 +287,6 @@ class Map extends Component {
     }),()=>{
       this.loadClusters(map,this.state.markers)
       this.getMarkersInBounds()
-      console.log(this.state.markers,"these are the markers")
     })
 
   }
@@ -299,6 +298,7 @@ class Map extends Component {
         var s = document.createElement('script');
         s.type = 'text/javascript';
         s.src = `https://maps.google.com/maps/api/js?key=AIzaSyAGgm00r51Xpx2wUfWvvKUMNWd6GrjV6Ck`;
+        //s.setAttribute('crossorigin',"use-credentials")
         var x = document.getElementsByTagName('script')[0];
         x.parentNode.insertBefore(s, x);
         // Below is important.
@@ -321,9 +321,7 @@ class Map extends Component {
 
   componentDidUpdate(prevProps,prevState){
     if(!arraysMatch(prevState.markerData,this.state.markerData)){
-      console.log("UPDATED",prevState.markerData,this.state.markerData)
       this.clearMarkers(()=>this.renderMarkers(this.state.map))
-      console.log(this.state.markers,"markers in update function")
       this.loadClusters(this.state.map,this.state.markers);
     }
   }

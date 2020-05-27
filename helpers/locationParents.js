@@ -5,6 +5,7 @@ const mapParentData = (data)=>{
     loc.location_type = location.location_type
     loc.name = location.name
     loc.name_id = location.name_id
+
     if(location.parent_id){
       loc.parents = []
       if(location.parent_1){
