@@ -19,6 +19,7 @@ class Map extends Component {
           zoom:12,
           markers:[],
           activeMarker:null,
+          hoveredListing:null,
           infoWindow:null
         }
   }
@@ -65,9 +66,15 @@ class Map extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if(prevState.markerData !== nextProps.data){
-
+      console.log(prevState.markerData,nextProps.data,"DATA~")
       return {
         markerData: nextProps.data
+      }
+    }
+    if(prevState.hoveredListing !== nextProps.activeListing && nextProps.activeListing !== null){
+      console.log("active marker changed", nextProps.activeListing)
+      return {
+        hoveredListing:nextProps.activeListing
       }
     }
     return null
@@ -141,12 +148,14 @@ class Map extends Component {
   }
 
   loadClusters(map,markers){
+    console.log("running")
     const options = {
       imagePath:'http://localhost:3000/images/m',
       minimumClusterSize:2,
       gridSize:500,
       zoomOnClick:true,
       averageCenter:true,
+      ignoreHiddenMarkers:true,
       zIndex:1000,
       styles:[
         {
@@ -191,8 +200,11 @@ class Map extends Component {
       })
     }
 
+    const cluster = new MarkerClusterer(map,markers,options)
+    cluster.ignoreHidden = true
+
     this.setState({
-      markerCluster: new MarkerClusterer(map,markers,options)
+      markerCluster:cluster
     })
 
   }
@@ -311,18 +323,46 @@ class Map extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps,nextState){
-    if(this.state.markerData === nextState.markerData){
-      return false
-    }else{
-      return true
-    }
+  //shouldComponentUpdate(nextProps,nextState){
+  //  if(this.state.markerData === nextState.markerData){
+  //    return false
+  //  }else{
+  //    return true
+  //  }
+  //}
+  selectMarker = (markerId)=>{
+    let markers = [...this.state.markers]
+    let index;
+    const marker = this.state.markers.find((marker,i)=>{
+      index = i
+      return marker.id === markerId
+    })
+    marker.setIcon({
+      url:icon({center:'2ee1ff', color:'2ee1ff', text:abbreviatePrice(marker.listingData.price)}),
+      scaledSize: new window.google.maps.Size(60,60),
+      anchor: new window.google.maps.Point(30,30)
+    })
+    marker.setVisible(false)
+    console.log(markers,"first",index,marker)
+    markers.splice(index,1,marker)
+    markers.pop()
+    console.log(markers,"second",markers[index])
+    this.setState({
+      markers
+    },()=>this.loadClusters(this.state.map,this.state.markers))
+    console.log(this.state.markerCluster,"cluster")
+
   }
 
   componentDidUpdate(prevProps,prevState){
     if(!arraysMatch(prevState.markerData,this.state.markerData)){
       this.clearMarkers(()=>this.renderMarkers(this.state.map))
       this.loadClusters(this.state.map,this.state.markers);
+    }
+    if(this.state.hoveredListing !== prevState.hoveredListing){
+      this.selectMarker(this.state.hoveredListing)
+    }else if(this.state.hoveredListing !== null){
+      //this.deselectMarker(this.state.hoveredListing)
     }
   }
 

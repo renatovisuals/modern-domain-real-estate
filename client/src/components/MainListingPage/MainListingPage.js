@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import './MainListingPage.scss';
 import Listing from '../Listing/Listing';
-import Listings from '../Listings/Listings';
+import ListingPanel from '../ListingPanel/ListingPanel';
 import Map from '../Map/Map';
 import { mapStyles } from '../../utils';
 import axios from 'axios';
@@ -21,8 +21,10 @@ class MainListingPage extends Component {
       markerData:'',
       markersInBounds:[],
       showCurrentListing:false,
+      activeListing:null,
       currentListingData:null,
       mapHeight:null,
+      mapWidth:null,
       mapIsVisible:false,
       map:2,
       searchQuery:'',
@@ -38,6 +40,18 @@ class MainListingPage extends Component {
   setMarkersInBounds = (markersInBounds)=>{
     this.setState({
       markersInBounds
+    })
+  }
+
+  setActiveListing = (activeListing)=>{
+    this.setState({
+      activeListing
+    },()=>console.log(this.state.activeListing,"HELLO"))
+  }
+
+  removeActiveListing = ()=>{
+    this.setState({
+      activeListing:null
     })
   }
 
@@ -96,7 +110,6 @@ class MainListingPage extends Component {
 
   componentDidUpdate(prevProps,prevState){
     const {locations,agents,addresses} = this.state.searchResults;
-    //console.log(addresses,"addresses")
     if(this.state.search){
       if(locations && locations.length>0){
         this.getListingsByLocationNameId(this.state.searchResults.locations[0].item.name_id)
@@ -127,16 +140,19 @@ class MainListingPage extends Component {
     if(result.type === "location"){
       this.getListingsByLocationId(result.id)
     }else if(result.type ==="agent"){
-      
+
     }
   }
 
-  updateMapHeight = ()=>{
+  updateMapDimensions = ()=>{
     const navHeight =document.getElementById('nav').getBoundingClientRect().height;
     const nav = document.getElementById('nav');
-    let mapHeight = window.innerHeight-(navHeight || 0);
+    const listingPanelWidth = document.getElementById('listing-panel').getBoundingClientRect().height;
+    let mapHeight = window.innerHeight - (navHeight || 0);
+    let mapWidth = window.innerWidth - 600;
     this.setState({
-      mapHeight
+      mapHeight,
+      mapWidth
     })
   }
 
@@ -193,29 +209,19 @@ class MainListingPage extends Component {
 
   getListingsByAddressId = async (id)=>{
     axios.get(`/api/listing/getbyaddressid/${id}`).then((res)=>{
-    console.log(res.data,"THIS IS THE DATA")
     this.setState({
         markerData:res.data
       },console.log(this.state.markerData,"new data"));
-      //return res.data
     })
-    //const test = res.data
-
-    //console.log(res.data,"this is the response for address")
-
   }
 
   getAllListings = async ()=>{
     axios.get(`/api/listing/get/`).then((res)=>{
       const test = res.data;
-      console.log(test,"test")
         this.setState({
           markerData: res.data
         });
-
     });
-
-    //return res.data
   }
 
   componentDidMount(){
@@ -225,15 +231,15 @@ class MainListingPage extends Component {
     }else{
       this.getAllListings()
     }
-    this.updateMapHeight();
+    this.updateMapDimensions();
     this.mapIsVisible();
-    window.addEventListener("resize",this.updateMapHeight);
+    window.addEventListener("resize",this.updateMapDimensions);
     window.addEventListener("resize",this.mapIsVisible);
   }
 
 
   componentWillUnmount(){
-    window.removeEventListener("resize",this.updateMapHeight);
+    window.removeEventListener("resize",this.updateMapDimensions);
     window.removeEventListener("resize",this.mapIsVisible);
   }
 
@@ -276,7 +282,7 @@ class MainListingPage extends Component {
           ? <Listing listingData = {this.state.currentListingData} handleClose = {this.closeListing}/>
           : null
         }
-        <div className = "listing-page__map-container" style={{height:`${this.state.mapHeight}px`}}>
+        <div className = "listing-page__map-container" style={{height:`${this.state.mapHeight}px`,width:`${this.state.mapWidth}px`}}>
           {this.state.mapIsVisible && this.state.markerData
             ? <Map
                 id="myMap"
@@ -286,13 +292,19 @@ class MainListingPage extends Component {
                 onMapMove = {this.onMapMove}
                 markersInBounds = {this.state.markersInBounds}
                 setMarkersInBounds = {(markersInBounds)=>this.setMarkersInBounds(markersInBounds)}
+                activeListing = {this.state.activeListing}
               />
             : null
           }
         </div>
 
-        <div className = "listing-page__listing-container" style={{height:`${this.state.mapHeight}px`}}>
-          <Listings markerData = {this.state.markerData} markersInBounds = {this.state.markersInBounds}/>
+        <div id = "listing-panel" className = "listing-page__listing-panel" style={{height:`${this.state.mapHeight}px`}}>
+          <ListingPanel
+           markerData = {this.state.markerData}
+           markersInBounds = {this.state.markersInBounds}
+           handleListingMouseEnter = {(listingId)=> this.setActiveListing(listingId)}
+           handleListingMouseLeave = {this.removeActiveListing}
+          />
         </div>
       </div>
     )

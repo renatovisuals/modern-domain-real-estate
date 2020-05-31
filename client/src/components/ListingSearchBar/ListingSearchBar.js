@@ -99,7 +99,7 @@ class ListingSearchBar extends Component {
     //this.isMobileWidth()
     window.addEventListener('resize',this.isMobileWidth)
     window.addEventListener('keydown',(e)=>{
-      if(e.keyCode == 13){
+      if(e.keyCode === 13){
         this.props.handlePressEnter()
         //console.log(this.props,"THIS")
       }

@@ -1,0 +1,21 @@
+.listing-panel{
+  width:100%;
+  height:100%;
+
+  &__listing-container{
+    display:grid;
+    padding:20px;
+    grid-template-columns:1fr 1fr;
+    column-gap: 20px;
+  }
+
+  &__listing{
+    width:100%;
+    height:250px;
+    //margin: 0 10px 0 10px;
+
+    &:hover{
+      cursor:pointer;
+    }
+  }
+}

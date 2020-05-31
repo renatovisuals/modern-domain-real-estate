@@ -3,18 +3,20 @@
 
   &__map-container{
     position:relative;
-    width:50%;
+    //width:500px;
     display:none;
     float:left;
   }
 
-  &__listing-container{
-    width:50%;
+  &__listing-panel{
+    position:absolute;
+    right:0;
+    width:600px;
     height:100vh;
     //background:red;
-    float:left;
+    //float:left;
     //position:absolute;
-    display:inline-block;
+    //display:inline-block;
     //right:0;
   }
 

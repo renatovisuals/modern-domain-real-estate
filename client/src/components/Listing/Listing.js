@@ -9,7 +9,7 @@ function Listing(props) {
 
     const getImages = ()=>{
         for( let i = 1; i<imgAmnt; i++){
-            imgs.push(<li key = {i} className="box"> <img src = {`./images/houses/${listingData.id}/${i}.jpg`}/></li>)
+            imgs.push(<li key = {i} className="box"> <img alt="listing" src = {`./images/houses/${listingData.id}/${i}.jpg`}/></li>)
             console.log(`${i}.jpg`);
         }
         return(

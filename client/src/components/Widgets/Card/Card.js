@@ -11,8 +11,8 @@ const Card = (props) => {
     switch(props.type){
       case 'listing':
         return(
-          <div className = {`card ${props.className}`}>
-            <div className = "card__image" style = {{backgroundImage:`url("./images/listings/${data.id}/${data.images[0]}")`}}></div>
+          <div className = {`card ${props.className}`} onMouseEnter = {(e)=>props.onMouseEnter(e)} onMouseLeave = {(e)=>props.onMouseLeave(e)}>
+            <div className = "card__image" style = {{backgroundImage:props.imagePath}}></div>
             <div className = "card__details">
               <div className = "card__text-container">
                 <div className ="card__price-and-rooms">

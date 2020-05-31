@@ -51,7 +51,7 @@ router.route('/getbyaddressid/:addressid').get((req,res)=>{
 
 router.route('/get').get((req,res)=>{
   const id = req.params.locationnameid;
-  const sql = "SELECT * FROM listing"
+  const sql = "SELECT * FROM listing_address"
 
   pool.query(sql, function (error, results, fields) {
     if (error) throw error;
