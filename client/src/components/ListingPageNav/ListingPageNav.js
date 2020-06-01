@@ -105,9 +105,13 @@ render(){
             <li><Link to = {'/agents'}>Find An Agent</Link></li>
           </ul>
         </div>
-        <div className = "test">
-          {renderDesktopSearch()}
-        </div>
+        {!this.state.isMobileWidth ?
+          <div className = "test">
+            {renderDesktopSearch()}
+          </div>
+        :
+        null
+        }
       </nav>
     </div>
   )

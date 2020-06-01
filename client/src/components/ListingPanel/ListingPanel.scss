@@ -5,17 +5,36 @@
   &__listing-container{
     display:grid;
     padding:20px;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:1fr;
     column-gap: 20px;
+    grid-row-gap: 20px;
   }
 
   &__listing{
     width:100%;
     height:250px;
-    //margin: 0 10px 0 10px;
 
     &:hover{
       cursor:pointer;
+    }
+  }
+
+  @media screen and (min-width:600px){
+    &__listing-container{
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media screen and (min-width:768px){
+    &__listing-container{
+      grid-template-columns: 1fr;
+    }
+  }
+
+
+  @media screen and (min-width:1000px){
+    &__listing-container{
+      grid-template-columns: 1fr 1fr;
     }
   }
 }

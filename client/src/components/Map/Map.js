@@ -7,7 +7,6 @@ import './map.css';
 import { arraysMatch } from '../../utils'
 
 class Map extends Component {
-  _isMounted = false;
     constructor(props) {
         super(props);
         this.onScriptLoad = this.onScriptLoad.bind(this)
@@ -66,13 +65,12 @@ class Map extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if(prevState.markerData !== nextProps.data){
-      console.log(prevState.markerData,nextProps.data,"DATA~")
+      console.log(prevState.markerData,nextProps.data,"TESTING TESTING")
       return {
         markerData: nextProps.data
       }
     }
-    if(prevState.hoveredListing !== nextProps.activeListing && nextProps.activeListing !== null){
-      console.log("active marker changed", nextProps.activeListing)
+    if(prevState.hoveredListing !== nextProps.activeListing){
       return {
         hoveredListing:nextProps.activeListing
       }
@@ -80,7 +78,7 @@ class Map extends Component {
     return null
   }
 
-  createInfoWindow(e, map) {
+  createInfoWindow(e,map) {
       const infoWindow = new window.google.maps.InfoWindow({
           content: '<div id="infoWindow"></div>',
           position: { lat: e.latLng.lat(), lng: e.latLng.lng() },
@@ -155,7 +153,6 @@ class Map extends Component {
       gridSize:500,
       zoomOnClick:true,
       averageCenter:true,
-      ignoreHiddenMarkers:true,
       zIndex:1000,
       styles:[
         {
@@ -199,12 +196,8 @@ class Map extends Component {
         markerCluster:null
       })
     }
-
-    const cluster = new MarkerClusterer(map,markers,options)
-    cluster.ignoreHidden = true
-
     this.setState({
-      markerCluster:cluster
+      markerCluster:new MarkerClusterer(map,markers,options)
     })
 
   }
@@ -271,24 +264,18 @@ class Map extends Component {
         })
 
         marker.addListener('mouseover', e => {
-            marker.setIcon({
-              url:icon({center:'2ee1ff', color:'2ee1ff', text:shorthandPrice}),
-              scaledSize: new window.google.maps.Size(60,60),
-              anchor: new window.google.maps.Point(30,30)
-            })
+            //this.selectMarker(null,marker)
+            if(!this.state.infoWindow)this.props.setActiveListing(marker.id)
             this.setState({
-                activeMarker:marker
+                activeMarker:marker,
+                //hoveredListing:marker.id
             })
             this.correctZIndex(marker)
         })
 
         marker.addListener('mouseout', e => {
-            let closeInfoWindowWithTimeout;
-            marker.setIcon({
-              url:icon({center:'3cc194', text:shorthandPrice}),
-              scaledSize: new window.google.maps.Size(60,60),
-              anchor: new window.google.maps.Point(30,30)
-            })
+            //let closeInfoWindowWithTimeout;
+            this.props.removeActiveListing(marker.id)
         })
 
         markers.push(marker)
@@ -323,35 +310,32 @@ class Map extends Component {
     }
   }
 
-  //shouldComponentUpdate(nextProps,nextState){
-  //  if(this.state.markerData === nextState.markerData){
-  //    return false
-  //  }else{
-  //    return true
-  //  }
-  //}
   selectMarker = (markerId)=>{
-    let markers = [...this.state.markers]
     let index;
-    const marker = this.state.markers.find((marker,i)=>{
+    const newMarker = this.state.markers.find((marker,i)=>{
       index = i
       return marker.id === markerId
     })
-    marker.setIcon({
-      url:icon({center:'2ee1ff', color:'2ee1ff', text:abbreviatePrice(marker.listingData.price)}),
-      scaledSize: new window.google.maps.Size(60,60),
-      anchor: new window.google.maps.Point(30,30)
+    newMarker.setIcon({
+      url:icon({center:'2ee1ff', color:'2ee1ff', text:abbreviatePrice(newMarker.listingData.price)}),
+      scaledSize: new window.google.maps.Size(65,65),
+      anchor: new window.google.maps.Point(32,32)
     })
-    marker.setVisible(false)
-    console.log(markers,"first",index,marker)
-    markers.splice(index,1,marker)
-    markers.pop()
-    console.log(markers,"second",markers[index])
-    this.setState({
-      markers
-    },()=>this.loadClusters(this.state.map,this.state.markers))
-    console.log(this.state.markerCluster,"cluster")
+  }
 
+  deselectMarker = (markerId)=>{
+    if(markerId){
+      let index;
+      const newMarker = this.state.markers.find((marker,i)=>{
+        index = i
+        return marker.id === markerId
+      })
+      newMarker.setIcon({
+        url:icon({center:'3cc194', text:abbreviatePrice(newMarker.listingData.price)}),
+        scaledSize: new window.google.maps.Size(60,60),
+        anchor: new window.google.maps.Point(30,30)
+      })
+    }
   }
 
   componentDidUpdate(prevProps,prevState){
@@ -360,9 +344,13 @@ class Map extends Component {
       this.loadClusters(this.state.map,this.state.markers);
     }
     if(this.state.hoveredListing !== prevState.hoveredListing){
-      this.selectMarker(this.state.hoveredListing)
-    }else if(this.state.hoveredListing !== null){
-      //this.deselectMarker(this.state.hoveredListing)
+      if(this.state.hoveredListing !== null){
+        this.deselectMarker(prevState.hoveredListing)
+        this.selectMarker(this.state.hoveredListing)
+      }else{
+        this.deselectMarker(prevState.hoveredListing)
+      }
+
     }
   }
 

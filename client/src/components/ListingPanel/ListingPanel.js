@@ -8,13 +8,19 @@ class ListingPanel extends Component {
 
   state = {
     markersInBounds:[],
-    markerData:[]
+    markerData:[],
+    activeListing:null
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
     if(prevState.markersInBounds !== nextProps.markersInBounds){
       return {
         markersInBounds: nextProps.markersInBounds
+      }
+    }
+    if(prevState.activeListing !== nextProps.activeListing){
+      return {
+        activeListing:nextProps.activeListing
       }
     }
     return null
@@ -31,8 +37,9 @@ class ListingPanel extends Component {
 
   renderListings = ()=>{
     const listings = this.state.markersInBounds.map((marker)=>{
+      let hover = this.state.activeListing === marker.id;
       return <Card
-              className = "listing-panel__listing"
+              className = {`listing-panel__listing ${hover ? 'hover':null}`}
               type="listing"
               data = {marker.listingData}
               imagePath = {`url("/images/listings/${marker.listingData.listing_id}/1.jpg")`}

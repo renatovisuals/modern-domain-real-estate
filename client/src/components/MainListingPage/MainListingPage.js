@@ -147,9 +147,9 @@ class MainListingPage extends Component {
   updateMapDimensions = ()=>{
     const navHeight =document.getElementById('nav').getBoundingClientRect().height;
     const nav = document.getElementById('nav');
-    const listingPanelWidth = document.getElementById('listing-panel').getBoundingClientRect().height;
+    const listingPanelWidth = document.getElementById('listing-panel').getBoundingClientRect().width;
     let mapHeight = window.innerHeight - (navHeight || 0);
-    let mapWidth = window.innerWidth - 600;
+    let mapWidth = window.innerWidth - listingPanelWidth;
     this.setState({
       mapHeight,
       mapWidth
@@ -293,6 +293,8 @@ class MainListingPage extends Component {
                 markersInBounds = {this.state.markersInBounds}
                 setMarkersInBounds = {(markersInBounds)=>this.setMarkersInBounds(markersInBounds)}
                 activeListing = {this.state.activeListing}
+                setActiveListing = {(listingId)=>this.setActiveListing(listingId)}
+                removeActiveListing = {(listingId)=>this.removeActiveListing(listingId)}
               />
             : null
           }
@@ -301,9 +303,11 @@ class MainListingPage extends Component {
         <div id = "listing-panel" className = "listing-page__listing-panel" style={{height:`${this.state.mapHeight}px`}}>
           <ListingPanel
            markerData = {this.state.markerData}
+           mapIsVisible = {this.state.mapIsVisible}
            markersInBounds = {this.state.markersInBounds}
            handleListingMouseEnter = {(listingId)=> this.setActiveListing(listingId)}
            handleListingMouseLeave = {this.removeActiveListing}
+           activeListing = {this.state.activeListing}
           />
         </div>
       </div>
