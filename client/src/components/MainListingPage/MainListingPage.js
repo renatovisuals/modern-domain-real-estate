@@ -225,6 +225,7 @@ class MainListingPage extends Component {
   }
 
   componentDidMount(){
+    console.log(this.props.match,"params")
     window.scrollTo(0,0);
     if(this.props.match.params.location){
       this.getListingsByLocationNameId(this.props.match.params.location)
@@ -308,7 +309,8 @@ class MainListingPage extends Component {
            handleListingMouseEnter = {(listingId)=> this.setActiveListing(listingId)}
            handleListingMouseLeave = {this.removeActiveListing}
            activeListing = {this.state.activeListing}
-          />
+           >
+          </ListingPanel>
         </div>
       </div>
     )

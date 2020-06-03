@@ -3,19 +3,18 @@ import './listing.css'
 //listingData
 
 function Listing(props) {
-    const imgAmnt = props.listingData.imageAmount;
+    //const imgAmnt = props.listingData.imageAmount;
     const { listingData } = props;
     let imgs = [];
 
     const getImages = ()=>{
-        for( let i = 1; i<imgAmnt; i++){
-            imgs.push(<li key = {i} className="box"> <img alt="listing" src = {`./images/houses/${listingData.id}/${i}.jpg`}/></li>)
-            console.log(`${i}.jpg`);
-        }
+      //  for( let i = 1; i<imgAmnt; i++){
+      //      imgs.push(<li key = {i} className="box"> <img alt="listing" src = {`./images/houses/${listingData.id}/${i}.jpg`}/></li>)
+      //      console.log(`${i}.jpg`);
+      //  }
         return(
             <ul>
-                <li className = "top-image"> <img src = {`./images/houses/${listingData.id}/main.jpg`}/> </li>
-                {imgs}
+            
             </ul>
         )
     }

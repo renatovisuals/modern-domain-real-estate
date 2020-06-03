@@ -1,0 +1,31 @@
+.listing-panel-filter{
+  font-size: 20px;
+  //background:red;
+  height:80px;
+  border-bottom: 1px solid #b1b1b1;
+  padding-left: 20px;
+  display:flex;
+  align-items: center;
+  transition: .3s all ease;
+
+  &__button{
+    &--filter{
+      width:140px;
+      margin:0;
+    }
+  }
+}
+
+.listing-panel-filter.is-active{
+  background-color: red;
+  height:100%;
+
+  .listing-panel-filter__button{
+    &--filter{
+      width:140px;
+      margin:0;
+      background-color:#fff;
+      color:black;
+    }
+  }
+}
