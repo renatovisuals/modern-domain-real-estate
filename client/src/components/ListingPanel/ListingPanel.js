@@ -14,7 +14,11 @@ class ListingPanel extends Component {
     filterDrawerIsOpen:false
   }
 
-
+  componentDidMount(){
+    setTimeout(()=>{
+      this.props.updateMapDimensions()
+    },100)
+  }
 
   static getDerivedStateFromProps(nextProps, prevState){
     if(prevState.markersInBounds !== nextProps.markersInBounds){

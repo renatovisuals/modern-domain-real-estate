@@ -19,6 +19,7 @@ class MainListingPage extends Component {
     super(props)
     this.state = {
       markerData:'',
+      filteredData:'',
       markersInBounds:[],
       showCurrentListing:false,
       activeListing:null,
@@ -31,7 +32,9 @@ class MainListingPage extends Component {
       searchResults:[],
       search:false,
       listingsToShow:[],
-      mobileWidth:768
+      mobileWidth:768,
+      bedrooms:0,
+      bathrooms:0
     }
     this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
@@ -54,13 +57,6 @@ class MainListingPage extends Component {
       activeListing:null
     })
   }
-
-  //getListingsToShow = ()=>{
-  //  const listingsToShow = this.state.markersInBounds.map((marker)=>marker.listingData)
-  //  this.setState({
-  //    listingsToShow
-  //  }, console.log(this.state.listingsToShow, "Showing current listings"))
-  //}
 
   handleSearchInput = (e)=>{
     this.setState({
@@ -115,7 +111,6 @@ class MainListingPage extends Component {
         this.getListingsByLocationNameId(this.state.searchResults.locations[0].item.name_id)
       }else if(addresses && addresses.length>0){
         this.getListingsByAddressId(this.state.searchResults.addresses[0].item.address_id)
-        //this.getListingsByLocationNameId(this.state.searchResults.addresses[0].item.name_id)
       }
       this.setState({
         search:false
@@ -140,12 +135,12 @@ class MainListingPage extends Component {
     if(result.type === "location"){
       this.getListingsByLocationId(result.id)
     }else if(result.type ==="agent"){
-
     }
   }
 
   updateMapDimensions = ()=>{
     const navHeight =document.getElementById('nav').getBoundingClientRect().height;
+    console.log(navHeight, "nav height")
     const nav = document.getElementById('nav');
     const listingPanelWidth = document.getElementById('listing-panel').getBoundingClientRect().width;
     let mapHeight = window.innerHeight - (navHeight || 0);
@@ -174,19 +169,12 @@ class MainListingPage extends Component {
     let boundsString = JSON.stringify(mapBounds)
   }
 
-  getListingsByLocationNameId = async (nameId)=>{
+  getListingsByLocationNameId = async (nameId,callback)=>{
     axios.get(`/api/listing/getbylocationnameid/${nameId}`).then((res)=>{
       this.setState({
         markerData:res.data
-      })
+      },()=>{if(callback)callback()})
     });
-
-    //return res.data
-    /*let res = await axios.get(`/api/listing/getbylocationnameid/${nameId}`);
-    this.setState({
-      markerData: res.data
-    });
-    return res.data*/
   }
 
   getListingsByLocationId = async (id)=>{
@@ -195,16 +183,6 @@ class MainListingPage extends Component {
         markerData:res.data
       })
     })
-
-    //console.log(res.data,"this is the response")
-    //return res.data
-
-    /*let res = await axios.get(`/api/listings/getbylocationid/${id}`);
-    this.setState({
-      markerData: res.data
-    });
-    console.log(res.data,"this is the response")
-    return res.data */
   }
 
   getListingsByAddressId = async (id)=>{
@@ -215,27 +193,64 @@ class MainListingPage extends Component {
     })
   }
 
-  getAllListings = async ()=>{
+  getAllListings = async (callback)=>{
     axios.get(`/api/listing/get/`).then((res)=>{
       const test = res.data;
         this.setState({
           markerData: res.data
-        });
+        },()=>{if(callback)callback()});
     });
   }
 
   componentDidMount(){
-    console.log(this.props.match,"params")
+    console.log(this.props.location,"params")
     window.scrollTo(0,0);
     if(this.props.match.params.location){
-      this.getListingsByLocationNameId(this.props.match.params.location)
+      this.getListingsByLocationNameId(this.props.match.params.location,this.getInitialListingFilterState)
     }else{
-      this.getAllListings()
+      this.getAllListings(this.getInitialListingFilterState)
     }
     this.updateMapDimensions();
     this.mapIsVisible();
     window.addEventListener("resize",this.updateMapDimensions);
     window.addEventListener("resize",this.mapIsVisible);
+  }
+
+  getInitialListingFilterState = ()=>{
+    console.log("listing filter state called")
+    if(!this.state.filteredData){
+      this.setState({
+        filteredData:this.state.markerData
+      },()=>this.getInitialListingFilterState())
+      return
+    }
+    let search = queryString.parse(this.props.location.search);
+    console.log(search,"search")
+    for(let param in search){
+      if(param === 'bedrooms' || 'bathrooms'){
+        search[param]= parseFloat(search[param])
+      }
+    }
+    console.log(search,"SEARCH")
+    this.setState({
+      bedrooms:search.bedrooms,
+      bathrooms:search.bathrooms
+    },()=>this.filterListingData())
+  }
+
+  filterListingData = ()=>{
+    let bedrooms,bathrooms;
+    let markerData = [...this.state.markerData];
+    console.log(this.state,"this is a test",markerData);
+    markerData = markerData.filter((data)=>{
+       if (data.bathrooms<this.state.bathrooms || data.bedrooms<this.state.bedrooms){
+         return false
+       }
+        return true
+    })
+    this.setState({
+      filteredData:markerData
+    },()=>console.log(this.state,"new filtered data"))
   }
 
 
@@ -284,11 +299,11 @@ class MainListingPage extends Component {
           : null
         }
         <div className = "listing-page__map-container" style={{height:`${this.state.mapHeight}px`,width:`${this.state.mapWidth}px`}}>
-          {this.state.mapIsVisible && this.state.markerData
+          {this.state.mapIsVisible && this.state.filteredData
             ? <Map
                 id="myMap"
                 options={mapOptions}
-                data = {this.state.markerData}
+                data = {this.state.filteredData}
                 getListing = {this.getListingData}
                 onMapMove = {this.onMapMove}
                 markersInBounds = {this.state.markersInBounds}
@@ -303,12 +318,13 @@ class MainListingPage extends Component {
 
         <div id = "listing-panel" className = "listing-page__listing-panel" style={{height:`${this.state.mapHeight}px`}}>
           <ListingPanel
-           markerData = {this.state.markerData}
+           markerData = {this.state.filteredData}
            mapIsVisible = {this.state.mapIsVisible}
            markersInBounds = {this.state.markersInBounds}
            handleListingMouseEnter = {(listingId)=> this.setActiveListing(listingId)}
            handleListingMouseLeave = {this.removeActiveListing}
            activeListing = {this.state.activeListing}
+           updateMapDimensions = {this.updateMapDimensions}
            >
           </ListingPanel>
         </div>

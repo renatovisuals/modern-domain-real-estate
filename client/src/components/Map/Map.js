@@ -140,7 +140,9 @@ class Map extends Component {
            })
          }
      })
-
+      if(!this.state.markerData){
+        return
+      }
       this.clearMarkers(()=>this.renderMarkers(map))
 
   }
@@ -213,6 +215,9 @@ class Map extends Component {
   }
 
   renderMarkers(map){
+    if(this.state.markerData.length === 0){
+      return
+    }
     const markers = []
     let bounds = new window.google.maps.LatLngBounds();
     this.state.markerData.forEach(house => {
@@ -339,7 +344,7 @@ class Map extends Component {
   }
 
   componentDidUpdate(prevProps,prevState){
-    if(!arraysMatch(prevState.markerData,this.state.markerData)){
+    if(!arraysMatch(prevState.markerData,this.state.markerData) && this.state.markerData.length !== 0){
       this.clearMarkers(()=>this.renderMarkers(this.state.map))
       this.loadClusters(this.state.map,this.state.markers);
     }

@@ -30,7 +30,15 @@ class ListingPanelFilter extends Component {
 
     return(
       <div id="listing-filter" className= {`listing-panel-filter ${this.props.filterDrawerIsOpen ? 'is-active' : null}`} >
-        <Button onClick = {this.handleFilterToggle} content = "Filter" className = "listing-panel-filter__button--filter"> FILTER </Button>
+        <div className = "listing-panel-filter__filter-menu">
+          <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filter' : 'Filter'} className = "listing-panel-filter__button--filter"> FILTER </Button>
+          <div className = "listing-panel-filter__filter-menu-bottom-border">
+          </div>
+        </div>
+        <div className = "listing-filter__main">
+          <div className = "listing-panel-filter__test">
+          </div>
+        </div>
       </div>
     )
   }

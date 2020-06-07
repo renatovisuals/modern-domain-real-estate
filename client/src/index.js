@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import Routes from './routes';
+import history from './history';
 import './index.scss';
 
 const App = () => {
   return(
-    <BrowserRouter>
+    <BrowserRouter history = {history}>
       <Routes/>
     </BrowserRouter>
   )

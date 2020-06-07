@@ -5,6 +5,7 @@ import data from '../../db';
 import Select from '../Widgets/Select/Select';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import queryString from 'query-string';
 
 
 class HeroSection extends Component {
@@ -15,7 +16,7 @@ class HeroSection extends Component {
     location:'',
     redirect:false,
     cities:null,
-    paramStr:''
+    queryStr:''
   }
 
   componentDidMount(){
@@ -37,7 +38,7 @@ class HeroSection extends Component {
         return city.location_id === parseFloat(this.state.location)
       })
       return <Redirect to={{
-        pathname:`/listings/for-sale/${location[0].name_id || '_map'}/${this.state.paramStr}`,
+        pathname:`/listings/for-sale/${location[0].name_id || '_map'}/${this.state.queryStr}`,
         state: {location:location}
       }} />
     }
@@ -52,17 +53,12 @@ class HeroSection extends Component {
 
   handleSubmit = (e)=>{
     e.preventDefault();
-    let paramStr="";
-    const params = {
-      ...(this.state.bedrooms ? {'bedrooms.min':this.state.bedrooms} :{}),
-      ...(this.state.bathrooms ? {'bathrooms.min':this.state.bathrooms} :{})
-    }
-    for(let param in params){
-      paramStr += param + "=" + params[param] + "/"
-    }
-    console.log(paramStr, "param string")
+    const params = {}
+    if(this.state.bedrooms) params.bedrooms = this.state.bedrooms;
+    if(this.state.bathrooms) params.bathrooms = this.state.bathrooms;
+    const queryStr = `${Object.keys(params).length===0 ? '':'?'}${queryString.stringify(params)}`
     this.setState({
-      paramStr,
+      queryStr,
       redirect:true
     },()=>console.log(this.state,"this is the state"))
   }
