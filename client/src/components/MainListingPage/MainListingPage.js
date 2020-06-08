@@ -26,8 +26,9 @@ class MainListingPage extends Component {
       currentListingData:null,
       mapHeight:null,
       mapWidth:null,
+      //mapCenter:null,
       mapIsVisible:false,
-      map:2,
+      //map:2,
       searchQuery:'',
       searchResults:[],
       search:false,
@@ -71,6 +72,11 @@ class MainListingPage extends Component {
       this.setState({
         search:true
       },this.handleSearch())
+    }else if (this.state.searchQuery.trim().length === 0){
+      console.log(this.props.location.search,"location object")
+
+      this.props.history.push(`/listings/for-sale/_map/${this.props.history.location.search}`)
+      this.getAllListings()
     }
   }
 
@@ -107,6 +113,7 @@ class MainListingPage extends Component {
   componentDidUpdate(prevProps,prevState){
     const {locations,agents,addresses} = this.state.searchResults;
     if(this.state.search){
+
       if(locations && locations.length>0){
         this.getListingsByLocationNameId(this.state.searchResults.locations[0].item.name_id)
       }else if(addresses && addresses.length>0){
@@ -172,7 +179,8 @@ class MainListingPage extends Component {
   getListingsByLocationNameId = async (nameId,callback)=>{
     axios.get(`/api/listing/getbylocationnameid/${nameId}`).then((res)=>{
       this.setState({
-        markerData:res.data
+        markerData:res.data,
+        filteredData:res.data
       },()=>{if(callback)callback()})
     });
   }
@@ -180,7 +188,8 @@ class MainListingPage extends Component {
   getListingsByLocationId = async (id)=>{
     axios.get(`/api/listing/getbylocationid/${id}`).then((res)=>{
       this.setState({
-        markerData:res.data
+        markerData:res.data,
+        filteredData:res.data
       })
     })
   }
@@ -188,7 +197,8 @@ class MainListingPage extends Component {
   getListingsByAddressId = async (id)=>{
     axios.get(`/api/listing/getbyaddressid/${id}`).then((res)=>{
     this.setState({
-        markerData:res.data
+        markerData:res.data,
+        filteredData:res.data
       },console.log(this.state.markerData,"new data"));
     })
   }
@@ -197,7 +207,8 @@ class MainListingPage extends Component {
     axios.get(`/api/listing/get/`).then((res)=>{
       const test = res.data;
         this.setState({
-          markerData: res.data
+          markerData: res.data,
+          filteredData:res.data
         },()=>{if(callback)callback()});
     });
   }
@@ -216,32 +227,40 @@ class MainListingPage extends Component {
     window.addEventListener("resize",this.mapIsVisible);
   }
 
+  handleFilterInputChange = (name,value)=>{
+    let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'})
+    search[name] = value;
+    let newHistory = queryString.stringify(search,{arrayFormat:'comma'})
+    this.props.history.push({
+      search:newHistory
+    })
+    console.log(this.props.location.search,this.props.history,"location from input change")
+    this.setState({
+      ...search
+    })
+  }
+
   getInitialListingFilterState = ()=>{
-    console.log("listing filter state called")
     if(!this.state.filteredData){
       this.setState({
         filteredData:this.state.markerData
       },()=>this.getInitialListingFilterState())
       return
     }
-    let search = queryString.parse(this.props.location.search);
-    console.log(search,"search")
+    let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'});
     for(let param in search){
-      if(param === 'bedrooms' || 'bathrooms'){
+      if(param === 'bedrooms' || param === 'bathrooms'){
         search[param]= parseFloat(search[param])
       }
     }
     console.log(search,"SEARCH")
     this.setState({
-      bedrooms:search.bedrooms,
-      bathrooms:search.bathrooms
+      ...search
     },()=>this.filterListingData())
   }
 
   filterListingData = ()=>{
-    let bedrooms,bathrooms;
     let markerData = [...this.state.markerData];
-    console.log(this.state,"this is a test",markerData);
     markerData = markerData.filter((data)=>{
        if (data.bathrooms<this.state.bathrooms || data.bedrooms<this.state.bedrooms){
          return false
@@ -251,6 +270,7 @@ class MainListingPage extends Component {
     this.setState({
       filteredData:markerData
     },()=>console.log(this.state,"new filtered data"))
+    console.log(this.props.location.search,"THIS IS A TEST")
   }
 
 
@@ -278,7 +298,7 @@ class MainListingPage extends Component {
 
   render(){
     const mapOptions = {
-      //center:{lat:40.7128,lng:-74.0060},
+      center:this.state.mapCenter,
       zoom:8,
       styles: mapStyles()
     }
@@ -325,6 +345,8 @@ class MainListingPage extends Component {
            handleListingMouseLeave = {this.removeActiveListing}
            activeListing = {this.state.activeListing}
            updateMapDimensions = {this.updateMapDimensions}
+           handleChange = {(name,value)=>this.handleFilterInputChange(name,value)}
+
            >
           </ListingPanel>
         </div>

@@ -6,6 +6,7 @@ import Select from '../Widgets/Select/Select';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import queryString from 'query-string';
+import { withRouter } from 'react-router-dom';
 
 
 class HeroSection extends Component {
@@ -32,18 +33,6 @@ class HeroSection extends Component {
       getListings()
   }
 
-  renderRedirect = () =>{
-    if(this.state.redirect){
-      const location = this.state.cities.filter((city)=>{
-        return city.location_id === parseFloat(this.state.location)
-      })
-      return <Redirect to={{
-        pathname:`/listings/for-sale/${location[0].name_id || '_map'}/${this.state.queryStr}`,
-        state: {location:location}
-      }} />
-    }
-  }
-
   handleChange = (key,value)=>{
     console.log(key,value,"KEY VALUE")
     this.setState({
@@ -57,10 +46,10 @@ class HeroSection extends Component {
     if(this.state.bedrooms) params.bedrooms = this.state.bedrooms;
     if(this.state.bathrooms) params.bathrooms = this.state.bathrooms;
     const queryStr = `${Object.keys(params).length===0 ? '':'?'}${queryString.stringify(params)}`
-    this.setState({
-      queryStr,
-      redirect:true
-    },()=>console.log(this.state,"this is the state"))
+    const location = this.state.cities.filter((city)=>{
+      return city.location_id === parseFloat(this.state.location)
+    })
+    this.props.history.push(`/listings/for-sale/${location[0].name_id || '_map'}/${queryStr}`)
   }
 
 
@@ -85,7 +74,6 @@ class HeroSection extends Component {
 render(){
   return(
     <section className = "hero-section">
-      {this.renderRedirect()}
       <ContentContainer>
         <h1 className = "hero-section__title"> Find Your Perfect Texas Home. </h1>
         <h3 className = "hero-section__subtitle"> We provide access to the most upscale living spaces in Texas. </h3>
@@ -149,4 +137,4 @@ render(){
 
 }
 
-export default HeroSection;
+export default withRouter(HeroSection);
