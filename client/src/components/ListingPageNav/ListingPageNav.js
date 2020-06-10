@@ -66,6 +66,8 @@ render(){
           clearSearch = {this.props.clearSearch}
           placeHolder = {placeHolder}
           mobileWidth = {this.state.mobileWidth}
+          resultsVisible = {this.props.resultsVisible}
+          hideListingSearchResults = {this.props.hideListingSearchResults}
         />
       )
     }
@@ -83,6 +85,8 @@ render(){
           clearSearch = {this.props.clearSearch}
           placeHolder = {placeHolder}
           mobileWidth = {this.state.mobileWidth}
+          resultsVisible = {this.props.resultsVisible}
+          hideListingSearchResults = {this.props.hideListingSearchResults}
         />
       )
     }

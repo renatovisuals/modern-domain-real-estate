@@ -34,6 +34,11 @@ const buildConditions = ((params)=>{
     values.push(params.name)
   }
 
+  if(params.name_id){
+    conditions.push("name_id = ?")
+    values.push(params.name_id)
+  }
+
   if(params.id){
     conditions.push("location_id = ?")
     values.push(params.id)

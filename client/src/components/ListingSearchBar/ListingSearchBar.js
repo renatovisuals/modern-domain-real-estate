@@ -13,7 +13,7 @@ class ListingSearchBar extends Component {
     this.state = {
       value:'',
       resultsVisible:true,
-      active:false,
+      active:false
     }
   }
 
@@ -26,7 +26,7 @@ class ListingSearchBar extends Component {
   hideSearchResults = (e)=>{
     if(e.target.id !== "listing-search-bar"){
       this.setState({
-        resultsVisible:false
+      //  resultsVisible:false
       })
     }
   }
@@ -76,27 +76,29 @@ class ListingSearchBar extends Component {
   }
 
   handleBlur = (e)=>{
-    if(e && e.relatedTarget && e.relatedTarget.id){
-      console.log(e.relatedTarget.id)
-      e.preventDefault()
-      return
-    }
-    if(window.innerWidth>=650){
-      this.setState({
-        active:false,
-        resultsVisible:false
-      })
-    }
+  setTimeout(()=>{
+    this.props.hideListingSearchResults()
+    this.setState({
+      active:false
+    })
+  },100)
   }
 
-  hideResults = ()=>{
+  handleClick = (result)=>{
+    console.log("CLICKED",result)
+    this.props.handleResultClick(result)
+    this.props.hideListingSearchResults()
     this.setState({
-      resultsVisible:false
+      active:false
     })
   }
 
   componentDidMount(){
-    //this.isMobileWidth()
+    if(this.props.searchQuery.length>0){
+      //this.props.showListingSearchResults()
+    }else{
+      console.log(this.props.searchQuery, "This is the query")
+    }
     window.addEventListener('resize',this.isMobileWidth)
     window.addEventListener('keydown',(e)=>{
       if(e.keyCode === 13){
@@ -106,17 +108,28 @@ class ListingSearchBar extends Component {
     })
   }
 
+  static getDerivedStateFromProps(nextProps, prevState){
+    if(prevState.searchQuery !== nextProps.searchQuery){
+      return {
+        searchQuery: nextProps.searchQuery
+      }
+    }
+    return null
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(this.state.searchQuery !== prevState.searchQuery){
+      this.setState({
+        resultsVisible:false
+      })
+    }
+  }
+
   componentWillUnmount(){
     window.removeEventListener('resize',this.isMobileWidth)
     //document.removeEventListener('click',this.hideSearchResults)
     console.log(this.props,"THESE ARE THE PROPS!!")
     this.props.clearSearch()
-  }
-
-  handleClick = ()=>{
-    this.setState({
-      resultsVisible:true
-    })
   }
 
   formatLocationResults = (result)=>{
@@ -184,7 +197,7 @@ class ListingSearchBar extends Component {
         if(this.props.data.locations){
           locations = this.props.data.locations.map((result)=>{
             return (
-              <div key = {result.location_id} tabIndex="0" id="type-ahead-result" className = "listing-search-bar__type-ahead-result" onClick = {()=> {this.props.handleResultClick({type:'location', id:result.item.location_id}); this.handleBlur()}}>
+              <div key = {result.location_id} tabIndex="0" id="type-ahead-result" className = "listing-search-bar__type-ahead-result" onClick = {(e)=> {this.handleClick({type:'location', id:result.item.name_id})}}>
                 {this.formatLocationResults(result)}
               </div>
             )
@@ -257,7 +270,7 @@ class ListingSearchBar extends Component {
 
 
       return (
-        <div id = "listing-search-bar__results" className = "listing-search-bar__type-ahead-container">
+        <div id = "listing-search-bar-results" className = "listing-search-bar__type-ahead-container">
           {getLocations()}
           {getAgents()}
           {getAddresses()}
@@ -278,7 +291,6 @@ render(){
                  className = "listing-search-bar__input"
                  type="text"
                  value={this.props.searchQuery}
-                 onClick={(e)=>this.handleClick(e)}
                  onChange = {(e)=>this.props.handleChange(e)}
                  onFocus = {(e)=>this.handleFocus(e)}
                  onBlur = {(e)=>this.handleBlur(e)}
@@ -287,7 +299,7 @@ render(){
           <div className = "listing-search-bar__search-btn"> </div>
         </div>
 
-        {this.state.resultsVisible && this.props.searchQuery.length>=2 ? this.renderResults() : null}
+        {this.props.resultsVisible && this.props.searchQuery.length>=2 ? this.renderResults() : null}
 
       </div>
     </div>

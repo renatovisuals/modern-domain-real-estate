@@ -64,7 +64,6 @@ class ListingPanel extends Component {
   }
 
   renderListings = ()=>{
-    console.log("re rendering listings")
     let listingData = [];
     let imagePath;
     if(this.props.mapIsVisible){

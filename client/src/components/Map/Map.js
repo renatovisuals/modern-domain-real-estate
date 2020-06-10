@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import InfoWindow from '../InfoWindow/InfoWindow';
 import MarkerClusterer from "@google/markerclusterer";
 import { render } from 'react-dom';
-import { icon, abbreviatePrice } from '../../utils'
+import { icon, abbreviatePrice } from '../../utils';
 import './map.css';
-import { arraysMatch } from '../../utils'
+import { arraysMatch } from '../../utils';
+import queryString from 'query-string';
+import { withRouter } from 'react-router-dom';
+import debounce from 'lodash.debounce';
 
 class Map extends Component {
     constructor(props) {
@@ -15,7 +18,7 @@ class Map extends Component {
           markerData:this.props.data,
           markerCluster:null,
           map:null,
-          zoom:12,
+          //zoom:12,
           markers:[],
           activeMarker:null,
           hoveredListing:null,
@@ -40,12 +43,8 @@ class Map extends Component {
         document.getElementById(this.props.id),
         mapOptions)
 
-      window.google.maps.event.addListenerOnce(map,'bounds_changed',(e)=>{
-        if (map.getZoom()>this.state.zoom){
-          map.setZoom(this.state.zoom)
-        }
-      })
       window.google.maps.event.addListenerOnce(map,'idle',(e)=>{
+        console.log("IDLE COMPLETE")
           this.setState({
             map
           }, ()=> this.onMapLoad(this.state.map))
@@ -53,7 +52,7 @@ class Map extends Component {
 
   }
 
-  getMapBounds(map){
+  getMapBounds = (map)=>{
     const bounds = map.getBounds()
     return ({
       north:bounds.getNorthEast().lat(),
@@ -63,9 +62,33 @@ class Map extends Component {
     })
   }
 
+  updateMapBounds = (bounds)=>{
+    this.props.updateMapBounds(bounds)
+  }
+
+  setMapBounds = (map,bounds,callback)=>{
+      let search = this.getSearchParams()
+      const ne = new window.google.maps.LatLng(bounds[0], bounds[1]);
+      const sw = new window.google.maps.LatLng(bounds[2], bounds[3]);
+      const boundsNew = new window.google.maps.LatLngBounds(sw,ne);
+      map.setCenter(boundsNew.getCenter())
+      if(search.mapZoom){
+        map.setZoom(parseFloat(search.mapZoom))
+      }
+      if(callback) callback()
+  }
+
+  changeZoomState = (map)=>{
+    console.log("change zoom state fired!")
+    let search = this.getSearchParams()
+    search.mapZoom = map.getZoom()
+    this.props.history.push({
+      search:queryString.stringify(search,{arrayFormat:'comma'})
+    })
+  }
+
   static getDerivedStateFromProps(nextProps, prevState){
     if(prevState.markerData !== nextProps.data){
-      console.log(prevState.markerData,nextProps.data,"TESTING TESTING")
       return {
         markerData: nextProps.data
       }
@@ -111,8 +134,6 @@ class Map extends Component {
           markers:[]
         },()=>callback())
       })
-
-
   }
 
   correctZIndex(activeMarker){
@@ -123,14 +144,13 @@ class Map extends Component {
   activeMarker.setZIndex(100)
   }
 
-
-
   onMapLoad(map){
-
-      map.addListener('dragend',()=> this.props.onMapMove(this.getMapBounds(map)))
-      map.addListener('zoom_changed',()=> this.props.onMapMove(this.getMapBounds(map)))
+      map.addListener('dragend',()=> this.updateMapBounds(this.getMapBounds(map)))
+      map.addListener('zoom_changed',()=>{this.updateMapBounds(this.getMapBounds(map))})
+      map.addListener('zoom_changed', ()=>this.changeZoomState(map))
       map.addListener('center_changed', this.getMarkersInBounds)
       map.addListener('zoom_changed',this.getMarkersInBounds)
+      window.addEventListener('resize',this.getMarkersInBounds)
 
       map.addListener('click',()=>{
          if(this.state.infoWindow){
@@ -143,7 +163,12 @@ class Map extends Component {
       if(!this.state.markerData){
         return
       }
-      this.clearMarkers(()=>this.renderMarkers(map))
+      let search = this.getSearchParams();
+      let shouldFitBounds = search.mapBounds ? false : true;
+        this.renderMarkers(this.state.map,shouldFitBounds,()=>{
+          if(search.mapBounds)this.setMapBounds(this.state.map,search.mapBounds)
+          console.log(search.mapBounds,"THESE ARE THE MAPBOUNDS")
+        })
 
   }
 
@@ -201,98 +226,103 @@ class Map extends Component {
     this.setState({
       markerCluster:new MarkerClusterer(map,markers,options)
     })
-
   }
 
-  getMarkersInBounds = ()=>{
-    const markersInBounds = []
-    for(let i=0; i< this.state.markers.length; i++){
-      if(this.state.map.getBounds().contains(this.state.markers[i].getPosition())){
-        markersInBounds.push(this.state.markers[i])
+  getMarkersInBounds = debounce(()=>{
+    if(this.state.map.getBounds()){
+      const markersInBounds = []
+      for(let i=0; i< this.state.markers.length; i++){
+        if(this.state.map.getBounds().contains(this.state.markers[i].getPosition())){
+          markersInBounds.push(this.state.markers[i])
+        }
       }
+      console.log(this)
+      this.props.setMarkersInBounds(markersInBounds)
     }
-    this.props.setMarkersInBounds(markersInBounds)
-  }
+  },300)
 
-  renderMarkers(map){
+  renderMarkers(map,shouldFitBounds,callback){
     if(this.state.markerData.length === 0){
       return
     }
     const markers = []
     let bounds = new window.google.maps.LatLngBounds();
-    this.state.markerData.forEach(house => {
-        const shorthandPrice = abbreviatePrice(house.price)
-        const position = {
-          lat:parseFloat(house.pos_lat),
-          lng:parseFloat(house.pos_lng)
-        }
-        let marker = new window.google.maps.Marker({
-            map:map,
-            position:position,
-            name:house.name,
-            id:house.listing_id,
-            cursor:'pointer',
-            icon:{
-                url: house.icon || icon({text:shorthandPrice}),
-                scaledSize: new window.google.maps.Size(60, 60),
-                anchor:new window.google.maps.Point(30,30)
-            }
-        })
-
-        marker.listingData = house;
-
-        //if center exists in options, override the marker based map positioning
-        if(!this.props.options.center){
-          bounds.extend(marker.position);
-          //if only one marker on map, extend the bounds to zoom further out
-          if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
-            var extendPoint1 = new window.google.maps.LatLng(bounds.getNorthEast().lat() + 0.01, bounds.getNorthEast().lng() + 0.01);
-            var extendPoint2 = new window.google.maps.LatLng(bounds.getNorthEast().lat() - 0.01, bounds.getNorthEast().lng() - 0.01);
-            bounds.extend(extendPoint1);
-            bounds.extend(extendPoint2);
+    this.clearMarkers(()=>{
+      console.log(this.state.markerData,"MARKER DATA")
+      this.state.markerData.forEach(house => {
+          const shorthandPrice = abbreviatePrice(house.price)
+          const position = {
+            lat:parseFloat(house.pos_lat),
+            lng:parseFloat(house.pos_lng)
           }
-          map.fitBounds(bounds)
-        }
-        map.fitBounds(bounds)
+          let marker = new window.google.maps.Marker({
+              map:map,
+              position:position,
+              name:house.name,
+              id:house.listing_id,
+              cursor:'pointer',
+              icon:{
+                  url: house.icon || icon({text:shorthandPrice}),
+                  scaledSize: new window.google.maps.Size(60, 60),
+                  anchor:new window.google.maps.Point(30,30)
+              }
+          })
 
-        marker.addListener('click', e => {
-            if(this.state.infoWindow){
-                this.state.infoWindow.close()
-                this.setState({
-                    infoWindow:null
-                })
+          marker.listingData = house;
+
+          if(shouldFitBounds){
+            bounds.extend(marker.position);
+            //if only one marker on map, extend the bounds to zoom further out
+            if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+              var extendPoint1 = new window.google.maps.LatLng(bounds.getNorthEast().lat() + 0.01, bounds.getNorthEast().lng() + 0.01);
+              var extendPoint2 = new window.google.maps.LatLng(bounds.getNorthEast().lat() - 0.01, bounds.getNorthEast().lng() - 0.01);
+              bounds.extend(extendPoint1);
+              bounds.extend(extendPoint2);
             }
-            this.setState({
-              activeMarker:marker
-            })
-            this.createInfoWindow(e,map)
-        })
+            map.fitBounds(bounds)
+            this.getMarkersInBounds()
+          }
+            //map.fitBounds(bounds)
+          marker.addListener('click', e => {
+              if(this.state.infoWindow){
+                  this.state.infoWindow.close()
+                  this.setState({
+                      infoWindow:null
+                  })
+              }
+              this.setState({
+                activeMarker:marker
+              })
+              this.createInfoWindow(e,map)
+          })
 
-        marker.addListener('mouseover', e => {
-            //this.selectMarker(null,marker)
-            if(!this.state.infoWindow)this.props.setActiveListing(marker.id)
-            this.setState({
-                activeMarker:marker,
-                //hoveredListing:marker.id
-            })
-            this.correctZIndex(marker)
-        })
+          marker.addListener('mouseover', e => {
+              //this.selectMarker(null,marker)
+              if(!this.state.infoWindow)this.props.setActiveListing(marker.id)
+              this.setState({
+                  activeMarker:marker,
+                  //hoveredListing:marker.id
+              })
+              this.correctZIndex(marker)
+          })
 
-        marker.addListener('mouseout', e => {
-            //let closeInfoWindowWithTimeout;
-            this.props.removeActiveListing(marker.id)
-        })
+          marker.addListener('mouseout', e => {
+              //let closeInfoWindowWithTimeout;
+              this.props.removeActiveListing(marker.id)
+          })
 
-        markers.push(marker)
+          markers.push(marker)
+      })
+
+      this.setState((prevState)=>({
+        markers
+      }),()=>{
+        this.loadClusters(map,this.state.markers)
+        console.log(map,"map")
+        //this.getMarkersInBounds()
+        if(callback)callback()
+      })
     })
-
-    this.setState((prevState)=>({
-      markers
-    }),()=>{
-      this.loadClusters(map,this.state.markers)
-      this.getMarkersInBounds()
-    })
-
   }
 
 //Prepending Google Maps Api Script before the React JS script in order to make full use of
@@ -343,10 +373,28 @@ class Map extends Component {
     }
   }
 
+  getSearchParams = ()=>{
+    let search = queryString.parse(this.props.history.location.search,{arrayFormat:'comma'})
+    return search
+  }
+
   componentDidUpdate(prevProps,prevState){
+
     if(!arraysMatch(prevState.markerData,this.state.markerData) && this.state.markerData.length !== 0){
-      this.clearMarkers(()=>this.renderMarkers(this.state.map))
+      this.onScriptLoad()
+      //console.log("this is a test")
+      //let search = this.getSearchParams();
+      //console.log(search,"THIS IS THE SEARCH ON CHANGE")
+      //let shouldFitBounds = search.mapBounds ? false : true;
+      //  this.renderMarkers(this.state.map,shouldFitBounds,()=>{
+      //    if(search.mapBounds)this.setMapBounds(this.state.map,search.mapBounds,this.getMarkersInBounds)
+      //  })
+    //  this.clearMarkers(()=>this.renderMarkers(this.state.map,{fitBounds:shouldFitBounds},()=>{
+    //    if(search.mapBounds)this.setMapBounds(this.state.map,search.mapBounds)
+    // }))
+
       this.loadClusters(this.state.map,this.state.markers);
+
     }
     if(this.state.hoveredListing !== prevState.hoveredListing){
       if(this.state.hoveredListing !== null){
@@ -359,6 +407,10 @@ class Map extends Component {
     }
   }
 
+  componentWillUnmount(){
+      window.removeEventListener('resize',this.getMarkersInBounds)
+  }
+
   render() {
     return (
       <div id={this.props.id} />
@@ -366,4 +418,4 @@ class Map extends Component {
   }
 }
 
-export default Map
+export default withRouter(Map);

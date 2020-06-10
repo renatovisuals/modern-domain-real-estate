@@ -26,6 +26,9 @@ class MainListingPage extends Component {
       currentListingData:null,
       mapHeight:null,
       mapWidth:null,
+      mapBounds:true,
+      searchResultsVisible:true,
+      //listingSearchBarValue:'',
       //mapCenter:null,
       mapIsVisible:false,
       //map:2,
@@ -41,7 +44,14 @@ class MainListingPage extends Component {
     this.closeListing = this.closeListing.bind(this);
   }
 
+  //onSearchBarChange = (value)=>{
+  //  this.setState({
+  //    listingSearchBarValue:value
+  //  })
+  //}
+
   setMarkersInBounds = (markersInBounds)=>{
+    console.log(markersInBounds,"MARKERS IN BOUNDS")
     this.setState({
       markersInBounds
     })
@@ -50,7 +60,7 @@ class MainListingPage extends Component {
   setActiveListing = (activeListing)=>{
     this.setState({
       activeListing
-    },()=>console.log(this.state.activeListing,"HELLO"))
+    })
   }
 
   removeActiveListing = ()=>{
@@ -64,6 +74,7 @@ class MainListingPage extends Component {
       searchQuery:e.target.value,
       searchResults:[]
     })
+    this.showListingSearchResults()
     this.getSearchResults(e)
   }
 
@@ -73,9 +84,8 @@ class MainListingPage extends Component {
         search:true
       },this.handleSearch())
     }else if (this.state.searchQuery.trim().length === 0){
-      console.log(this.props.location.search,"location object")
-
       this.props.history.push(`/listings/for-sale/_map/${this.props.history.location.search}`)
+      console.log(this.props.history.location.search,"SEARCH")
       this.getAllListings()
     }
   }
@@ -84,7 +94,8 @@ class MainListingPage extends Component {
     if(this.state.search){
       if(this.state.searchResults.locations && this.state.searchResults.locations.length>0){
         this.setState({
-          search:false
+          search:false,
+          searchQuery:this.state.searchResults.locations[0].item.name
         })
         return <Redirect to = {`/listings/for-sale/${this.state.searchResults.locations[0].item.name_id}`}/>
       }
@@ -139,15 +150,16 @@ class MainListingPage extends Component {
   }
 
   handleResultClick = (result)=>{
+    console.log("handle result click called!")
     if(result.type === "location"){
-      this.getListingsByLocationId(result.id)
+      this.getListingsByLocationNameId(result.id)
+      this.props.history.push(`/listings/for-sale/${result.id}/`)
     }else if(result.type ==="agent"){
     }
   }
 
   updateMapDimensions = ()=>{
     const navHeight =document.getElementById('nav').getBoundingClientRect().height;
-    console.log(navHeight, "nav height")
     const nav = document.getElementById('nav');
     const listingPanelWidth = document.getElementById('listing-panel').getBoundingClientRect().width;
     let mapHeight = window.innerHeight - (navHeight || 0);
@@ -158,9 +170,30 @@ class MainListingPage extends Component {
     })
   }
 
+  updateMapBounds = (bounds)=>{
+    bounds = [bounds.north,bounds.east,bounds.south,bounds.west]
+    let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'})
+    search.mapBounds = bounds
+    this.props.history.push({
+      search:queryString.stringify(search,{arrayFormat:'comma'})
+    })
+  }
+
   mapIsVisible = ()=>{
     this.setState({
       mapIsVisible:window.innerWidth>this.state.mobileWidth
+    })
+  }
+
+  hideListingSearchResults = ()=>{
+    this.setState({
+      searchResultsVisible:false
+    })
+  }
+
+  showListingSearchResults = ()=>{
+    this.setState({
+      searchResultsVisible:true
     })
   }
 
@@ -185,6 +218,12 @@ class MainListingPage extends Component {
     });
   }
 
+  getLocationByNameId = async (id)=>{
+    axios.get(`/api/listing/getbylocationid/${id}`).then((res)=>{
+      return res.data
+    })
+  }
+
   getListingsByLocationId = async (id)=>{
     axios.get(`/api/listing/getbylocationid/${id}`).then((res)=>{
       this.setState({
@@ -199,7 +238,7 @@ class MainListingPage extends Component {
     this.setState({
         markerData:res.data,
         filteredData:res.data
-      },console.log(this.state.markerData,"new data"));
+      });
     })
   }
 
@@ -213,11 +252,17 @@ class MainListingPage extends Component {
     });
   }
 
-  componentDidMount(){
-    console.log(this.props.location,"params")
+  async componentDidMount(){
     window.scrollTo(0,0);
     if(this.props.match.params.location){
       this.getListingsByLocationNameId(this.props.match.params.location,this.getInitialListingFilterState)
+      let locationName = await axios.get(`/api/locations/get?name_id=${this.props.match.params.location}`)
+      locationName = locationName.data[0].name
+      console.log(locationName, "locationName")
+      this.setState({
+        searchQuery:locationName,
+        searchResultsVisible:false
+      })
     }else{
       this.getAllListings(this.getInitialListingFilterState)
     }
@@ -229,12 +274,16 @@ class MainListingPage extends Component {
 
   handleFilterInputChange = (name,value)=>{
     let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'})
-    search[name] = value;
+    if(value==='0'){
+      delete search[name]
+    }else{
+      search[name] = value;
+    }
     let newHistory = queryString.stringify(search,{arrayFormat:'comma'})
+    console.log(newHistory,"NEW HISTORY")
     this.props.history.push({
       search:newHistory
     })
-    console.log(this.props.location.search,this.props.history,"location from input change")
     this.setState({
       ...search
     })
@@ -253,7 +302,6 @@ class MainListingPage extends Component {
         search[param]= parseFloat(search[param])
       }
     }
-    console.log(search,"SEARCH")
     this.setState({
       ...search
     },()=>this.filterListingData())
@@ -269,8 +317,7 @@ class MainListingPage extends Component {
     })
     this.setState({
       filteredData:markerData
-    },()=>console.log(this.state,"new filtered data"))
-    console.log(this.props.location.search,"THIS IS A TEST")
+    })
   }
 
 
@@ -298,9 +345,10 @@ class MainListingPage extends Component {
 
   render(){
     const mapOptions = {
-      center:this.state.mapCenter,
+      center:{lat: -34.397, lng: 150.644},
       zoom:8,
-      styles: mapStyles()
+      styles: mapStyles(),
+      minZoom:4
     }
 
     return(
@@ -309,10 +357,12 @@ class MainListingPage extends Component {
         <ListingPageNav
           handleSearchInput = {(e)=> this.handleSearchInput(e)}
           searchQuery = {this.state.searchQuery}
+          resultsVisible = {this.state.searchResultsVisible}
           results = {this.state.searchResults}
           handleResultClick = {(result)=>this.handleResultClick(result)}
           clearSearch = {this.clearSearch}
           handlePressEnter = {this.handlePressEnter}
+          hideListingSearchResults = {this.hideListingSearchResults}
         />
         {this.state.showCurrentListing
           ? <Listing listingData = {this.state.currentListingData} handleClose = {this.closeListing}/>
@@ -328,6 +378,8 @@ class MainListingPage extends Component {
                 onMapMove = {this.onMapMove}
                 markersInBounds = {this.state.markersInBounds}
                 setMarkersInBounds = {(markersInBounds)=>this.setMarkersInBounds(markersInBounds)}
+                updateMapBounds = {(bounds)=>this.updateMapBounds(bounds)}
+                mapBounds = {true}
                 activeListing = {this.state.activeListing}
                 setActiveListing = {(listingId)=>this.setActiveListing(listingId)}
                 removeActiveListing = {(listingId)=>this.removeActiveListing(listingId)}
