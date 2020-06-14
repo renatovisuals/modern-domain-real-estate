@@ -28,17 +28,16 @@ class MainListingPage extends Component {
       mapWidth:null,
       mapBounds:true,
       searchResultsVisible:true,
-      //listingSearchBarValue:'',
-      //mapCenter:null,
       mapIsVisible:false,
-      //map:2,
       searchQuery:'',
       searchResults:[],
       search:false,
       listingsToShow:[],
       mobileWidth:768,
       bedrooms:0,
-      bathrooms:0
+      bathrooms:0,
+      minPrice:0,
+      maxPrice:200000000
     }
     this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
@@ -51,7 +50,6 @@ class MainListingPage extends Component {
   //}
 
   setMarkersInBounds = (markersInBounds)=>{
-    console.log(markersInBounds,"MARKERS IN BOUNDS")
     this.setState({
       markersInBounds
     })
@@ -258,7 +256,6 @@ class MainListingPage extends Component {
       this.getListingsByLocationNameId(this.props.match.params.location,this.getInitialListingFilterState)
       let locationName = await axios.get(`/api/locations/get?name_id=${this.props.match.params.location}`)
       locationName = locationName.data[0].name
-      console.log(locationName, "locationName")
       this.setState({
         searchQuery:locationName,
         searchResultsVisible:false
@@ -273,20 +270,26 @@ class MainListingPage extends Component {
   }
 
   handleFilterInputChange = (name,value)=>{
+    const values = {
+      ...this.state
+    }
+
     let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'})
-    if(value==='0'){
+    if((name === 'minPrice' || name === 'maxPrice') && parseFloat(value) === 0){
       delete search[name]
+      console.log("VALUE")
     }else{
       search[name] = value;
     }
+    values[name] = value;
     let newHistory = queryString.stringify(search,{arrayFormat:'comma'})
     console.log(newHistory,"NEW HISTORY")
     this.props.history.push({
       search:newHistory
     })
     this.setState({
-      ...search
-    })
+      ...values
+    },()=>this.filterListingData())
   }
 
   getInitialListingFilterState = ()=>{
@@ -298,7 +301,7 @@ class MainListingPage extends Component {
     }
     let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'});
     for(let param in search){
-      if(param === 'bedrooms' || param === 'bathrooms'){
+      if(param === 'bedrooms' || param === 'bathrooms' || param === 'minPrice' || param === 'maxPrice'){
         search[param]= parseFloat(search[param])
       }
     }
@@ -310,14 +313,20 @@ class MainListingPage extends Component {
   filterListingData = ()=>{
     let markerData = [...this.state.markerData];
     markerData = markerData.filter((data)=>{
-       if (data.bathrooms<this.state.bathrooms || data.bedrooms<this.state.bedrooms){
+       if ((data.bathrooms<parseFloat(this.state.bathrooms) || data.bedrooms<parseFloat(this.state.bedrooms))){
+         return false
+       }
+       if (data.price < parseFloat(this.state.minPrice)){
+         return false
+       }
+       if (data.price > parseFloat(this.state.maxPrice)){
          return false
        }
         return true
     })
     this.setState({
       filteredData:markerData
-    })
+    },()=>console.log(this.state, "NEW DATA"))
   }
 
 
@@ -398,7 +407,7 @@ class MainListingPage extends Component {
            activeListing = {this.state.activeListing}
            updateMapDimensions = {this.updateMapDimensions}
            handleChange = {(name,value)=>this.handleFilterInputChange(name,value)}
-
+           filterState = {this.state}
            >
           </ListingPanel>
         </div>

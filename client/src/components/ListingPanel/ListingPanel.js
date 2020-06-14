@@ -15,9 +15,9 @@ class ListingPanel extends Component {
   }
 
   componentDidMount(){
-    setTimeout(()=>{
-      this.props.updateMapDimensions()
-    },100)
+    //setTimeout(()=>{
+    //  this.props.updateMapDimensions()
+    //},100)
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
@@ -32,7 +32,6 @@ class ListingPanel extends Component {
       }
     }
     if(prevState.markerData !== nextProps.markerData){
-      console.log(nextProps.markerData)
       return {
         markerData: nextProps.markerData
       }
@@ -115,6 +114,7 @@ class ListingPanel extends Component {
           filterDrawerIsOpen = {this.state.filterDrawerIsOpen}
           toggleViewListings = {this.toggleViewListings}
           handleChange = {(name,value)=>this.props.handleChange(name,value)}
+          filterState = {this.props.filterState}
         />
         {this.state.listingsAreVisible ?
           <div className = "listing-panel__listing-container">

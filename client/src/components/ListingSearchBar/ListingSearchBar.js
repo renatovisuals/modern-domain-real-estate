@@ -288,6 +288,7 @@ render(){
           <button className = "listing-search-bar__back-btn" id = "back-btn" onClick = {this.handleBlur}> 	<FontAwesomeIcon className = "listing-search-bar__back-btn-icon" icon = {faArrowLeft} size = "lg"/> </button>
           <input id = "listing-search-bar"
                  autoComplete="no"
+                 autoComplete="off"
                  className = "listing-search-bar__input"
                  type="text"
                  value={this.props.searchQuery}

@@ -33,10 +33,6 @@ class ListingPanelFilter extends Component {
   render(){
     const priceOptions = [
       {
-        content: "Min-Price",
-        value:0
-      },
-      {
         content:"100,000",
         value:100000
       },
@@ -47,14 +43,25 @@ class ListingPanelFilter extends Component {
       {
         content:"150,000",
         value:150000
+      },
+      {
+        content:"15,000,000",
+        value:15000000
+      },
+      {
+        content:"500,000",
+        value:500000
       }
     ]
+    const minPriceOptions = [{content:'No Min-Price',value:0},...priceOptions]
+    const maxPriceOptions = [{content:'No Max-Price',value:0},...priceOptions]
+
 
     return(
       <div id="listing-filter" className= {`listing-panel-filter ${this.props.filterDrawerIsOpen ? 'is-active' : null}`} >
         <div className = "listing-panel-filter__filter-menu">
-          <Select name = "Min-Price" className = "listing-panel-filter__select" options = {priceOptions} onChange = {(name,value)=>this.handleChange(name,value)}/>
-          <Select name = "Max-Price" className = "listing-panel-filter__select"/>
+          <Select value ={this.props.filterState.minPrice} name = "minPrice" className = "listing-panel-filter__select" options = {minPriceOptions} onChange = {(name,value)=>this.handleChange(name,value)}/>
+          <Select value ={this.props.filterState.maxPrice} name = "maxPrice" className = "listing-panel-filter__select" options = {maxPriceOptions} onChange = {(name,value)=>this.handleChange(name,value)}/>
           <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filter' : 'Filter'} className = "listing-panel-filter__button--filter"> FILTER </Button>
           <div className = "listing-panel-filter__filter-menu-bottom-border">
           </div>

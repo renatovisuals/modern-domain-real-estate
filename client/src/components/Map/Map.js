@@ -18,7 +18,6 @@ class Map extends Component {
           markerData:this.props.data,
           markerCluster:null,
           map:null,
-          //zoom:12,
           markers:[],
           activeMarker:null,
           hoveredListing:null,
@@ -43,23 +42,24 @@ class Map extends Component {
         document.getElementById(this.props.id),
         mapOptions)
 
+      console.log(map,"HELLLO")
+
       window.google.maps.event.addListenerOnce(map,'idle',(e)=>{
-        console.log("IDLE COMPLETE")
           this.setState({
             map
-          }, ()=> this.onMapLoad(this.state.map))
+          }, ()=>this.onMapLoad(this.state.map))
       })
 
   }
 
   getMapBounds = (map)=>{
-    const bounds = map.getBounds()
-    return ({
-      north:bounds.getNorthEast().lat(),
-      east:bounds.getNorthEast().lng(),
-      south:bounds.getSouthWest().lat(),
-      west:bounds.getSouthWest().lng()
-    })
+      const bounds = map.getBounds()
+      return ({
+        north:bounds.getNorthEast().lat(),
+        east:bounds.getNorthEast().lng(),
+        south:bounds.getSouthWest().lat(),
+        west:bounds.getSouthWest().lng()
+      })
   }
 
   updateMapBounds = (bounds)=>{
@@ -67,6 +67,7 @@ class Map extends Component {
   }
 
   setMapBounds = (map,bounds,callback)=>{
+      console.log("set map bounds called")
       let search = this.getSearchParams()
       const ne = new window.google.maps.LatLng(bounds[0], bounds[1]);
       const sw = new window.google.maps.LatLng(bounds[2], bounds[3]);
@@ -79,7 +80,6 @@ class Map extends Component {
   }
 
   changeZoomState = (map)=>{
-    console.log("change zoom state fired!")
     let search = this.getSearchParams()
     search.mapZoom = map.getZoom()
     this.props.history.push({
@@ -145,6 +145,7 @@ class Map extends Component {
   }
 
   onMapLoad(map){
+      console.log(map, "this is the map")
       map.addListener('dragend',()=> this.updateMapBounds(this.getMapBounds(map)))
       map.addListener('zoom_changed',()=>{this.updateMapBounds(this.getMapBounds(map))})
       map.addListener('zoom_changed', ()=>this.changeZoomState(map))
@@ -165,15 +166,14 @@ class Map extends Component {
       }
       let search = this.getSearchParams();
       let shouldFitBounds = search.mapBounds ? false : true;
+      console.log(shouldFitBounds, "re-rendering")
         this.renderMarkers(this.state.map,shouldFitBounds,()=>{
           if(search.mapBounds)this.setMapBounds(this.state.map,search.mapBounds)
-          console.log(search.mapBounds,"THESE ARE THE MAPBOUNDS")
         })
 
   }
 
   loadClusters(map,markers){
-    console.log("running")
     const options = {
       imagePath:'http://localhost:3000/images/m',
       minimumClusterSize:2,
@@ -229,26 +229,29 @@ class Map extends Component {
   }
 
   getMarkersInBounds = debounce(()=>{
-    if(this.state.map.getBounds()){
       const markersInBounds = []
+    if(this.state.map.getBounds()){
       for(let i=0; i< this.state.markers.length; i++){
         if(this.state.map.getBounds().contains(this.state.markers[i].getPosition())){
           markersInBounds.push(this.state.markers[i])
         }
       }
-      console.log(this)
-      this.props.setMarkersInBounds(markersInBounds)
     }
+    this.props.setMarkersInBounds(markersInBounds)
   },300)
 
   renderMarkers(map,shouldFitBounds,callback){
+    console.log("rendering markers")
     if(this.state.markerData.length === 0){
+      const bounds = this.getSearchParams().mapBounds
+      this.clearMarkers(()=>console.log("cleared markers"))
+      this.getMarkersInBounds()
+      this.setMapBounds(map,bounds)
       return
     }
     const markers = []
     let bounds = new window.google.maps.LatLngBounds();
     this.clearMarkers(()=>{
-      console.log(this.state.markerData,"MARKER DATA")
       this.state.markerData.forEach(house => {
           const shorthandPrice = abbreviatePrice(house.price)
           const position = {
@@ -318,7 +321,6 @@ class Map extends Component {
         markers
       }),()=>{
         this.loadClusters(map,this.state.markers)
-        console.log(map,"map")
         //this.getMarkersInBounds()
         if(callback)callback()
       })
@@ -351,11 +353,13 @@ class Map extends Component {
       index = i
       return marker.id === markerId
     })
-    newMarker.setIcon({
-      url:icon({center:'2ee1ff', color:'2ee1ff', text:abbreviatePrice(newMarker.listingData.price)}),
-      scaledSize: new window.google.maps.Size(65,65),
-      anchor: new window.google.maps.Point(32,32)
-    })
+    if(newMarker){
+      newMarker.setIcon({
+        url:icon({center:'2ee1ff', color:'2ee1ff', text:abbreviatePrice(newMarker.listingData.price)}),
+        scaledSize: new window.google.maps.Size(65,65),
+        anchor: new window.google.maps.Point(32,32)
+      })
+    }
   }
 
   deselectMarker = (markerId)=>{
@@ -365,11 +369,13 @@ class Map extends Component {
         index = i
         return marker.id === markerId
       })
+    if(newMarker){
       newMarker.setIcon({
         url:icon({center:'3cc194', text:abbreviatePrice(newMarker.listingData.price)}),
         scaledSize: new window.google.maps.Size(60,60),
         anchor: new window.google.maps.Point(30,30)
       })
+    }
     }
   }
 
@@ -380,8 +386,9 @@ class Map extends Component {
 
   componentDidUpdate(prevProps,prevState){
 
-    if(!arraysMatch(prevState.markerData,this.state.markerData) && this.state.markerData.length !== 0){
-      this.onScriptLoad()
+    if(!arraysMatch(prevState.markerData,this.state.markerData) && this.state.map){
+      console.log("UPDATING")
+      this.onMapLoad(this.state.map)
       //console.log("this is a test")
       //let search = this.getSearchParams();
       //console.log(search,"THIS IS THE SEARCH ON CHANGE")
@@ -393,7 +400,7 @@ class Map extends Component {
     //    if(search.mapBounds)this.setMapBounds(this.state.map,search.mapBounds)
     // }))
 
-      this.loadClusters(this.state.map,this.state.markers);
+      //this.loadClusters(this.state.map,this.state.markers);
 
     }
     if(this.state.hoveredListing !== prevState.hoveredListing){
