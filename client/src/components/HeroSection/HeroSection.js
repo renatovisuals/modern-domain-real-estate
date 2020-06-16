@@ -33,11 +33,12 @@ class HeroSection extends Component {
       getListings()
   }
 
-  handleChange = (key,value)=>{
-    console.log(key,value,"KEY VALUE")
+  handleChange = (e)=>{
+    const name = e.target.name;
+    const value = e.target.value;
     this.setState({
-      [key]:value
-    },()=> console.log(this.state, "STATE VALUES"))
+      [name]:value
+    })
   }
 
   handleSubmit = (e)=>{

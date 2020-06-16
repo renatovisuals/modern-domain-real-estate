@@ -37,7 +37,9 @@ class MainListingPage extends Component {
       bedrooms:0,
       bathrooms:0,
       minPrice:0,
-      maxPrice:200000000
+      maxPrice:200000000,
+      propertyTypes:[],
+      singleFamily:false
     }
     this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
@@ -269,36 +271,79 @@ class MainListingPage extends Component {
     window.addEventListener("resize",this.mapIsVisible);
   }
 
-  handleFilterInputChange = (name,value)=>{
-    const values = {
+  handleFilterInputChange = (e)=>{
+    let name,value;
+    let filterState = {
       ...this.state
     }
+    let parsedSearch = queryString.parse(this.props.location.search,{arrayFormat:'comma'})
+    console.log(parsedSearch,"PARSED")
+    let arr;
+    if(parsedSearch[e.target.name]){
+      if(Array.isArray(parsedSearch[e.target.name])){
+        arr = parsedSearch[e.target.name]
+      }else{
+        arr = [parsedSearch[e.target.name]]
+      }
 
-    let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'})
-    if((name === 'minPrice' || name === 'maxPrice') && parseFloat(value) === 0){
-      delete search[name]
-      console.log("VALUE")
     }else{
-      search[name] = value;
+      arr = []
     }
-    values[name] = value;
-    let newHistory = queryString.stringify(search,{arrayFormat:'comma'})
+    console.log(arr,"ARRR")
+    if(e.target.type === "checkbox"){
+      if(e.target.checked){
+        arr.push(e.target.value)
+      }else{
+        let index = arr.indexOf(e.target.value)
+        if(index !== -1){
+          console.log(index,"removing from array")
+          arr.splice(index,1)
+        }
+
+      }
+      parsedSearch[e.target.name] = arr;
+    }
+
+    let newHistory = queryString.stringify(parsedSearch,{arrayFormat:'comma'})
+    this.props.history.push({
+      search:newHistory
+    })
+
+    console.log(parsedSearch)
+    /*
+    if(e.target.type === 'checkbox'){
+
+    }
+    let filterState = {
+      ...this.state
+    }
+    let parsedSearch = queryString.parse(this.props.location.search,{arrayFormat:'comma'})
+    if(name === 'minPrice' && parseFloat(value) === 0){
+      delete parsedSearch[name]
+    }else if(name === 'maxPrice' && parseFloat(value) === 200000000){
+      delete parsedSearch[name]
+    }else{
+      parsedSearch[name] = value;
+    }
+    filterState[name] = value;
+    let newHistory = queryString.stringify(parsedSearch,{arrayFormat:'comma'})
     console.log(newHistory,"NEW HISTORY")
     this.props.history.push({
       search:newHistory
     })
     this.setState({
-      ...values
+      ...filterState
     },()=>this.filterListingData())
+    */
   }
 
   getInitialListingFilterState = ()=>{
-    if(!this.state.filteredData){
-      this.setState({
-        filteredData:this.state.markerData
-      },()=>this.getInitialListingFilterState())
-      return
-    }
+    //if(!this.state.filteredData){
+    //  this.setState({
+    //    filteredData:this.state.markerData
+    //  },()=>this.getInitialListingFilterState())
+    //  return
+    //}
     let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'});
     for(let param in search){
       if(param === 'bedrooms' || param === 'bathrooms' || param === 'minPrice' || param === 'maxPrice'){
@@ -392,6 +437,7 @@ class MainListingPage extends Component {
                 activeListing = {this.state.activeListing}
                 setActiveListing = {(listingId)=>this.setActiveListing(listingId)}
                 removeActiveListing = {(listingId)=>this.removeActiveListing(listingId)}
+                state = {this.state}
               />
             : null
           }
@@ -406,7 +452,7 @@ class MainListingPage extends Component {
            handleListingMouseLeave = {this.removeActiveListing}
            activeListing = {this.state.activeListing}
            updateMapDimensions = {this.updateMapDimensions}
-           handleChange = {(name,value)=>this.handleFilterInputChange(name,value)}
+           handleChange = {(name,value,e)=>this.handleFilterInputChange(name,value,e)}
            filterState = {this.state}
            >
           </ListingPanel>

@@ -113,7 +113,7 @@ class ListingPanel extends Component {
           toggleFilterDrawer = {(callback)=>this.toggleFilterDrawer(callback)}
           filterDrawerIsOpen = {this.state.filterDrawerIsOpen}
           toggleViewListings = {this.toggleViewListings}
-          handleChange = {(name,value)=>this.props.handleChange(name,value)}
+          handleChange = {(name,value,e)=>this.props.handleChange(name,value,e)}
           filterState = {this.props.filterState}
         />
         {this.state.listingsAreVisible ?

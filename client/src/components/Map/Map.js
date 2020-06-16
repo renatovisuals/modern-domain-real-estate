@@ -241,7 +241,6 @@ class Map extends Component {
   },300)
 
   renderMarkers(map,shouldFitBounds,callback){
-    console.log("rendering markers")
     if(this.state.markerData.length === 0){
       const bounds = this.getSearchParams().mapBounds
       this.clearMarkers(()=>console.log("cleared markers"))
@@ -385,9 +384,9 @@ class Map extends Component {
   }
 
   componentDidUpdate(prevProps,prevState){
-
+    console.log("UPDATING")
     if(!arraysMatch(prevState.markerData,this.state.markerData) && this.state.map){
-      console.log("UPDATING")
+
       this.onMapLoad(this.state.map)
       //console.log("this is a test")
       //let search = this.getSearchParams();

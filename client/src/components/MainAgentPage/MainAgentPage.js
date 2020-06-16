@@ -23,7 +23,9 @@ class MainAgentPage extends Component {
     agents:[]
   }
 
-  handleUserInput = (name,value)=>{
+  handleUserInput = (e)=>{
+    const name = e.target.name;
+    const value = e.target.value;
     this.setState({
         [name]:value
     },()=>this.filterData())

@@ -77,7 +77,7 @@ class AgentFilter extends Component{
                 className="agent-filter__select"
                 border size="small"
                 options={[{value:'',content:'All Cities'},...this.state.citySelectOptions]}
-                onChange={this.props.handleUserInput}
+                onChange={(e)=>this.props.handleUserInput(e)}
                 value={this.props.city}
               />
 

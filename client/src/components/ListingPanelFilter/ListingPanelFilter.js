@@ -26,10 +26,6 @@ class ListingPanelFilter extends Component {
     }
   }
 
-  handleChange = (name,value)=>{
-    this.props.handleChange(name,value)
-  }
-
   render(){
     const priceOptions = [
       {
@@ -54,20 +50,77 @@ class ListingPanelFilter extends Component {
       }
     ]
     const minPriceOptions = [{content:'No Min-Price',value:0},...priceOptions]
-    const maxPriceOptions = [{content:'No Max-Price',value:0},...priceOptions]
-
+    const maxPriceOptions = [{content:'No Max-Price',value:200000000},...priceOptions]
+    const bedOptions = [
+        {
+          value:1,
+          content:"1+ bed"
+        },
+        {
+          value:2,
+          content:"2+ bed"
+        },
+        {
+          value:3,
+          content:"3+ bed"
+        },
+        {
+          value:4,
+          content:"4+ bed"
+        }
+      ]
+    const bathOptions = [
+        {
+          value:1,
+          content:"1+ bath"
+        },
+        {
+          value:2,
+          content:"2+ bath"
+        },
+        {
+          value:3,
+          content:"3+ bath"
+        },
+        {
+          value:4,
+          content:"4+ bath"
+        },
+        {
+          value:5,
+          content:"5+ bath"
+        }
+      ]
 
     return(
       <div id="listing-filter" className= {`listing-panel-filter ${this.props.filterDrawerIsOpen ? 'is-active' : null}`} >
         <div className = "listing-panel-filter__filter-menu">
-          <Select value ={this.props.filterState.minPrice} name = "minPrice" className = "listing-panel-filter__select" options = {minPriceOptions} onChange = {(name,value)=>this.handleChange(name,value)}/>
-          <Select value ={this.props.filterState.maxPrice} name = "maxPrice" className = "listing-panel-filter__select" options = {maxPriceOptions} onChange = {(name,value)=>this.handleChange(name,value)}/>
-          <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filter' : 'Filter'} className = "listing-panel-filter__button--filter"> FILTER </Button>
+          <Select value ={this.props.filterState.minPrice} name = "minPrice" className = "listing-panel-filter__select listing-panel-filter__select--filter-menu" options = {minPriceOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+          <Select value ={this.props.filterState.maxPrice} name = "maxPrice" className = "listing-panel-filter__select listing-panel-filter__select--filter-menu" options = {maxPriceOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+          <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'Filters'} className = "listing-panel-filter__button--filter"> </Button>
           <div className = "listing-panel-filter__filter-menu-bottom-border">
           </div>
         </div>
-        <div className = "listing-panel-filter__main">
-          <div className = "listing-panel-filter__test">
+        <div className = {`listing-panel-filter__main ${this.props.filterDrawerIsOpen ? 'is-visible' : null}`}>
+          <div className = "listing-panel-filter__panel">
+            <div className = "listing-panel-filter__panel-title">
+              Bedrooms and Bathrooms
+            </div>
+            <div className = "listing-panel-filter__filter-container">
+              <Select value ={this.props.filterState.bedrooms} name = "bedrooms" className = "listing-panel-filter__select" options = {bedOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+              <Select value ={this.props.filterState.bathrooms} name = "bathrooms" className = "listing-panel-filter__select" options = {bathOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+            </div>
+          </div>
+          <div className = "listing-panel-filter__panel">
+            <div className = "listing-panel-filter__panel-title">
+              Property Type
+            </div>
+            <div className = "listing-panel-filter__filter-container">
+              <input type="checkbox" name="propertyTypes" value="Single Family" onChange = {(e)=>this.props.handleChange(e)}/>
+              <label for="male">Single Family</label><br/>
+              <input type="checkbox" name="propertyTypes" value="Apartment" onChange = {(e)=>this.props.handleChange(e)}/>
+              <label for="male">Apartment</label><br/>
+            </div>
           </div>
         </div>
       </div>
