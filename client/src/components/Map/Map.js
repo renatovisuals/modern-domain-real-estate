@@ -64,6 +64,7 @@ class Map extends Component {
 
   updateMapBounds = (bounds)=>{
     this.props.updateMapBounds(bounds)
+    console.log(this.state.markers,"MARKERS")
   }
 
   setMapBounds = (map,bounds,callback)=>{
@@ -132,7 +133,7 @@ class Map extends Component {
       },()=>{
         this.setState({
           markers:[]
-        },()=>callback())
+        },()=>{if(callback)callback()})
       })
   }
 
@@ -145,7 +146,8 @@ class Map extends Component {
   }
 
   onMapLoad(map){
-      console.log(map, "this is the map")
+      let search = this.getSearchParams();
+      console.log(map, "this is the map",this.state.markerData)
       map.addListener('dragend',()=> this.updateMapBounds(this.getMapBounds(map)))
       map.addListener('zoom_changed',()=>{this.updateMapBounds(this.getMapBounds(map))})
       map.addListener('zoom_changed', ()=>this.changeZoomState(map))
@@ -161,10 +163,12 @@ class Map extends Component {
            })
          }
      })
-      if(!this.state.markerData){
+      if(this.state.markerData.length === 0){
+        this.clearMarkers(this.loadClusters(this.state.map,[]))
+        if(search.mapBounds)this.setMapBounds(this.state.map,search.mapBounds)
         return
       }
-      let search = this.getSearchParams();
+
       let shouldFitBounds = search.mapBounds ? false : true;
       console.log(shouldFitBounds, "re-rendering")
         this.renderMarkers(this.state.map,shouldFitBounds,()=>{
@@ -384,9 +388,9 @@ class Map extends Component {
   }
 
   componentDidUpdate(prevProps,prevState){
-    console.log("UPDATING")
+    //console.log(this.state.markerData,this.state.markers,"this is the new marker data")
     if(!arraysMatch(prevState.markerData,this.state.markerData) && this.state.map){
-
+      console.log("RUNNING")
       this.onMapLoad(this.state.map)
       //console.log("this is a test")
       //let search = this.getSearchParams();

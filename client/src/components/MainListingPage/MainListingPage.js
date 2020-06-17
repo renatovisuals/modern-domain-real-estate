@@ -39,7 +39,8 @@ class MainListingPage extends Component {
       minPrice:0,
       maxPrice:200000000,
       propertyTypes:[],
-      singleFamily:false
+      singleFamily:false,
+      apartment:false,
     }
     this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
@@ -177,6 +178,7 @@ class MainListingPage extends Component {
     this.props.history.push({
       search:queryString.stringify(search,{arrayFormat:'comma'})
     })
+    this.filterListingData()
   }
 
   mapIsVisible = ()=>{
@@ -272,84 +274,93 @@ class MainListingPage extends Component {
   }
 
   handleFilterInputChange = (e)=>{
-    let name,value;
-    let filterState = {
-      ...this.state
-    }
-    let parsedSearch = queryString.parse(this.props.location.search,{arrayFormat:'comma'})
-    console.log(parsedSearch,"PARSED")
-    let arr;
-    if(parsedSearch[e.target.name]){
-      if(Array.isArray(parsedSearch[e.target.name])){
-        arr = parsedSearch[e.target.name]
-      }else{
-        arr = [parsedSearch[e.target.name]]
-      }
-
-    }else{
-      arr = []
-    }
-    console.log(arr,"ARRR")
-    if(e.target.type === "checkbox"){
-      if(e.target.checked){
-        arr.push(e.target.value)
-      }else{
-        let index = arr.indexOf(e.target.value)
-        if(index !== -1){
-          console.log(index,"removing from array")
-          arr.splice(index,1)
-        }
-
-      }
-      parsedSearch[e.target.name] = arr;
-    }
-
-    let newHistory = queryString.stringify(parsedSearch,{arrayFormat:'comma'})
-    this.props.history.push({
-      search:newHistory
-    })
-
-    console.log(parsedSearch)
-    /*
-    if(e.target.type === 'checkbox'){
-
-    }
-    let filterState = {
-      ...this.state
-    }
-    let parsedSearch = queryString.parse(this.props.location.search,{arrayFormat:'comma'})
-    if(name === 'minPrice' && parseFloat(value) === 0){
-      delete parsedSearch[name]
-    }else if(name === 'maxPrice' && parseFloat(value) === 200000000){
-      delete parsedSearch[name]
-    }else{
-      parsedSearch[name] = value;
-    }
-    filterState[name] = value;
-    let newHistory = queryString.stringify(parsedSearch,{arrayFormat:'comma'})
-    console.log(newHistory,"NEW HISTORY")
-    this.props.history.push({
-      search:newHistory
-    })
+    e.persist()
+    let name = e.target.name;
+    let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    let parsedSearch = queryString.parse(this.props.location.search,{parseNumbers:true,arrayFormat:'comma'})
     this.setState({
-      ...filterState
-    },()=>this.filterListingData())
-    */
+      [name]:value
+    },()=>handleChange())
+
+    const handleChange = ()=>{
+      const filterState = {
+        ...this.state
+      }
+      if(e.target.type === "checkbox"){
+        const category = e.target.dataset.category;
+        if(e.target.checked){
+          if(Array.isArray(filterState[category])){
+            const values = new Set([...filterState[category]])
+            values.add(e.target.value)
+            filterState[category] = Array.from(values);
+            parsedSearch[category] = filterState[category]
+          }
+        }else{
+          if(Array.isArray(filterState[category])){
+            const index = filterState[category].indexOf(e.target.value)
+            if(index!== -1){
+              filterState[category].splice(index,1)
+              parsedSearch[category] = filterState[category]
+            }
+          }
+        }
+      }else{
+        console.log(parsedSearch,"parsed search")
+        if(name === "minPrice" && parseFloat(value) === 0){
+          delete parsedSearch[name]
+        }else if (name === "maxPrice" && parseFloat(value) === 200000000){
+          delete parsedSearch[name]
+        }else if ((name === "bedrooms" || name === "bathrooms") && parseFloat(value) === 1){
+          delete parsedSearch[name]
+        }else{
+          parsedSearch[name] = value
+        }
+        filterState[name] = value
+
+      }
+      let newHistory = queryString.stringify(parsedSearch,{arrayFormat:'comma'})
+      this.props.history.push({
+        search:newHistory
+      })
+      this.setState({
+        ...filterState
+      },()=>this.filterListingData())
+    }
+
+
   }
 
   getInitialListingFilterState = ()=>{
-    //if(!this.state.filteredData){
-    //  this.setState({
-    //    filteredData:this.state.markerData
-    //  },()=>this.getInitialListingFilterState())
-    //  return
-    //}
+    const toCamelCase = (string)=>{
+      string = string.trim()
+      string = string.toLowerCase()
+      if(string.indexOf(' ')!== -1){
+        string = string.split(" ")
+        string[1] = string[1].charAt(0).toUpperCase() + string[1].substring(1,string[1].length)
+        string = string.join("")
+      }
+      return string
+    }
     let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'});
     for(let param in search){
       if(param === 'bedrooms' || param === 'bathrooms' || param === 'minPrice' || param === 'maxPrice'){
         search[param]= parseFloat(search[param])
       }
+      if(param === 'propertyTypes'){
+        const checkboxVals = {}
+        if(!Array.isArray(search[param])){
+          if(search[param]!==null){
+            search[param] = [search[param]]
+          }else if(search[param]===null){
+            search[param] = []
+          }
+        }
+        search[param].forEach((val)=>{
+          search[toCamelCase(val)] = true
+        })
+      }
     }
+    console.log(search,"SEARCH")
     this.setState({
       ...search
     },()=>this.filterListingData())
@@ -366,6 +377,16 @@ class MainListingPage extends Component {
        }
        if (data.price > parseFloat(this.state.maxPrice)){
          return false
+       }
+       if(this.state.propertyTypes.length > 0){
+         let found = false
+         for(let i = 0; i< this.state.propertyTypes.length; i++){
+           if(this.state.propertyTypes[i] === data.listing_type){
+             found = true;
+             break;
+           }
+         }
+         if(found === false) return false
        }
         return true
     })

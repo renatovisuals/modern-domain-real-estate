@@ -116,9 +116,9 @@ class ListingPanelFilter extends Component {
               Property Type
             </div>
             <div className = "listing-panel-filter__filter-container">
-              <input type="checkbox" name="propertyTypes" value="Single Family" onChange = {(e)=>this.props.handleChange(e)}/>
+              <input type="checkbox" name="singleFamily" value="Single Family" data-category = "propertyTypes" checked={this.props.filterState.singleFamily} onChange = {(e)=>this.props.handleChange(e)}/>
               <label for="male">Single Family</label><br/>
-              <input type="checkbox" name="propertyTypes" value="Apartment" onChange = {(e)=>this.props.handleChange(e)}/>
+              <input type="checkbox" name="apartment" value="Apartment" data-category = "propertyTypes" checked ={this.props.filterState.apartment} onChange = {(e)=>this.props.handleChange(e)}/>
               <label for="male">Apartment</label><br/>
             </div>
           </div>
