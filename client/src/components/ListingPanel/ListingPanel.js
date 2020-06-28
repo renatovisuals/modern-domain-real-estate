@@ -11,13 +11,20 @@ class ListingPanel extends Component {
     activeListing:null,
     mapIsVisible:false,
     listingsAreVisible:true,
-    filterDrawerIsOpen:false
+    filterDrawerIsOpen:false,
+    filterDrawerIsTransitioning:false
   }
 
   componentDidMount(){
     //setTimeout(()=>{
     //  this.props.updateMapDimensions()
     //},100)
+  }
+
+  setFilterDrawerTransitionState = (bool)=>{
+    this.setState({
+      filterDrawerIsTransitioning:bool
+    },()=>console.log(this.state,"NEW STATE",bool))
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
@@ -108,13 +115,16 @@ class ListingPanel extends Component {
   render(){
 
     return(
-      <div className= "listing-panel">
+      <div id = "listing-panel" className= {`listing-panel ${this.state.filterDrawerIsTransitioning ? "disable-scroll" : ""}`}>
         <ListingPanelFilter
           toggleFilterDrawer = {(callback)=>this.toggleFilterDrawer(callback)}
           filterDrawerIsOpen = {this.state.filterDrawerIsOpen}
           toggleViewListings = {this.toggleViewListings}
           handleChange = {(name,value,e)=>this.props.handleChange(name,value,e)}
           filterState = {this.props.filterState}
+          mapHeight = {this.props.mapHeight}
+          setFilterDrawerTransitionState = {(bool)=>this.setFilterDrawerTransitionState(bool)}
+          filterDrawerIsTransitioning = {this.state.filterDrawerIsTransitioning}
         />
         {this.state.listingsAreVisible ?
           <div className = "listing-panel__listing-container">

@@ -368,6 +368,7 @@ class MainListingPage extends Component {
 
   filterListingData = ()=>{
     let markerData = [...this.state.markerData];
+
     markerData = markerData.filter((data)=>{
        if ((data.bathrooms<parseFloat(this.state.bathrooms) || data.bedrooms<parseFloat(this.state.bedrooms))){
          return false
@@ -379,20 +380,20 @@ class MainListingPage extends Component {
          return false
        }
        if(this.state.propertyTypes.length > 0){
-         let found = false
+         let isMatched = false
          for(let i = 0; i< this.state.propertyTypes.length; i++){
            if(this.state.propertyTypes[i] === data.listing_type){
-             found = true;
+             isMatched = true;
              break;
            }
          }
-         if(found === false) return false
+         if(!isMatched) return false
        }
         return true
     })
     this.setState({
       filteredData:markerData
-    },()=>console.log(this.state, "NEW DATA"))
+    })
   }
 
 
@@ -475,6 +476,7 @@ class MainListingPage extends Component {
            updateMapDimensions = {this.updateMapDimensions}
            handleChange = {(name,value,e)=>this.handleFilterInputChange(name,value,e)}
            filterState = {this.state}
+           mapHeight = {this.state.mapHeight}
            >
           </ListingPanel>
         </div>

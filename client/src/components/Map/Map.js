@@ -147,7 +147,6 @@ class Map extends Component {
 
   onMapLoad(map){
       let search = this.getSearchParams();
-      console.log(map, "this is the map",this.state.markerData)
       map.addListener('dragend',()=> this.updateMapBounds(this.getMapBounds(map)))
       map.addListener('zoom_changed',()=>{this.updateMapBounds(this.getMapBounds(map))})
       map.addListener('zoom_changed', ()=>this.changeZoomState(map))

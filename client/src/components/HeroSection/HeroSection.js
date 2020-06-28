@@ -3,6 +3,7 @@ import ContentContainer from '../../hoc/ContentContainer/ContentContainer'
 import './HeroSection.scss';
 import data from '../../db';
 import Select from '../Widgets/Select/Select';
+import Dropdown from '../Widgets/Dropdown/Dropdown'
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import queryString from 'query-string';
@@ -105,7 +106,7 @@ render(){
             name="bedrooms"
             />
 
-          <Select
+          <Dropdown
             className ="hero-section__select--small"
             onChange = {this.handleChange}
             options = {[
