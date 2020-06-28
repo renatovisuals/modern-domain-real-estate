@@ -179,19 +179,14 @@ class ListingPanelFilter extends Component {
             </div>
             <div className = "listing-panel-filter__filter-container">
               <div className = "listing-panel-filter__checkbox-container">
-                <Checkbox id="single-family" labelName = "Single Family" type="checkbox" name="singleFamily" value="Single Family" category = "propertyTypes" checked={this.props.filterState.singleFamily} onChange = {(e)=>this.props.handleChange(e)}/>
-                <input id="apartment" type="checkbox" name="apartment" value="Apartment" data-category = "propertyTypes" checked ={this.props.filterState.apartment} onChange = {(e)=>this.props.handleChange(e)}/>
-                <label for="apartment">Apartment</label><br/>
-                <input id="apartment" type="checkbox" name="apartment" value="Apartment" data-category = "propertyTypes" checked ={this.props.filterState.apartment} onChange = {(e)=>this.props.handleChange(e)}/>
-                <label for="apartment">Apartment</label><br/>
+                <Checkbox id="home" labelName = "Home" name="home" value="Home" category = "propertyTypes" checked={this.props.filterState.home} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Checkbox id="manufactured" labelName = "Manufactured" name="manufactured" value="Manufactured" category = "propertyTypes" checked={this.props.filterState.manufactured} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Checkbox id="condos-coops" labelName = "Condos/co-ops" type="checkbox" name="condosCoops" value="Condos/co-ops" category = "propertyTypes" checked={this.props.filterState.condosCoops} onChange = {(e)=>this.props.handleChange(e)}/>
               </div>
               <div className = "listing-panel-filter__checkbox-container">
-                <input id="apartment" type="checkbox" name="apartment" value="Apartment" data-category = "propertyTypes" checked ={this.props.filterState.apartment} onChange = {(e)=>this.props.handleChange(e)}/>
-                <label for="apartment">Apartment</label><br/>
-                <input id="apartment" type="checkbox" name="apartment" value="Apartment" data-category = "propertyTypes" checked ={this.props.filterState.apartment} onChange = {(e)=>this.props.handleChange(e)}/>
-                <label for="apartment">Apartment</label><br/>
-                <input id="apartment" type="checkbox" name="apartment" value="Apartment" data-category = "propertyTypes" checked ={this.props.filterState.apartment} onChange = {(e)=>this.props.handleChange(e)}/>
-                <label for="apartment">Apartment</label><br/>
+                <Checkbox id="multi-family" labelName = "Multi-Family" name="multiFamily" value="Multi-Family" category = "propertyTypes" checked={this.props.filterState.multiFamily} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Checkbox id="apartments" labelName = "Apartments" name="apartments" value="Apartments" category = "propertyTypes" checked={this.props.filterState.apartments} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Checkbox id="lots-land" labelName = "Lots/Land" type="checkbox" name="lotsLand" value="Condos/coops" category = "propertyTypes" checked={this.props.filterState.lotsLand} onChange = {(e)=>this.props.handleChange(e)}/>
               </div>
             </div>
           </div>

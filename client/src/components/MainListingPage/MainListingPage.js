@@ -331,15 +331,23 @@ class MainListingPage extends Component {
   }
 
   getInitialListingFilterState = ()=>{
-    const toCamelCase = (string)=>{
-      string = string.trim()
-      string = string.toLowerCase()
-      if(string.indexOf(' ')!== -1){
-        string = string.split(" ")
-        string[1] = string[1].charAt(0).toUpperCase() + string[1].substring(1,string[1].length)
-        string = string.join("")
+    //const toCamelCase = (string)=>{
+    //  string = string.trim()
+    //  string = string.toLowerCase()
+    //  if(string.indexOf(' ')!== -1){
+    //    string = string.split(" ")
+    //    string[1] = string[1].charAt(0).toUpperCase() + string[1].substring(1,string[1].length)
+    //    string = string.join("")
+    //  }
+    //  return string
+    //}
+    const getName = (string)=>{
+      const names = {
+        "Home":"home",
+        "Condos/coops":"condosCoops",
+        "Manufactured":"manufactured"
       }
-      return string
+      return names[string]
     }
     let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'});
     for(let param in search){
@@ -355,8 +363,10 @@ class MainListingPage extends Component {
             search[param] = []
           }
         }
+
+        console.log(search, "this is the search string")
         search[param].forEach((val)=>{
-          search[toCamelCase(val)] = true
+          search[getName(val)] = true
         })
       }
     }
@@ -382,7 +392,7 @@ class MainListingPage extends Component {
        if(this.state.propertyTypes.length > 0){
          let isMatched = false
          for(let i = 0; i< this.state.propertyTypes.length; i++){
-           if(this.state.propertyTypes[i] === data.listing_type){
+           if(this.state.propertyTypes[i] === data.building_type){
              isMatched = true;
              break;
            }
