@@ -148,7 +148,8 @@ class ListingPanelFilter extends Component {
     return(
       <div id="listing-filter" className= {`listing-panel-filter ${this.props.filterDrawerIsOpen ? 'is-active' : ""}`} >
         <div className = "listing-panel-filter__filter-menu">
-          <Dropdown value ={this.props.filterState.minPrice} name = "minPrice" className = "listing-panel-filter__select listing-panel-filter__select--filter-menu" options = {minPriceOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+          <Dropdown value ={this.props.filterState.minPrice} name = "minPrice" className = "listing-panel-filter__select listing-panel-filter__select--no-margin listing-panel-filter__select--filter-menu" options = {minPriceOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+          <span className = "listing-panel-filter__hyphen-separator"> - </span>
           <Dropdown value ={this.props.filterState.maxPrice} name = "maxPrice" className = "listing-panel-filter__select listing-panel-filter__select--filter-menu" options = {maxPriceOptions} onChange = {(e)=>this.props.handleChange(e)}/>
           {renderFilterButton()}
           <div className = "listing-panel-filter__filter-menu-bottom-border">
@@ -178,12 +179,12 @@ class ListingPanelFilter extends Component {
               Property Type
             </div>
             <div className = "listing-panel-filter__filter-container">
-              <div className = "listing-panel-filter__checkbox-container">
+              <div className = "listing-panel-filter__input-container">
                 <Checkbox id="home" labelName = "Home" name="home" value="Home" category = "propertyTypes" checked={this.props.filterState.home} onChange = {(e)=>this.props.handleChange(e)}/>
                 <Checkbox id="manufactured" labelName = "Manufactured" name="manufactured" value="Manufactured" category = "propertyTypes" checked={this.props.filterState.manufactured} onChange = {(e)=>this.props.handleChange(e)}/>
                 <Checkbox id="condos-coops" labelName = "Condos/co-ops" type="checkbox" name="condosCoops" value="Condos/co-ops" category = "propertyTypes" checked={this.props.filterState.condosCoops} onChange = {(e)=>this.props.handleChange(e)}/>
               </div>
-              <div className = "listing-panel-filter__checkbox-container">
+              <div className = "listing-panel-filter__input-container">
                 <Checkbox id="multi-family" labelName = "Multi-Family" name="multiFamily" value="Multi-Family" category = "propertyTypes" checked={this.props.filterState.multiFamily} onChange = {(e)=>this.props.handleChange(e)}/>
                 <Checkbox id="apartments" labelName = "Apartments" name="apartments" value="Apartments" category = "propertyTypes" checked={this.props.filterState.apartments} onChange = {(e)=>this.props.handleChange(e)}/>
                 <Checkbox id="lots-land" labelName = "Lots/Land" type="checkbox" name="lotsLand" value="Condos/coops" category = "propertyTypes" checked={this.props.filterState.lotsLand} onChange = {(e)=>this.props.handleChange(e)}/>
@@ -195,8 +196,14 @@ class ListingPanelFilter extends Component {
               Property Info
             </div>
             <div className = "listing-panel-filter__filter-container">
-              <Dropdown value ={this.props.filterState.bedrooms} name = "bedrooms" className = "listing-panel-filter__select" options = {bedOptions} onChange = {(e)=>this.props.handleChange(e)}/>
-              <Dropdown value ={this.props.filterState.bathrooms} name = "bathrooms" className = "listing-panel-filter__select" options = {bathOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+              <div className = "listing-panel-filter__input-container">
+                <Dropdown value ={this.props.filterState.bedrooms} name = "bedrooms" className = "listing-panel-filter__select" options = {bedOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Dropdown value ={this.props.filterState.bathrooms} name = "bathrooms" className = "listing-panel-filter__select" options = {bathOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+              </div>
+              <div className = "listing-panel-filter__input-container">
+                <Dropdown value ={this.props.filterState.bedrooms} name = "bedrooms" className = "listing-panel-filter__select" options = {bedOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Dropdown value ={this.props.filterState.bathrooms} name = "bathrooms" className = "listing-panel-filter__select" options = {bathOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+              </div>
             </div>
           </div>
         </div>

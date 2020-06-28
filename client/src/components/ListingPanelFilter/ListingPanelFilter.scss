@@ -9,6 +9,13 @@
   overflow-y: hidden;
   position:relative;
 
+  &__hyphen-separator{
+    width:20px;
+    color:#555;
+    text-align:center;
+    font-size: 25px;
+  }
+
   &__filter-menu{
     height:65px;
     display:flex;
@@ -18,9 +25,7 @@
     overflow:hidden;
   }
 
-  &__checkbox-container{
-    //background:red;
-    //border: 1px solid orange;
+  &__input-container{
     display:inline-block;
     width:50%;
     display:block;
@@ -112,6 +117,10 @@
   //width:175px;
   margin-right: 20px;
   display:inline-block;
+
+  &--no-margin{
+    margin-right: 0;
+  }
 
   &:last-child{
     margin-right: 0;
