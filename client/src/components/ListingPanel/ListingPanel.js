@@ -21,10 +21,11 @@ class ListingPanel extends Component {
     //},100)
   }
 
-  setFilterDrawerTransitionState = (bool)=>{
+  setFilterDrawerTransitionState = (bool,callback)=>{
+    console.log('function called!!!')
     this.setState({
       filterDrawerIsTransitioning:bool
-    },()=>console.log(this.state,"NEW STATE",bool))
+    },()=>{if(callback)callback()})
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
@@ -123,7 +124,7 @@ class ListingPanel extends Component {
           handleChange = {(name,value,e)=>this.props.handleChange(name,value,e)}
           filterState = {this.props.filterState}
           mapHeight = {this.props.mapHeight}
-          setFilterDrawerTransitionState = {(bool)=>this.setFilterDrawerTransitionState(bool)}
+          setFilterDrawerTransitionState = {(bool,callback)=>this.setFilterDrawerTransitionState(bool,callback)}
           filterDrawerIsTransitioning = {this.state.filterDrawerIsTransitioning}
         />
         {this.state.listingsAreVisible ?

@@ -32,6 +32,8 @@ class Map extends Component {
   onScriptLoad() {
       const mapOptions = {
         zoom: this.state.zoom,
+        streetViewControl: false,
+        fullscreenControl: false,
         mapTypeControlOptions: {
         mapTypeIds:[]
       },
