@@ -34,10 +34,12 @@ class MainListingPage extends Component {
       search:false,
       listingsToShow:[],
       mobileWidth:768,
-      bedrooms:0,
-      bathrooms:0,
-      minPrice:0,
-      maxPrice:200000000,
+      bedrooms:'',
+      bathrooms:'',
+      minPrice:'',
+      maxPrice:'',
+      minSqft:'',
+      maxSqft:'',
       propertyTypes:[],
       singleFamily:false,
       apartment:false,
@@ -45,12 +47,6 @@ class MainListingPage extends Component {
     this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
   }
-
-  //onSearchBarChange = (value)=>{
-  //  this.setState({
-  //    listingSearchBarValue:value
-  //  })
-  //}
 
   setMarkersInBounds = (markersInBounds)=>{
     this.setState({
@@ -305,18 +301,14 @@ class MainListingPage extends Component {
           }
         }
       }else{
-        console.log(parsedSearch,"parsed search")
-        if(name === "minPrice" && parseFloat(value) === 0){
-          delete parsedSearch[name]
-        }else if (name === "maxPrice" && parseFloat(value) === 200000000){
-          delete parsedSearch[name]
-        }else if ((name === "bedrooms" || name === "bathrooms") && parseFloat(value) === 1){
+        console.log(e,"this is the event object",e.target.attributes)
+        if(e.target.value === ""){
           delete parsedSearch[name]
         }else{
-          parsedSearch[name] = value
+          parsedSearch[name] = value;
         }
         filterState[name] = value
-
+        console.log(parsedSearch, "Parsed Search",value)
       }
       let newHistory = queryString.stringify(parsedSearch,{arrayFormat:'comma'})
       this.props.history.push({
@@ -345,7 +337,10 @@ class MainListingPage extends Component {
       const names = {
         "Home":"home",
         "Condos/coops":"condosCoops",
-        "Manufactured":"manufactured"
+        "Manufactured":"manufactured",
+        "Multi-Family":"multiFamily",
+        "Apartment":"apartment",
+        "Lots/Land":"lotsLand"
       }
       return names[string]
     }
@@ -378,15 +373,18 @@ class MainListingPage extends Component {
 
   filterListingData = ()=>{
     let markerData = [...this.state.markerData];
-
+    console.log(this.state,"this is the state")
     markerData = markerData.filter((data)=>{
-       if ((data.bathrooms<parseFloat(this.state.bathrooms) || data.bedrooms<parseFloat(this.state.bedrooms))){
+       if (this.state.bathrooms && data.bathrooms<parseFloat(this.state.bathrooms)){
          return false
        }
-       if (data.price < parseFloat(this.state.minPrice)){
+       if (this.state.bedrooms && data.bedrooms<parseFloat(this.state.bedrooms)){
          return false
        }
-       if (data.price > parseFloat(this.state.maxPrice)){
+       if (this.state.minPrice && data.price < parseFloat(this.state.minPrice)){
+         return false
+       }
+       if (this.state.maxPrice && data.price > parseFloat(this.state.maxPrice)){
          return false
        }
        if(this.state.propertyTypes.length > 0){

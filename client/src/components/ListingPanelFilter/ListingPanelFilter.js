@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import Button from '../Widgets/Button/Button';
 import './ListingPanelFilter.scss';
-import Dropdown from '../Widgets/Dropdown/Dropdown';
-
-
+import Select from '../Widgets/Select/Select';
+import PriceSelect from '../Widgets/PriceSelect/PriceSelect';
+import BedroomSelect from '../Widgets/BedroomSelect/BedroomSelect';
+import BathroomSelect from '../Widgets/BathroomSelect/BathroomSelect';
+import SqftSelect from '../Widgets/SqftSelect/SqftSelect';
 import Checkbox from '../Widgets/Checkbox/Checkbox';
 
 class ListingPanelFilter extends Component {
@@ -33,7 +35,6 @@ class ListingPanelFilter extends Component {
         listingsFilter.addEventListener('transitionend',hideListings)
       })
     }else{
-      //listingsFilter.classList.remove('enable-scroll')
       this.props.toggleViewListings()
       this.props.toggleFilterDrawer()
     }
@@ -65,70 +66,6 @@ class ListingPanelFilter extends Component {
   }
 
   render(){
-    const priceOptions = [
-      {
-        content:"100,000",
-        value:100000
-      },
-      {
-        content:"125,000",
-        value:125000
-      },
-      {
-        content:"150,000",
-        value:150000
-      },
-      {
-        content:"15,000,000",
-        value:15000000
-      },
-      {
-        content:"500,000",
-        value:500000
-      }
-    ]
-    const minPriceOptions = [{content:'No Min-Price',value:0},...priceOptions]
-    const maxPriceOptions = [{content:'No Max-Price',value:200000000},...priceOptions]
-    const bedOptions = [
-        {
-          value:1,
-          content:"1+ bed"
-        },
-        {
-          value:2,
-          content:"2+ bed"
-        },
-        {
-          value:3,
-          content:"3+ bed"
-        },
-        {
-          value:4,
-          content:"4+ bed"
-        }
-      ]
-    const bathOptions = [
-        {
-          value:1,
-          content:"1+ bath"
-        },
-        {
-          value:2,
-          content:"2+ bath"
-        },
-        {
-          value:3,
-          content:"3+ bath"
-        },
-        {
-          value:4,
-          content:"4+ bath"
-        },
-        {
-          value:5,
-          content:"5+ bath"
-        }
-      ]
       const renderFilterButton = ()=>{
         if(window.innerWidth > 570 && window.innerWidth <768){
           return(
@@ -143,15 +80,14 @@ class ListingPanelFilter extends Component {
             <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'Filters'} className = "listing-panel-filter__button--filter"> </Button>
           )
         }
-
       }
 
     return(
       <div id="listing-filter" className= {`listing-panel-filter ${this.props.filterDrawerIsOpen ? 'is-active' : ""}`} >
         <div className = "listing-panel-filter__filter-menu">
-          <Dropdown value ={this.props.filterState.minPrice} name = "minPrice" className = "listing-panel-filter__select listing-panel-filter__select--filter-menu" options = {[{content:'No Min-Price',value:0},...priceOptions]} onChange = {(e)=>this.props.handleChange(e)}/>
+          <PriceSelect type = "min" label = "No Min-Price" value ={this.props.filterState.minPrice} name = "minPrice" className = "listing-panel-filter__select listing-panel-filter__select--filter-menu" onChange = {(e)=>this.props.handleChange(e)}/>
           <span className = "listing-panel-filter__hyphen-separator listing-panel-filter__hyphen-separator--filter-menu"> - </span>
-          <Dropdown value ={this.props.filterState.maxPrice} name = "maxPrice" className = "listing-panel-filter__select listing-panel-filter__select--filter-menu" options = {[{content:'No Max-Price',value:200000000},...priceOptions]} onChange = {(e)=>this.props.handleChange(e)}/>
+          <PriceSelect type = "max" label = "No Max-Price" value ={this.props.filterState.maxPrice} name = "maxPrice" className = "listing-panel-filter__select listing-panel-filter__select--filter-menu" onChange = {(e)=>this.props.handleChange(e)}/>
           {renderFilterButton()}
           <div className = "listing-panel-filter__filter-menu-bottom-border">
           </div>
@@ -162,9 +98,9 @@ class ListingPanelFilter extends Component {
               Price
             </div>
             <div className = "listing-panel-filter__filter-container">
-              <Dropdown value ={this.props.filterState.minPrice} name = "minPrice" className = "listing-panel-filter__select" options = {[{content:'No Min',value:0},...priceOptions]} onChange = {(e)=>this.props.handleChange(e)}/>
+              <PriceSelect label = "No Min" type = "min" value ={this.props.filterState.minPrice} name = "minPrice" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
               <span className = "listing-panel-filter__hyphen-separator"> - </span>
-              <Dropdown value ={this.props.filterState.maxPrice} name = "maxPrice" className = "listing-panel-filter__select" options = {[{content:'No Max',value:200000000},...priceOptions]} onChange = {(e)=>this.props.handleChange(e)}/>
+              <PriceSelect label = "No Max" type = "min" value ={this.props.filterState.maxPrice} name = "maxPrice" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
             </div>
           </div>
           <div className = "listing-panel-filter__panel">
@@ -172,9 +108,9 @@ class ListingPanelFilter extends Component {
               Bedrooms and Bathrooms
             </div>
             <div className = "listing-panel-filter__filter-container">
-              <Dropdown value ={this.props.filterState.bedrooms} name = "bedrooms" className = "listing-panel-filter__select" options = {bedOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+              <BedroomSelect value ={this.props.filterState.bedrooms} name = "bedrooms" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
               <span className = "listing-panel-filter__hyphen-separator"> - </span>
-              <Dropdown value ={this.props.filterState.bathrooms} name = "bathrooms" className = "listing-panel-filter__select" options = {bathOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+              <BathroomSelect value ={this.props.filterState.bathrooms} name = "bathrooms" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
             </div>
           </div>
           <div className = "listing-panel-filter__panel">
@@ -201,15 +137,15 @@ class ListingPanelFilter extends Component {
             <div className = "listing-panel-filter__filter-container">
               <div className = "listing-panel-filter__input-container">
                 <span className = "listing-panel-filter__input-title"> Square Feet </span>
-                <Dropdown value ={this.props.filterState.bedrooms} name = "bedrooms" className = "listing-panel-filter__select" options = {bedOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+                <SqftSelect label = "No Min" type= "min" defaultValue = {0} value ={this.props.filterState.sqftMin} name = "sqftMin" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
                 <span className = "listing-panel-filter__hyphen-separator"> - </span>
-                <Dropdown value ={this.props.filterState.bathrooms} name = "bathrooms" className = "listing-panel-filter__select" options = {bathOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+                <SqftSelect label = "No Max" type="max" defaultValue = {750} value ={this.props.filterState.sqftMax} name = "sqftMax" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
               </div>
               <div className = "listing-panel-filter__input-container">
                 <span className = "listing-panel-filter__input-title"> Lot Size </span>
-                <Dropdown value ={this.props.filterState.bedrooms} name = "bedrooms" className = "listing-panel-filter__select" options = {bedOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Select value ={this.props.filterState.bedrooms} name = "bedrooms" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
                 <span className = "listing-panel-filter__hyphen-separator"> - </span>
-                <Dropdown style = {{marginRight:0}} value ={this.props.filterState.bathrooms} name = "bathrooms" className = "listing-panel-filter__select" options = {bathOptions} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Select style = {{marginRight:0}} value ={this.props.filterState.bathrooms} name = "bathrooms" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
               </div>
             </div>
           </div>

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import './Select.scss';
 
 
@@ -18,8 +20,9 @@ const Select = (props)=> {
   }
 
   return(
-      <div className = {`select ${props.border ? 'select--border' : null} ${props.size === "small" ? 'select--small': null} ${props.className}`}>
-        <select value = {props.value} onChange = {(e)=>props.onChange(e)} name={props.name}>
+      <div className = {`dropdown ${props.className}`}>
+        <FontAwesomeIcon className = "dropdown__icon" icon={faChevronDown} size="lg" />
+        <select data-defaultValue = {props.defaultValue} value = {props.value} onChange = {(e)=>props.onChange(e)} name={props.name}>
           {renderOptions()}
         </select>
       </div>
