@@ -138,9 +138,9 @@ class ListingPanelFilter extends Component {
             <div className = "listing-panel-filter__filter-container">
               <div className = "listing-panel-filter__input-container">
                 <span className = "listing-panel-filter__input-title"> Square Feet </span>
-                <SqftSelect label = "No Min" type = "min" defaultValue = {0} value ={this.props.filterState.sqftMin} name = "sqftMin" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
+                <SqftSelect label = "No Min" type = "min" defaultValue = {0} value ={this.props.filterState.minSqft} name = "minSqft" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
                 <span className = "listing-panel-filter__hyphen-separator"> - </span>
-                <SqftSelect label = "No Max" type ="max" defaultValue = {750} value ={this.props.filterState.sqftMax} name = "sqftMax" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
+                <SqftSelect label = "No Max" type ="max" defaultValue = {750} value ={this.props.filterState.maxSqft} name = "maxSqft" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
               </div>
               <div className = "listing-panel-filter__input-container">
                 <span className = "listing-panel-filter__input-title"> Lot Size </span>

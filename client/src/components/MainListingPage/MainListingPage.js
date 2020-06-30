@@ -391,6 +391,12 @@ class MainListingPage extends Component {
        if (this.state.maxLotSize && stringToSqft(dataLotSizeString) > stringToSqft(this.state.minLotSize)){
          return false
        }
+       if (this.state.minSqft && data.sqft < parseFloat(this.state.minSqft)){
+         return false
+       }
+       if (this.state.maxSqft && data.sqft > parseFloat(this.state.maxSqft)){
+         return false
+       }
        if(this.state.propertyTypes.length > 0){
          let isMatched = false
          for(let i = 0; i< this.state.propertyTypes.length; i++){
