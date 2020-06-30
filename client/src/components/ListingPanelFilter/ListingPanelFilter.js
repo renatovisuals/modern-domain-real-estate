@@ -6,6 +6,7 @@ import PriceSelect from '../Widgets/PriceSelect/PriceSelect';
 import BedroomSelect from '../Widgets/BedroomSelect/BedroomSelect';
 import BathroomSelect from '../Widgets/BathroomSelect/BathroomSelect';
 import SqftSelect from '../Widgets/SqftSelect/SqftSelect';
+import LotSizeSelect from '../Widgets/LotSizeSelect/LotSizeSelect';
 import Checkbox from '../Widgets/Checkbox/Checkbox';
 
 class ListingPanelFilter extends Component {
@@ -137,15 +138,15 @@ class ListingPanelFilter extends Component {
             <div className = "listing-panel-filter__filter-container">
               <div className = "listing-panel-filter__input-container">
                 <span className = "listing-panel-filter__input-title"> Square Feet </span>
-                <SqftSelect label = "No Min" type= "min" defaultValue = {0} value ={this.props.filterState.sqftMin} name = "sqftMin" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
+                <SqftSelect label = "No Min" type = "min" defaultValue = {0} value ={this.props.filterState.sqftMin} name = "sqftMin" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
                 <span className = "listing-panel-filter__hyphen-separator"> - </span>
-                <SqftSelect label = "No Max" type="max" defaultValue = {750} value ={this.props.filterState.sqftMax} name = "sqftMax" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
+                <SqftSelect label = "No Max" type ="max" defaultValue = {750} value ={this.props.filterState.sqftMax} name = "sqftMax" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
               </div>
               <div className = "listing-panel-filter__input-container">
                 <span className = "listing-panel-filter__input-title"> Lot Size </span>
-                <Select value ={this.props.filterState.bedrooms} name = "bedrooms" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
+                <LotSizeSelect label = "No Min" type = "min" value ={this.props.filterState.minLotSize} name = "minLotSize" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
                 <span className = "listing-panel-filter__hyphen-separator"> - </span>
-                <Select style = {{marginRight:0}} value ={this.props.filterState.bathrooms} name = "bathrooms" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
+                <LotSizeSelect label = "No Max" type = "max" value ={this.props.filterState.maxLotSize} name = "maxLotSize" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
               </div>
             </div>
           </div>

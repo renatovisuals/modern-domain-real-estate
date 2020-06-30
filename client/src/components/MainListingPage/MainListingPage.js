@@ -10,6 +10,7 @@ import ListingPanel from '../ListingPanel/ListingPanel';
 import Map from '../Map/Map';
 import { mapStyles } from '../../utils';
 import axios from 'axios';
+import {stringToSqft} from '../../utils';
 import { Redirect } from 'react-router-dom';
 
 
@@ -40,6 +41,8 @@ class MainListingPage extends Component {
       maxPrice:'',
       minSqft:'',
       maxSqft:'',
+      minLotSize:'',
+      maxLotSize:'',
       propertyTypes:[],
       singleFamily:false,
       apartment:false,
@@ -82,7 +85,6 @@ class MainListingPage extends Component {
       },this.handleSearch())
     }else if (this.state.searchQuery.trim().length === 0){
       this.props.history.push(`/listings/for-sale/_map/${this.props.history.location.search}`)
-      console.log(this.props.history.location.search,"SEARCH")
       this.getAllListings()
     }
   }
@@ -147,7 +149,6 @@ class MainListingPage extends Component {
   }
 
   handleResultClick = (result)=>{
-    console.log("handle result click called!")
     if(result.type === "location"){
       this.getListingsByLocationNameId(result.id)
       this.props.history.push(`/listings/for-sale/${result.id}/`)
@@ -301,14 +302,12 @@ class MainListingPage extends Component {
           }
         }
       }else{
-        console.log(e,"this is the event object",e.target.attributes)
         if(e.target.value === ""){
           delete parsedSearch[name]
         }else{
           parsedSearch[name] = value;
         }
         filterState[name] = value
-        console.log(parsedSearch, "Parsed Search",value)
       }
       let newHistory = queryString.stringify(parsedSearch,{arrayFormat:'comma'})
       this.props.history.push({
@@ -359,13 +358,11 @@ class MainListingPage extends Component {
           }
         }
 
-        console.log(search, "this is the search string")
         search[param].forEach((val)=>{
           search[getName(val)] = true
         })
       }
     }
-    console.log(search,"SEARCH")
     this.setState({
       ...search
     },()=>this.filterListingData())
@@ -373,8 +370,9 @@ class MainListingPage extends Component {
 
   filterListingData = ()=>{
     let markerData = [...this.state.markerData];
-    console.log(this.state,"this is the state")
     markerData = markerData.filter((data)=>{
+       const dataLotSizeString = `${data.lot_quantity} ${data.lot_unit}`
+
        if (this.state.bathrooms && data.bathrooms<parseFloat(this.state.bathrooms)){
          return false
        }
@@ -385,6 +383,12 @@ class MainListingPage extends Component {
          return false
        }
        if (this.state.maxPrice && data.price > parseFloat(this.state.maxPrice)){
+         return false
+       }
+       if (this.state.minLotSize && stringToSqft(dataLotSizeString) < stringToSqft(this.state.minLotSize)){
+         return false
+       }
+       if (this.state.maxLotSize && stringToSqft(dataLotSizeString) > stringToSqft(this.state.minLotSize)){
          return false
        }
        if(this.state.propertyTypes.length > 0){

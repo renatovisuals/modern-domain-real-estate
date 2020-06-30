@@ -20,8 +20,8 @@ const Select = (props)=> {
   }
 
   return(
-      <div className = {`dropdown ${props.className}`}>
-        <FontAwesomeIcon className = "dropdown__icon" icon={faChevronDown} size="lg" />
+      <div className = {`select ${props.className}`}>
+        <FontAwesomeIcon className = "select__icon" icon={faChevronDown} size="lg" />
         <select data-defaultValue = {props.defaultValue} value = {props.value} onChange = {(e)=>props.onChange(e)} name={props.name}>
           {renderOptions()}
         </select>

@@ -18,6 +18,26 @@ export const arraysMatch = (arr1,arr2)=>{
 	return true;
 }
 
+export const stringToSqft = (string)=>{
+	const regex = new RegExp(/(^\.?\d+)\s{1}(sq\s{1}ft|sqft|acre|acres)$/,'gim')
+  const matches = regex.exec(string)
+  let quantity = parseFloat(matches[1])
+  let unit = ((string)=>{
+    const units = {
+      'acres':'acres',
+      'acre':'acres',
+      'sq ft':'sq ft',
+      'sqft':'sq ft'
+    }
+    return units[string]
+  })(matches[2])
+
+  if(unit === "acres"){
+    return quantity * 43560
+  }
+  return quantity
+}
+
 
 
 export const parseURL = (url)=>{

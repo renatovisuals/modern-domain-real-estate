@@ -89,7 +89,7 @@ const SqftSelect = (props)=> {
   })()
 
   return(
-        <Select defaultValue = {props.defaultValue} value ={props.value}  name = {props.name} className = {props.className} options = {options} onChange = {(e)=>props.onChange(e)}/>
+        <Select value ={props.value}  name = {props.name} className = {props.className} options = {options} onChange = {(e)=>props.onChange(e)}/>
   )
 
 }
