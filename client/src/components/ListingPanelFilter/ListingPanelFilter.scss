@@ -8,6 +8,23 @@
   overflow-x: hidden;
   overflow-y: hidden;
   position:relative;
+  //height:100%;
+
+  &__bottom-menu{
+    height:65px;
+    width:100%;
+    position:absolute;
+    display:none;
+    align-items: center;
+    right:0;
+    left:0px;
+    background:#fff;
+    border-top: 1px solid #dadada;
+    padding-left: 20px;
+    bottom:0;
+    display:flex;
+    position:sticky;
+  }
 
   &__input-title{
     display:block;
@@ -28,19 +45,15 @@
     color:#555;
     text-align:center;
     font-size: 25px;
-    //margin-left: -6%;
 
     @media screen and (min-width:600px){
       width:20px;
-      //margin-left:-20px;
     }
     @media screen and (min-width:768px){
       width:6%;
-      //margin-left:-6%;
     }
     @media screen and (min-width:1000px){
       width:20px;
-      //margin-left:-20px;
     }
 
     &--filter-menu{
@@ -61,6 +74,9 @@
 
   &__filter-menu{
     height:65px;
+    top:0px;
+    z-index: 1;
+    background:#fff;
     display:flex;
     align-items:center;
     position:relative;
@@ -108,6 +124,8 @@
     overflow-x: hidden;
     box-sizing: border-box;
     transition: all .3s ease;
+    position:relative;
+    padding-bottom: 65px;
   }
 
   &__panel{
@@ -148,20 +166,27 @@
   }
 
   &__button{
-    &--filter{
-      //width:140px;
-      width:auto;
-      height:40px;
-      padding:0 10px;
-      margin:0;
-      margin-right:20px;
-      //margin-left: 20px;
-      background:#fff;
-      border: 1px solid #d5d5d5;
-      box-shadow: none;
-      color:#181818;
-      transition: all .3s ease;
+    width:auto;
+    height:40px;
+    padding:0 10px;
+    margin:0;
+    margin-right:20px;
+    background:#fff;
+    border: 1px solid #d5d5d5;
+    box-shadow: none;
+    color:#181818;
+    transition: all .3s ease;
 
+    &--reset{
+      border: 1px solid #d9534f;
+      color: #d9534f;
+      &:hover{
+        background:#f6f6f6;
+        color:#d9534f;
+      }
+    }
+
+    &--filter{
       &:hover{
         color:#3bc193;
         background:#f6f6f6;
@@ -173,7 +198,6 @@
 .select.listing-panel-filter__select{
   height:40px;
   width:47%;
-  //margin-right: 6%;
   display:inline-block;
   margin:0;
 
@@ -183,15 +207,12 @@
 
   @media screen and (min-width:650px){
     width:auto;
-    //margin-right: 20px;
   }
   @media screen and (min-width:768px){
     width:47%;
-    //margin-right: 6%;
   }
   @media screen and (min-width:1000px){
     width:auto;
-    //margin-right: 20px;
   }
 
 
@@ -214,13 +235,9 @@
 
 .listing-panel-filter.is-active{
   height:100%;
-  //border-bottom:none;
-  //background:#f2f2f2;
-  //border-left:4px solid #3bc193;
 
   .listing-panel-filter__button{
     &--filter{
-      background-color:#fff;
       color:#3bc193;
       border:1px solid #3bc193
     }

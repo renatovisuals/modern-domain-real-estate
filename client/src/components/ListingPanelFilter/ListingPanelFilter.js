@@ -17,7 +17,6 @@ class ListingPanelFilter extends Component {
   }
 
   handleFilterToggle = ()=>{
-
     const listingsFilter = document.getElementById('listing-filter');
     const listingPanel = document.getElementById('listing-panel');
     this.props.setFilterDrawerTransitionState(false)
@@ -60,6 +59,11 @@ class ListingPanelFilter extends Component {
 
   componentDidMount(){
     window.addEventListener('resize',()=> this.updateWindowWidth())
+    const listingFilter = document.getElementById('listing-filter');
+    const listingFilterMenu = document.getElementById('listing-filter-menu');
+    listingFilter.addEventListener('scroll',()=>{
+      listingFilterMenu.style.top = `${listingFilter.scrollTop}px`;
+    })
     this.renderAnimationDelay()
   }
   componentWillUnmount(){
@@ -70,22 +74,22 @@ class ListingPanelFilter extends Component {
       const renderFilterButton = ()=>{
         if(window.innerWidth > 570 && window.innerWidth <768){
           return(
-            <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'More Filters'} className = "listing-panel-filter__button--filter"> </Button>
+            <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'More Filters'} className = "listing-panel-filter__button listing-panel-filter__button--filter"> </Button>
           )
         }else if(window.innerWidth > 1000){
           return(
-            <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'More Filters'} className = "listing-panel-filter__button--filter"> </Button>
+            <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'More Filters'} className = "listing-panel-filter__button listing-panel-filter__button--filter"> </Button>
           )
         }else{
           return(
-            <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'Filters'} className = "listing-panel-filter__button--filter"> </Button>
+            <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'Filters'} className = "listing-panel-filter__button listing-panel-filter__button--filter"> </Button>
           )
         }
       }
 
     return(
       <div id="listing-filter" className= {`listing-panel-filter ${this.props.filterDrawerIsOpen ? 'is-active' : ""}`} >
-        <div className = "listing-panel-filter__filter-menu">
+        <div id="listing-filter-menu" className = "listing-panel-filter__filter-menu">
           <PriceSelect type = "min" label = "No Min-Price" value ={this.props.filterState.minPrice} name = "minPrice" className = "listing-panel-filter__select listing-panel-filter__select--filter-menu" onChange = {(e)=>this.props.handleChange(e)}/>
           <span className = "listing-panel-filter__hyphen-separator listing-panel-filter__hyphen-separator--filter-menu"> - </span>
           <PriceSelect type = "max" label = "No Max-Price" value ={this.props.filterState.maxPrice} name = "maxPrice" className = "listing-panel-filter__select listing-panel-filter__select--filter-menu" onChange = {(e)=>this.props.handleChange(e)}/>
@@ -151,6 +155,12 @@ class ListingPanelFilter extends Component {
             </div>
           </div>
         </div>
+        {this.props.filterDrawerIsOpen ?
+          <div className = "listing-panel-filter__bottom-menu">
+            <Button className = "listing-panel-filter__button listing-panel-filter__button--reset" content = "Reset Filter"/>
+          </div>
+          :
+         null}
       </div>
     )
   }
