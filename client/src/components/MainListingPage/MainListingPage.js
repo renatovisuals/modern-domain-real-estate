@@ -368,6 +368,20 @@ class MainListingPage extends Component {
     },()=>this.filterListingData())
   }
 
+  resetFilterState = (filterState)=>{
+    let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'});
+    for(let i in filterState){
+      delete search[i]
+    }
+    search = queryString.stringify(search,{arrayFormat:'comma'})
+    this.props.history.push({
+      search:search
+    })
+    this.setState({
+      ...filterState
+    },()=>this.filterListingData())
+  }
+
   filterListingData = ()=>{
     let markerData = [...this.state.markerData];
     markerData = markerData.filter((data)=>{
@@ -409,6 +423,8 @@ class MainListingPage extends Component {
        }
         return true
     })
+
+    console.log(markerData, "NEW MARKER DATA")
     this.setState({
       filteredData:markerData
     })
@@ -495,6 +511,7 @@ class MainListingPage extends Component {
            handleChange = {(name,value,e)=>this.handleFilterInputChange(name,value,e)}
            filterState = {this.state}
            mapHeight = {this.state.mapHeight}
+           resetFilter = {(filterState)=>this.resetFilterState(filterState)}
            >
           </ListingPanel>
         </div>

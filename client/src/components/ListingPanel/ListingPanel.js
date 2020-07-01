@@ -126,6 +126,7 @@ class ListingPanel extends Component {
           mapHeight = {this.props.mapHeight}
           setFilterDrawerTransitionState = {(bool,callback)=>this.setFilterDrawerTransitionState(bool,callback)}
           filterDrawerIsTransitioning = {this.state.filterDrawerIsTransitioning}
+          resetFilter = {(filterState)=>this.props.resetFilter(filterState)}
         />
         {this.state.listingsAreVisible ?
           <div className = "listing-panel__listing-container">

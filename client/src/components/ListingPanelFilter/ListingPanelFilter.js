@@ -40,6 +40,27 @@ class ListingPanelFilter extends Component {
     }
   }
 
+  resetFilter = ()=>{
+    const defaultFilterState = {
+      bedrooms:'',
+      bathrooms:'',
+      minPrice:'',
+      maxPrice:'',
+      minSqft:'',
+      maxSqft:'',
+      minLotSize:'',
+      maxLotSize:'',
+      propertyTypes:[],
+      home:false,
+      manufactured:false,
+      condosCoops:false,
+      multiFamily:false,
+      lotsLand:false,
+      apartment:false
+    }
+    this.props.resetFilter(defaultFilterState)
+  }
+
   updateWindowWidth = ()=>{
     console.log(window.innerWidth,"inner width")
     this.setState({
@@ -157,7 +178,7 @@ class ListingPanelFilter extends Component {
         </div>
         {this.props.filterDrawerIsOpen ?
           <div className = "listing-panel-filter__bottom-menu">
-            <Button className = "listing-panel-filter__button listing-panel-filter__button--reset" content = "Reset Filter"/>
+            <Button className = "listing-panel-filter__button listing-panel-filter__button--reset" content = "Reset Filter" onClick = {(e)=>this.resetFilter(e)}/>
           </div>
           :
          null}
