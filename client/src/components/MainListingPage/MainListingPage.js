@@ -329,8 +329,7 @@ class MainListingPage extends Component {
       if(param === 'bedrooms' || param === 'bathrooms' || param === 'minPrice' || param === 'maxPrice'){
         search[param]= parseFloat(search[param])
       }
-      if(param === 'propertyTypes'){
-        const checkboxVals = {}
+      if(param === 'propertyTypes' || param === 'amentities'){
         if(!Array.isArray(search[param])){
           if(search[param]!==null){
             search[param] = [search[param]]
@@ -338,12 +337,13 @@ class MainListingPage extends Component {
             search[param] = []
           }
         }
-
         search[param].forEach((val)=>{
           search[camelize(val)] = true
         })
       }
     }
+
+
     this.setState({
       ...search
     },()=>this.filterListingData())
@@ -383,13 +383,19 @@ class MainListingPage extends Component {
        if (this.state.minLotSize && stringToSqft(dataLotSizeString) < stringToSqft(this.state.minLotSize)){
          return false
        }
-       if (this.state.maxLotSize && stringToSqft(dataLotSizeString) > stringToSqft(this.state.minLotSize)){
+       if (this.state.maxLotSize && stringToSqft(dataLotSizeString) > stringToSqft(this.state.maxLotSize)){
          return false
        }
        if (this.state.minSqft && data.sqft < parseFloat(this.state.minSqft)){
          return false
        }
        if (this.state.maxSqft && data.sqft > parseFloat(this.state.maxSqft)){
+         return false
+       }
+       if (this.state.minYear && data.year_built < parseFloat(this.state.minYear)){
+         return false
+       }
+       if (this.state.maxYear && data.year_built < parseFloat(this.state.maxYear)){
          return false
        }
        if(this.state.propertyTypes.length > 0){
@@ -404,13 +410,14 @@ class MainListingPage extends Component {
        }
        if(this.state.amentities.length > 0){
          for(let i = 0; i< this.state.amentities.length; i++){
-           console.log(data[this.state.amentities[i]])
+           const amentity = camelize(this.state.amentities[i])
+           if(data[amentity]!== 1){
+             return false
+           }
          }
        }
         return true
     })
-
-    console.log(markerData, "NEW MARKER DATA")
     this.setState({
       filteredData:markerData
     })

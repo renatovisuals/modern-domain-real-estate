@@ -52,6 +52,7 @@ class ListingPanelFilter extends Component {
       maxSqft:'',
       minLotSize:'',
       maxLotSize:'',
+      maxHOAFee:'',
       propertyTypes:[],
       home:false,
       manufactured:false,
@@ -63,7 +64,9 @@ class ListingPanelFilter extends Component {
       airConditioning:false,
       garage:false,
       pool:false,
-      elevator:false
+      elevator:false,
+      minYear:false,
+      maxYear:false
     }
     this.props.resetFilter(defaultFilterState)
   }

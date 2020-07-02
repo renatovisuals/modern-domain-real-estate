@@ -9,6 +9,16 @@
   overflow:visible;
   align-self: flex-start;
 
+  &__agent-image{
+    width:36px;
+    height:36px;
+    background:red;
+    display:inline-block;
+    border:1px solid orange;
+    opacity:30%;
+    border-radius: 50%;
+  }
+
   &__back-btn{
     display:none;
     position:relative;
@@ -41,9 +51,11 @@
   }
 
   &__result-text{
-    position: relative;
+    display:inline-block;
+    position: absolute;
     top:50%;
     transform:translateY(-50%);
+    border: 1px solid purple;
   }
 
   &__icon-container{

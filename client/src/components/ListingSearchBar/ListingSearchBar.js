@@ -167,13 +167,16 @@ class ListingSearchBar extends Component {
 
   formatAgentResults = (result)=>{
     return(
-        <div className = "listing-search-bar__result-text">
-          <span className = "listing-search-bar__result-title">
-          {this.getAgentMatchedText(result)}
-          </span>
-          <span className = "listing-search-bar__result-subtitle">
-          {`${result.item.city}, ${result.item.state}`}
-          </span>
+        <div style = {{height:'100%',position:'relative',border:'1px solid orange'}}>
+          <div className = "listing-search-bar__agent-image"></div>
+          <div className = "listing-search-bar__result-text">
+            <span className = "listing-search-bar__result-title">
+            {this.getAgentMatchedText(result)}
+            </span>
+            <span className = "listing-search-bar__result-subtitle">
+            {`${result.item.city}, ${result.item.state}`}
+            </span>
+          </div>
         </div>
     )
   }
