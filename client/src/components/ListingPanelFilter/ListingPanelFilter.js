@@ -7,7 +7,9 @@ import BedroomSelect from '../Widgets/BedroomSelect/BedroomSelect';
 import BathroomSelect from '../Widgets/BathroomSelect/BathroomSelect';
 import SqftSelect from '../Widgets/SqftSelect/SqftSelect';
 import LotSizeSelect from '../Widgets/LotSizeSelect/LotSizeSelect';
+import YearSelect from '../Widgets/YearSelect/YearSelect';
 import Checkbox from '../Widgets/Checkbox/Checkbox';
+import HOASelect from '../Widgets/HOASelect/HOASelect';
 
 class ListingPanelFilter extends Component {
 
@@ -56,7 +58,12 @@ class ListingPanelFilter extends Component {
       condosCoops:false,
       multiFamily:false,
       lotsLand:false,
-      apartment:false
+      apartment:false,
+      washerDryer:false,
+      airConditioning:false,
+      garage:false,
+      pool:false,
+      elevator:false
     }
     this.props.resetFilter(defaultFilterState)
   }
@@ -157,7 +164,7 @@ class ListingPanelFilter extends Component {
             </div>
           </div>
           <div className = "listing-panel-filter__panel">
-            <div className = "listing-panel-filter__panel-title">
+            <div className = "listing-panel-filter__panel-title listing-panel-filter__panel-title--no-margin">
               Property Info
             </div>
             <div className = "listing-panel-filter__filter-container">
@@ -172,6 +179,34 @@ class ListingPanelFilter extends Component {
                 <LotSizeSelect label = "No Min" type = "min" value ={this.props.filterState.minLotSize} name = "minLotSize" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
                 <span className = "listing-panel-filter__hyphen-separator"> - </span>
                 <LotSizeSelect label = "No Max" type = "max" value ={this.props.filterState.maxLotSize} name = "maxLotSize" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
+              </div>
+            </div>
+            <div className = "listing-panel-filter__filter-container">
+              <div className = "listing-panel-filter__input-container">
+                <span className = "listing-panel-filter__input-title"> Year Built </span>
+                <YearSelect label = "No Min" value ={this.props.filterState.minYear} name = "minYear" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
+                <span className = "listing-panel-filter__hyphen-separator"> - </span>
+                <YearSelect label = "No Max" value ={this.props.filterState.maxYear} name = "maxYear" className = "listing-panel-filter__select" onChange = {(e)=>this.props.handleChange(e)}/>
+              </div>
+              <div className = "listing-panel-filter__input-container">
+                <span className = "listing-panel-filter__input-title"> Max HOA Fee </span>
+                <HOASelect label = "No Max" value ={this.props.filterState.maxHOAFee} name = "maxHOAFee" className = "listing-panel-filter__select listing-panel-filter__select--full-width" onChange = {(e)=>this.props.handleChange(e)}/>
+              </div>
+            </div>
+          </div>
+          <div className = "listing-panel-filter__panel">
+            <div className = "listing-panel-filter__panel-title">
+              Other Amentities
+            </div>
+            <div className = "listing-panel-filter__filter-container">
+              <div className = "listing-panel-filter__input-container">
+                <Checkbox id="washer-dryer" labelName = "Must Have Washer / Dryer" name="washerDryer" value="Washer/Dryer" category = "amentities" checked={this.props.filterState.washerDryer} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Checkbox id="air-conditioning" labelName = "Must Have Air Conditoning" name="airConditioning" value="Air Conditioning" category = "amentities" checked={this.props.filterState.airConditioning} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Checkbox id="garage" labelName = "Must Have Garage" type="checkbox" name="garage" value="Garage" category = "amentities" checked={this.props.filterState.garage} onChange = {(e)=>this.props.handleChange(e)}/>
+              </div>
+              <div className = "listing-panel-filter__input-container">
+                <Checkbox id="pool" labelName = "Must Have Pool" name="pool" value="Pool" category = "amentities" checked={this.props.filterState.pool} onChange = {(e)=>this.props.handleChange(e)}/>
+                <Checkbox id="elevator" labelName = "Must Have Elevator" name="elevator" value="Elevator" category = "amentities" checked={this.props.filterState.elevator} onChange = {(e)=>this.props.handleChange(e)}/>
               </div>
             </div>
           </div>

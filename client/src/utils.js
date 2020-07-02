@@ -18,6 +18,19 @@ export const arraysMatch = (arr1,arr2)=>{
 	return true;
 }
 
+export const camelize = (word)=>{
+  const regex = new RegExp(/(\W+|_+)(?=\w)/,'gm');
+  word = word.trim().toLowerCase();
+  word = word.replace(regex," ");
+  word = word.split(" ")
+  if(word.length>1){
+  	for(let i = 1; i<word.length; i++){
+  word[i] = word[i].charAt(0).toUpperCase() + word[i].substring(1)
+  }
+  }
+	return word.join("")
+}
+
 export const stringToSqft = (string)=>{
 	const regex = new RegExp(/(^\.?\d+)\s{1}(sq\s{1}ft|sqft|acre|acres)$/,'gim')
   const matches = regex.exec(string)

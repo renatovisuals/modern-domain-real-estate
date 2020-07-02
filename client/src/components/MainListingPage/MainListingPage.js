@@ -11,6 +11,7 @@ import Map from '../Map/Map';
 import { mapStyles } from '../../utils';
 import axios from 'axios';
 import {stringToSqft} from '../../utils';
+import {camelize} from '../../utils';
 import { Redirect } from 'react-router-dom';
 
 
@@ -44,6 +45,7 @@ class MainListingPage extends Component {
       minLotSize:'',
       maxLotSize:'',
       propertyTypes:[],
+      amentities:[],
       singleFamily:false,
       apartment:false,
     }
@@ -322,27 +324,6 @@ class MainListingPage extends Component {
   }
 
   getInitialListingFilterState = ()=>{
-    //const toCamelCase = (string)=>{
-    //  string = string.trim()
-    //  string = string.toLowerCase()
-    //  if(string.indexOf(' ')!== -1){
-    //    string = string.split(" ")
-    //    string[1] = string[1].charAt(0).toUpperCase() + string[1].substring(1,string[1].length)
-    //    string = string.join("")
-    //  }
-    //  return string
-    //}
-    const getName = (string)=>{
-      const names = {
-        "Home":"home",
-        "Condos/coops":"condosCoops",
-        "Manufactured":"manufactured",
-        "Multi-Family":"multiFamily",
-        "Apartment":"apartment",
-        "Lots/Land":"lotsLand"
-      }
-      return names[string]
-    }
     let search = queryString.parse(this.props.location.search,{arrayFormat:'comma'});
     for(let param in search){
       if(param === 'bedrooms' || param === 'bathrooms' || param === 'minPrice' || param === 'maxPrice'){
@@ -359,7 +340,7 @@ class MainListingPage extends Component {
         }
 
         search[param].forEach((val)=>{
-          search[getName(val)] = true
+          search[camelize(val)] = true
         })
       }
     }
@@ -420,6 +401,11 @@ class MainListingPage extends Component {
            }
          }
          if(!isMatched) return false
+       }
+       if(this.state.amentities.length > 0){
+         for(let i = 0; i< this.state.amentities.length; i++){
+           console.log(data[this.state.amentities[i]])
+         }
        }
         return true
     })
