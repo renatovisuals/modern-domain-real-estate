@@ -1,6 +1,9 @@
 .listing-search-bar{
   position:relative;
-  width:400px;
+  //width:100%;
+  max-width: 400px;
+  //margin-right: 20px;
+
   //margin-right:30px;
   font-size: 0;
   border:1px solid #d5d5d5;
@@ -95,7 +98,8 @@
     padding:0;
     padding-left: 10px;
     box-sizing: border-box;
-    width:360px;
+    //width:360px;
+    width:100%;
     border:none;
     border:1px solid red;
     margin:0;
@@ -150,7 +154,6 @@
 
 .active{
     &.listing-search-bar  {
-      background: red;
       .listing-search-bar{
         &__search-btn{
           display:none;
@@ -187,6 +190,7 @@
           text-overflow: ellipsis;
           display:inline-block;
           vertical-align: top;
+          //min-width:400px;
         }
         &__type-ahead-result{
           &:last-child{
