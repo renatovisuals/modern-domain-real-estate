@@ -167,9 +167,7 @@ class ListingSearchBar extends Component {
 
   formatAgentResults = (result)=>{
     return(
-        <div style = {{height:'100%',position:'relative',border:'1px solid orange'}}>
-          <div className = "listing-search-bar__agent-image"></div>
-          <div className = "listing-search-bar__result-text">
+          <div className = "listing-search-bar__result-text listing-search-bar__result-text--agent">
             <span className = "listing-search-bar__result-title">
             {this.getAgentMatchedText(result)}
             </span>
@@ -177,7 +175,6 @@ class ListingSearchBar extends Component {
             {`${result.item.city}, ${result.item.state}`}
             </span>
           </div>
-        </div>
     )
   }
 
@@ -224,8 +221,10 @@ class ListingSearchBar extends Component {
       const getAgents = ()=> {
         if(this.props.data.agents){
           agents = this.props.data.agents.map((result)=>{
+            console.log(result.item,"AGENT")
             return (
               <div key = {result.location_id} className = "listing-search-bar__type-ahead-result" onClick = {()=> this.props.handleResultClick({type:'agent', id:result.item.agent_id})}>
+                <div className = "listing-search-bar__agent-image" style = {{backgroundImage:`url("/images/agents/${result.item.image}")`}}> </div>
                 {this.formatAgentResults(result)}
               </div>
             )

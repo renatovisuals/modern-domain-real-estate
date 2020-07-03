@@ -10,13 +10,15 @@
   align-self: flex-start;
 
   &__agent-image{
-    width:36px;
-    height:36px;
-    background:red;
+    width:35px;
+    height:35px;
     display:inline-block;
-    border:1px solid orange;
-    opacity:30%;
     border-radius: 50%;
+    line-height: 50px;
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background-size:cover;
   }
 
   &__back-btn{
@@ -55,11 +57,13 @@
     position: absolute;
     top:50%;
     transform:translateY(-50%);
-    border: 1px solid purple;
+
+    &--agent{
+      margin-left:45px;
+    }
   }
 
   &__icon-container{
-    //background:red;
     display:inline-block;
     width:40px;
     position:relative;

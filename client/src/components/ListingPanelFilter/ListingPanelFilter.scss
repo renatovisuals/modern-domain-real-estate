@@ -137,8 +137,9 @@
     margin-bottom: 15px;
     position:relative;
     top:-100px;
-    opacity:0;
+    opacity:0%;
     transition: all .3s ease;
+    -webkit-transition: all .3s ease;
 
     &--price{
       display:block;
