@@ -197,7 +197,7 @@ class ListingSearchBar extends Component {
         if(this.props.data.locations){
           locations = this.props.data.locations.map((result)=>{
             return (
-              <div key = {result.location_id} tabIndex="0" id="type-ahead-result" className = "listing-search-bar__type-ahead-result" onClick = {(e)=> {this.handleClick({type:'location', id:result.item.name_id})}}>
+              <div key = {result.location_id} tabIndex="0" id="type-ahead-result" className = "listing-search-bar__type-ahead-result" onClick = {(e)=> {this.handleClick({type:'location', data:result.item})}}>
                 {this.formatLocationResults(result)}
               </div>
             )
@@ -223,7 +223,7 @@ class ListingSearchBar extends Component {
           agents = this.props.data.agents.map((result)=>{
             console.log(result.item,"AGENT")
             return (
-              <div key = {result.location_id} className = "listing-search-bar__type-ahead-result" onClick = {()=> this.props.handleResultClick({type:'agent', id:result.item.agent_id})}>
+              <div key = {result.location_id} className = "listing-search-bar__type-ahead-result" onClick = {()=> this.props.handleResultClick({type:'agent', data:result.item})}>
                 <div className = "listing-search-bar__agent-image" style = {{backgroundImage:`url("/images/agents/${result.item.image}")`}}> </div>
                 {this.formatAgentResults(result)}
               </div>
@@ -249,7 +249,7 @@ class ListingSearchBar extends Component {
         if(this.props.data.addresses){
            addresses = this.props.data.addresses.map((result)=>{
             return (
-              <div key = {result.address_id} className = "listing-search-bar__type-ahead-result" onClick = {()=> this.props.handleResultClick({type:'address', id:result.itam.address_id})}>
+              <div key = {result.address_id} className = "listing-search-bar__type-ahead-result" onClick = {()=> this.props.handleResultClick({type:'address', data:result.item})}>
                 {this.formatAddressResults(result)}
               </div>
             )

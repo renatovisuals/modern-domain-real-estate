@@ -152,9 +152,10 @@ class MainListingPage extends Component {
 
   handleResultClick = (result)=>{
     if(result.type === "location"){
-      this.getListingsByLocationNameId(result.id)
-      this.props.history.push(`/listings/for-sale/${result.id}/`)
+      this.getListingsByLocationNameId(result.data.name_id)
+      this.props.history.push(`/listings/for-sale/${result.data.name_id}/`)
     }else if(result.type ==="agent"){
+      this.props.history.push(`/agents/${result.data.first_name.toLowerCase() + "-" + result.data.last_name.toLowerCase()}/${result.data.agent_id}`)
     }
   }
 
