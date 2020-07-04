@@ -5,6 +5,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faUserTie } from "@fortawesome/free-solid-svg-icons";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 class ListingSearchBar extends Component {
 
@@ -288,7 +289,6 @@ render(){
       <div className = "listing-search-bar__mobile-search-container ">
         <div className = "listing-search-bar__input-container">
           <button className = "listing-search-bar__back-btn" id = "back-btn" onClick = {this.handleBlur}> 	<FontAwesomeIcon className = "listing-search-bar__back-btn-icon" icon = {faArrowLeft} size = "lg"/> </button>
-
           <input id = "listing-search-bar"
                  autoComplete="no"
                  autoComplete="off"
@@ -300,6 +300,9 @@ render(){
                  onBlur = {(e)=>this.handleBlur(e)}
                  placeholder = {this.props.placeHolder}
           />
+          <div className = "listing-search-bar__clear-search-icon">
+            <FontAwesomeIcon icon = {faTimesCircle} size = 'sm' /> 
+          </div>
           <div className = "listing-search-bar__search-btn"> </div>
         </div>
 
