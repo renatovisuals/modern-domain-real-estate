@@ -14,14 +14,22 @@ class ListingSearchBar extends Component {
     this.state = {
       value:'',
       resultsVisible:true,
-      active:false
+      active:false,
+      clearSearchIsVisible:false
     }
   }
 
   handleChange = (e)=>{
-    this.setState({
-      value:e.target.value
-    })
+    this.props.handleChange(e)
+    if(e.target.value.length>0){
+      this.setState({
+        clearSearchIsVisible:true
+      })
+    }else{
+      this.setState({
+        clearSearchIsVisible:false
+      })
+    }
   }
 
   hideSearchResults = (e)=>{
@@ -36,6 +44,11 @@ class ListingSearchBar extends Component {
     this.setState({
       active:true
     })
+    if(e.target.value.length>0){
+      this.setState({
+        clearSearchIsVisible:true
+      })
+    }
   }
 
   getMatchedText = (result)=>{
@@ -288,20 +301,20 @@ render(){
     <div className = {`listing-search-bar ${this.state.active ? "active": ""} ${this.props.isMobile ? "mobile" : ""} ${this.props.className}`}>
       <div className = "listing-search-bar__mobile-search-container ">
         <div className = "listing-search-bar__input-container">
-          <button className = "listing-search-bar__back-btn" id = "back-btn" onClick = {this.handleBlur}> 	<FontAwesomeIcon className = "listing-search-bar__back-btn-icon" icon = {faArrowLeft} size = "lg"/> </button>
+          <button className = "listing-search-bar__back-btn" id = "back-btn"  onClick = {this.handleBlur}> 	<FontAwesomeIcon className = "listing-search-bar__back-btn-icon" icon = {faArrowLeft} size = "lg"/> </button>
           <input id = "listing-search-bar"
                  autoComplete="no"
                  autoComplete="off"
                  className = "listing-search-bar__input"
                  type="text"
                  value={this.props.searchQuery}
-                 onChange = {(e)=>this.props.handleChange(e)}
+                 onChange = {(e)=>this.handleChange(e)}
                  onFocus = {(e)=>this.handleFocus(e)}
                  onBlur = {(e)=>this.handleBlur(e)}
                  placeholder = {this.props.placeHolder}
           />
-          <div className = "listing-search-bar__clear-search-icon">
-            <FontAwesomeIcon icon = {faTimesCircle} size = 'sm' /> 
+          <div className = {`listing-search-bar__clear-search-icon ${this.state.clearSearchIsVisible ? 'is-visible': ''}`} onMouseDown = {(e)=>{e.preventDefault(); console.log("MOUSEDOWN")}} onClickCapture = {(e)=>{e.stopPropagation()}}>
+            <FontAwesomeIcon icon = {faTimesCircle} size = 'sm' />
           </div>
           <div className = "listing-search-bar__search-btn"> </div>
         </div>
