@@ -129,6 +129,7 @@ class ListingSearchBar extends Component {
     }else{
       console.log(this.props.searchQuery, "This is the query")
     }
+    this.isMobileWidth()
     window.addEventListener('resize',this.isMobileWidth)
     window.addEventListener('keydown',(e)=>{
       if(e.keyCode === 13){

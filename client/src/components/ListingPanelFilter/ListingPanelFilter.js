@@ -89,11 +89,11 @@ class ListingPanelFilter extends Component {
 
   componentDidMount(){
     window.addEventListener('resize',()=> this.updateWindowWidth())
-    const listingFilter = document.getElementById('listing-filter');
-    const listingFilterMenu = document.getElementById('listing-filter-menu');
-    listingFilter.addEventListener('scroll',()=>{
-      listingFilterMenu.style.top = `${listingFilter.scrollTop}px`;
-    })
+    //const listingFilter = document.getElementById('listing-filter');
+    //const listingFilterMenu = document.getElementById('listing-filter-menu');
+    //listingFilter.addEventListener('scroll',()=>{
+    //  listingFilterMenu.style.top = `${listingFilter.scrollTop}px`;
+    //})
     this.renderAnimationDelay()
   }
   componentWillUnmount(){
