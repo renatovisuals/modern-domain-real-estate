@@ -22,7 +22,6 @@ class ListingPanel extends Component {
   }
 
   setFilterDrawerTransitionState = (bool,callback)=>{
-    console.log('function called!!!')
     this.setState({
       filterDrawerIsTransitioning:bool
     },()=>{if(callback)callback()})

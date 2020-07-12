@@ -49,8 +49,12 @@ class MainListingPage extends Component {
       singleFamily:false,
       apartment:false,
     }
-    this.getListingData = this.getListingData.bind(this);
     this.closeListing = this.closeListing.bind(this);
+  }
+
+  viewListing = (marker)=>{
+    console.log(marker,"retrieving listing from marker")
+    this.props.history.push(`/listing/${marker.listingData.listing_id}/`)
   }
 
   setMarkersInBounds = (markersInBounds)=>{
@@ -437,16 +441,6 @@ class MainListingPage extends Component {
       })
   }
 
-  getListingData(marker){
-      let listingData = this.state.markerData.filter((data)=>{
-          return data.id === marker.id
-      })
-      this.setState({
-          currentListingData:listingData[0],
-          showCurrentListing:true
-      })
-  }
-
   render(){
     const mapOptions = {
       center:{lat: -34.397, lng: 150.644},
@@ -468,17 +462,13 @@ class MainListingPage extends Component {
           handleSearchSubmit = {this.handleSearchSubmit}
           hideListingSearchResults = {this.hideListingSearchResults}
         />
-        {this.state.showCurrentListing
-          ? <Listing listingData = {this.state.currentListingData} handleClose = {this.closeListing}/>
-          : null
-        }
         <div className = "listing-page__map-container" style={{height:`${this.state.mapHeight}px`,width:`${this.state.mapWidth}px`}}>
           {this.state.mapIsVisible && this.state.filteredData
             ? <Map
                 id="myMap"
                 options={mapOptions}
                 data = {this.state.filteredData}
-                getListing = {this.getListingData}
+                viewListing = {(marker)=>this.viewListing(marker)}
                 onMapMove = {this.onMapMove}
                 markersInBounds = {this.state.markersInBounds}
                 setMarkersInBounds = {(markersInBounds)=>this.setMarkersInBounds(markersInBounds)}

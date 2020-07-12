@@ -13,7 +13,6 @@ class Map extends Component {
     constructor(props) {
         super(props);
         this.onScriptLoad = this.onScriptLoad.bind(this)
-        this.viewListing = this.viewListing.bind(this)
         this.state = {
           markerData:this.props.data,
           markerCluster:null,
@@ -23,10 +22,6 @@ class Map extends Component {
           hoveredListing:null,
           infoWindow:null
         }
-  }
-
-  viewListing(){
-      this.props.getListing(this.state.activeMarker)
   }
 
   onScriptLoad() {
@@ -111,7 +106,7 @@ class Map extends Component {
           pixelOffset: new window.google.maps.Size(0,5)
       })
       infoWindow.addListener('domready', e => {
-          render(<InfoWindow marker = {this.state.activeMarker} data = {this.props.data} viewListing = {this.viewListing}/>, document.getElementById('infoWindow'))
+          render(<InfoWindow marker = {this.state.activeMarker} data = {this.props.data} viewListing = {()=>this.props.viewListing(this.state.activeMarker)}/>, document.getElementById('infoWindow'))
       })
       infoWindow.addListener('closeclick', e => {
           this.setState({
@@ -389,23 +384,8 @@ class Map extends Component {
   }
 
   componentDidUpdate(prevProps,prevState){
-    //console.log(this.state.markerData,this.state.markers,"this is the new marker data")
     if(!arraysMatch(prevState.markerData,this.state.markerData) && this.state.map){
-      console.log("RUNNING")
       this.onMapLoad(this.state.map)
-      //console.log("this is a test")
-      //let search = this.getSearchParams();
-      //console.log(search,"THIS IS THE SEARCH ON CHANGE")
-      //let shouldFitBounds = search.mapBounds ? false : true;
-      //  this.renderMarkers(this.state.map,shouldFitBounds,()=>{
-      //    if(search.mapBounds)this.setMapBounds(this.state.map,search.mapBounds,this.getMarkersInBounds)
-      //  })
-    //  this.clearMarkers(()=>this.renderMarkers(this.state.map,{fitBounds:shouldFitBounds},()=>{
-    //    if(search.mapBounds)this.setMapBounds(this.state.map,search.mapBounds)
-    // }))
-
-      //this.loadClusters(this.state.map,this.state.markers);
-
     }
     if(this.state.hoveredListing !== prevState.hoveredListing){
       if(this.state.hoveredListing !== null){
