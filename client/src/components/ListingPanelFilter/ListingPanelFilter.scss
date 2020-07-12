@@ -137,8 +137,8 @@
     margin-bottom: 15px;
     position:relative;
     top:-100px;
-    opacity:0%;
-    transition: opacity .3s ease, top .3s ease;
+    opacity:0;
+    transition: all .3s ease;
     -webkit-transition: all .3s ease;
 
     &--price{
@@ -262,7 +262,7 @@
 
 .listing-panel-filter__main.is-visible{
   .listing-panel-filter__panel{
-    opacity:100%;
+    opacity:1;
     top:0px;
   }
 }
