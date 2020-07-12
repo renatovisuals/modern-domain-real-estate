@@ -42,6 +42,7 @@
   &__search-btn{
     height:35px;
     width:15%;
+    font-size: 16px;
     background:#3bc193;
     border-radius: 0 5px 5px 0;
     display:inline-block;
@@ -53,6 +54,15 @@
     &:hover{
       background:#35a880;
     }
+  }
+
+  &__search-icon{
+    position:absolute;
+    left:50%;
+    top:49%;
+    transform:translate(-50%,-50%);
+    color:#fff;
+    display:inline-block;
   }
 
   &__back-btn{
@@ -186,6 +196,7 @@
         &__search-btn{
           display:none;
         }
+
         &__back-btn{
           width:40px;
           height:35px;

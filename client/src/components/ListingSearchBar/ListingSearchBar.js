@@ -6,6 +6,7 @@ import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 class ListingSearchBar extends Component {
 
@@ -15,8 +16,22 @@ class ListingSearchBar extends Component {
       value:'',
       resultsVisible:true,
       active:false,
-      clearSearchIsVisible:false
+      clearSearchIsVisible:false,
+      mobileWidth:false,
     }
+  }
+
+  isMobileWidth = ()=>{
+    if(window.innerWidth<650){
+      this.setState({
+        mobileWidth:true
+      })
+    }else{
+      this.setState({
+        mobileWidth:false
+      })
+    }
+    console.log(this.state.mobileWidth, "mobile width")
   }
 
   handleChange = (e)=>{
@@ -89,17 +104,18 @@ class ListingSearchBar extends Component {
     }
   }
 
-  handleBlur = (e)=>{
-  setTimeout(()=>{
-    this.props.hideListingSearchResults()
-    this.setState({
-      active:false
-    })
-  },100)
+  handleBlur = (forceBlur)=>{
+    if(!this.state.mobileWidth || forceBlur === true){
+      setTimeout(()=>{
+        this.props.hideListingSearchResults()
+        this.setState({
+          active:false
+        })
+      },100)
+    }
   }
 
   handleClick = (result)=>{
-    console.log("CLICKED",result)
     this.props.handleResultClick(result)
     this.props.hideListingSearchResults()
     this.setState({
@@ -116,8 +132,7 @@ class ListingSearchBar extends Component {
     window.addEventListener('resize',this.isMobileWidth)
     window.addEventListener('keydown',(e)=>{
       if(e.keyCode === 13){
-        this.props.handlePressEnter()
-        //console.log(this.props,"THIS")
+        this.props.handleSearchSubmit()
       }
     })
   }
@@ -300,8 +315,10 @@ render(){
   return(
     <div className = {`listing-search-bar ${this.state.active ? "active": ""} ${this.props.isMobile ? "mobile" : ""} ${this.props.className}`}>
       <div className = "listing-search-bar__mobile-search-container ">
-        <div className = "listing-search-bar__input-container">
-          <button className = "listing-search-bar__back-btn" id = "back-btn"  onClick = {this.handleBlur}> 	<FontAwesomeIcon className = "listing-search-bar__back-btn-icon" icon = {faArrowLeft} size = "lg"/> </button>
+        <div className = "listing-search-bar__input-container" onClick = {(e)=>e.stopPropagation()}>
+          <button className = "listing-search-bar__back-btn" id = "back-btn"  onClick = {()=>this.handleBlur(true)}>
+            <FontAwesomeIcon className = "listing-search-bar__back-btn-icon" icon = {faArrowLeft} size = "lg"/>
+          </button>
           <input id = "listing-search-bar"
                  autoComplete="no"
                  autoComplete="off"
@@ -312,11 +329,16 @@ render(){
                  onFocus = {(e)=>this.handleFocus(e)}
                  onBlur = {(e)=>this.handleBlur(e)}
                  placeholder = {this.props.placeHolder}
+                 onClick = {()=>console.log("clicked")}
           />
-          <div className = {`listing-search-bar__clear-search-icon ${this.state.clearSearchIsVisible ? 'is-visible': ''}`} onMouseDown = {(e)=>{e.preventDefault(); console.log("MOUSEDOWN")}} onClickCapture = {(e)=>{e.stopPropagation()}}>
+          <div className = {`listing-search-bar__clear-search-icon ${this.state.clearSearchIsVisible ? 'is-visible': ''}`} onMouseDown = {(e)=>e.preventDefault()} onClick = {this.props.clearSearch}>
             <FontAwesomeIcon icon = {faTimesCircle} size = 'sm' />
           </div>
-          <div className = "listing-search-bar__search-btn"> </div>
+          <div className = "listing-search-bar__search-btn" onClick = {this.props.handleSearchSubmit}>
+            <div className = "listing-search-bar__search-icon">
+              <FontAwesomeIcon icon = {faSearch} size = 'md' />
+            </div>
+          </div>
         </div>
 
         {this.props.resultsVisible && this.props.searchQuery.length>=2 ? this.renderResults() : null}

@@ -62,7 +62,7 @@ render(){
           searchQuery = {this.props.searchQuery}
           data ={this.props.results}
           handleResultClick = {(result)=>this.props.handleResultClick(result)}
-          handlePressEnter = {this.props.handlePressEnter}
+          handleSearchSubmit = {this.props.handleSearchSubmit}
           clearSearch = {this.props.clearSearch}
           placeHolder = {placeHolder}
           mobileWidth = {this.state.mobileWidth}
@@ -81,7 +81,7 @@ render(){
           searchQuery = {this.props.searchQuery}
           data ={this.props.results}
           handleResultClick = {(result)=>this.props.handleResultClick(result)}
-          handlePressEnter = {this.props.handlePressEnter}
+          handleSearchSubmit = {this.props.handleSearchSubmit}
           clearSearch = {this.props.clearSearch}
           placeHolder = {placeHolder}
           mobileWidth = {this.state.mobileWidth}

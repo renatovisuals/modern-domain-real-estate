@@ -72,7 +72,6 @@ class ListingPanelFilter extends Component {
   }
 
   updateWindowWidth = ()=>{
-    console.log(window.innerWidth,"inner width")
     this.setState({
       windowWidth:window.innerWidth
     })

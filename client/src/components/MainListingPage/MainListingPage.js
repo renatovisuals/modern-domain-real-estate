@@ -80,7 +80,7 @@ class MainListingPage extends Component {
     this.getSearchResults(e)
   }
 
-  handlePressEnter = ()=>{
+  handleSearchSubmit = ()=>{
     if(this.state.searchQuery.trim().length>=1){
       this.setState({
         search:true
@@ -465,7 +465,7 @@ class MainListingPage extends Component {
           results = {this.state.searchResults}
           handleResultClick = {(result)=>this.handleResultClick(result)}
           clearSearch = {this.clearSearch}
-          handlePressEnter = {this.handlePressEnter}
+          handleSearchSubmit = {this.handleSearchSubmit}
           hideListingSearchResults = {this.hideListingSearchResults}
         />
         {this.state.showCurrentListing
