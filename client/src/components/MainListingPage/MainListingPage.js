@@ -5,7 +5,7 @@ import Select from '../Widgets/Select/Select';
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import './MainListingPage.scss';
-import Listing from '../Listing/Listing';
+import ListingPage from '../ListingPage/ListingPage';
 import ListingPanel from '../ListingPanel/ListingPanel';
 import Map from '../Map/Map';
 import { mapStyles } from '../../utils';

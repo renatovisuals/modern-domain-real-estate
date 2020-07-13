@@ -9,7 +9,7 @@ import ExpertisePage from './components/ExpertisePage/ExpertisePage';
 import ServicesPage from './components/ServicesPage/ServicesPage';
 import CommunityPage from './components/CommunityPage/CommunityPage';
 import MainListingPage from './components/MainListingPage/MainListingPage';
-import Listing from './components/Listing/Listing';
+import ListingPage from './components/ListingPage/ListingPage';
 import { withRouter } from 'react-router';
 
 class Routes extends Component {
@@ -19,8 +19,8 @@ class Routes extends Component {
             <Route exact path="/" exact component ={Home} />
             <Route path="/listings/:searchType/_map" component ={MainListingPage} />
             <Route path="/listings/:searchType/:location" component ={MainListingPage} />
-            <Route exact path="/listing" exact component ={Listing} />
-            <Route exact path="/listing/:id" exact component ={Listing} />
+            <Route exact path="/listing" exact component ={ListingPage} />
+            <Route exact path="/listing/:id" exact component ={ListingPage} />
             <Route exact path="/about" exact component ={About} />
             <Route exact path="/agents/:agentName/:id" exact component ={AgentLandingPage} />
             <Route exact path="/agents" exact component ={MainAgentPage} />

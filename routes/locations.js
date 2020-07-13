@@ -66,8 +66,6 @@ router.route('/get/').get((req,res)=>{
     const sql = 'SELECT * FROM location_parents WHERE ' + conditions.where
     const limit = parseFloat(req.query.limit) || 10;
 
-    console.log(limit,"this is the limit")
-
     pool.query(sql,conditions.values, function (error, results, fields) {
       if (error) throw error;
       const data = mapLocationParents(results)

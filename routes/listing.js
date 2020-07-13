@@ -4,6 +4,23 @@ const mysql =require('mysql2/promise');
 const pool = mysql.createPool(mysqlSettings)
 const axios = require('axios');
 
+const buildConditions = ((params)=>{
+  let conditions = [];
+  let values = [];
+  let conditionsStr
+
+  if(params.id){
+    conditions.push("listing_id = ?")
+    values.push(params.id)
+    console.log("params id found")
+  }
+  console.log("testing")
+  return {
+    where: conditions.length ? conditions.join(' AND ') : '1',
+    values: values
+  }
+})
+
 router.route('/getbylocationid/:locationid').get((req,res)=>{
   const id = req.params.locationid;
   const sql = "SELECT listing_address.* \
@@ -51,12 +68,18 @@ router.route('/getbyaddressid/:addressid').get((req,res)=>{
 
 router.route('/get').get((req,res)=>{
   const id = req.params.locationnameid;
-  const sql = "SELECT * FROM listing_address"
+  //const sql = "SELECT * FROM listing_address"
+  const conditions = buildConditions(req.query);
+  const sql = 'SELECT * FROM listing_address WHERE ' + conditions.where;
+  //const limit = parseFloat(req.query.limit) || 10;
+  console.log(sql, "these are the values")
 
-  pool.query(sql, function (error, results, fields) {
-    if (error) throw error;
-    res.json(results)
-  });
+  pool.query(sql,conditions.values)
+  .then((results)=>res.json(results[0]))
+  .catch((err)=>{
+    console.log("ERROR!")
+    res.status(400).send(`error: ${err.message}`)
+  })
 })
 
 

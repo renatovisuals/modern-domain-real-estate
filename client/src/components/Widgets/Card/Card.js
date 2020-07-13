@@ -26,7 +26,7 @@ const Card = (props) => {
 
       case 'listing':
         return(
-          <div className = {`card ${props.className}`} onMouseEnter = {props.onMouseEnter ? (e)=>props.onMouseEnter(e) : null} onMouseLeave = {props.onMouseLeave ? (e)=>props.onMouseLeave(e) : null}>
+          <div className = {`card ${props.className}`} onClick = {props.onClick ? (e)=> props.onClick(e) : null} onMouseEnter = {props.onMouseEnter ? (e)=>props.onMouseEnter(e) : null} onMouseLeave = {props.onMouseLeave ? (e)=>props.onMouseLeave(e) : null}>
             <div className = "card__image" style = {{backgroundImage:props.imagePath}}></div>
             <div className = "card__details">
               <div className = "card__text-container">

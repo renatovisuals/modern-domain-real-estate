@@ -3,8 +3,10 @@ import './ListingPanel.scss';
 import Card from '../Widgets/Card/Card';
 import axios from 'axios';
 import ListingPanelFilter from '../ListingPanelFilter/ListingPanelFilter';
-class ListingPanel extends Component {
+import { withRouter } from 'react-router-dom';
 
+
+class ListingPanel extends Component {
   state = {
     markersInBounds:[],
     markerData:[],
@@ -25,6 +27,10 @@ class ListingPanel extends Component {
     this.setState({
       filterDrawerIsTransitioning:bool
     },()=>{if(callback)callback()})
+  }
+
+  handleListingClick = (listingId)=>{
+    this.props.history.push(`/listing/${listingId}/`)
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
@@ -85,6 +91,7 @@ class ListingPanel extends Component {
                 id = {marker.listingData.listing_id}
                 onMouseEnter = {()=>this.handleMouseEnter(marker.listingData.listing_id)}
                 onMouseLeave = {this.handleMouseLeave}
+                onClick = {()=> this.handleListingClick(marker.listingData.listing_id)}
                />
       })
       return listings
@@ -103,6 +110,7 @@ class ListingPanel extends Component {
                   id = {listing.listing_id}
                   onMouseEnter = {()=>this.handleMouseEnter(listing.listing_id)}
                   onMouseLeave = {this.handleMouseLeave}
+                  onClick = {()=> this.handleListingClick(listing.listing_id)}
                  />
         })
         return listings
@@ -138,4 +146,4 @@ class ListingPanel extends Component {
   }
 }
 
-export default ListingPanel;
+export default withRouter(ListingPanel);
