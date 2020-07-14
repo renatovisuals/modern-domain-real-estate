@@ -18,6 +18,16 @@ export const arraysMatch = (arr1,arr2)=>{
 	return true;
 }
 
+export const priceToString = (price)=>{
+	const options = {
+  	style: 'currency',
+    currency:'USD',
+    minimumFractionDigits:0,
+    maximumFractionDigits:0
+  }
+	return new Intl.NumberFormat('en-US',options).format(price);
+}
+
 export const camelize = (word)=>{
   const regex = new RegExp(/(\W+|_+)(?=\w)/,'gm');
   word = word.trim().toLowerCase();
