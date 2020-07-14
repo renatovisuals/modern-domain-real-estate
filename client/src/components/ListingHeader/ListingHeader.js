@@ -8,12 +8,22 @@ function ListingHeader(props) {
     <div className = "listing-header">
       <ContentContainer className = "listing-header__content-container">
           <div>
-            <span className = "listing-header__street"> {`${listing.street} ${listing.apartment ? ','+ listing.apartment : ''}`} </span>
-            <span className = "listing-header__city-state"> {`${listing.city}, ${listing.state}`} </span>
+            <span className = "listing-header__info listing-header__info--title"> {`${listing.street} ${listing.apartment ? ','+ listing.apartment : ''}`} </span>
+            <span className = "listing-header__info"> {`${listing.city}, ${listing.state}`} </span>
           </div>
-          <div className = "listing-header__header-info">
-            <span className = "listing-header__street"> {`${listing.street} ${listing.apartment ? ','+ listing.apartment : ''}`} </span>
-            <span className = "listing-header__city-state"> {`${listing.city}, ${listing.state}`} </span>
+          <div className = "listing-header__info-wrapper">
+            <div className = "listing-header__info-container">
+              <span className = "listing-header__info listing-header__info--title"> {`${listing.price}`} </span>
+              <span className = "listing-header__info"> Price </span>
+            </div>
+            <div className = "listing-header__info-container">
+              <span className = "listing-header__info listing-header__info--title"> {`${listing.bedrooms}`} </span>
+              <span className = "listing-header__info"> Beds </span>
+            </div>
+            <div className = "listing-header__info-container">
+              <span className = "listing-header__info listing-header__info--title"> {`${listing.bathrooms}`} </span>
+              <span className = "listing-header__info"> Baths </span>
+            </div>
           </div>
 
       </ContentContainer>
