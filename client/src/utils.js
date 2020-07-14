@@ -28,6 +28,14 @@ export const formatPrice = (price)=>{
 	return new Intl.NumberFormat('en-US',options).format(price);
 }
 
+export const formatNumber = (number)=>{
+	const options = {
+    minimumFractionDigits:0,
+    maximumFractionDigits:0
+  }
+	return new Intl.NumberFormat('en-US',options).format(number);
+}
+
 export const camelize = (word)=>{
   const regex = new RegExp(/(\W+|_+)(?=\w)/,'gm');
   word = word.trim().toLowerCase();

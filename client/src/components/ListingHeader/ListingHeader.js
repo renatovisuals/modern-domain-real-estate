@@ -2,13 +2,11 @@ import React from 'react';
 import './ListingHeader.scss';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import {formatPrice} from '../../utils';
+import {formatNumber} from '../../utils';
 
 function ListingHeader(props) {
   const {listing} = props;
-//  const sqft = ()=>{
-//    const string = listing.
-//    return stringToSqft()
-//  }
+
   return (
     <div className = "listing-header">
       <ContentContainer className = "listing-header__content-container">
@@ -30,7 +28,7 @@ function ListingHeader(props) {
               <span className = "listing-header__info"> Baths </span>
             </div>
             <div className = "listing-header__info-container">
-              <span className = "listing-header__info listing-header__info--title"> {`${listing.sqft}`} </span>
+              <span className = "listing-header__info listing-header__info--title"> {`${formatNumber(listing.sqft)}`} </span>
               <span className = "listing-header__info"> Sqft </span>
             </div>
           </div>

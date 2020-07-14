@@ -8,20 +8,7 @@ import axios from 'axios';
 class ListingPage extends Component {
 
   state = {
-    listing:null
-  }
-
-  componentDidMount(){
-    const getListing = async () => {
-      await axios.get(`/api/listing/get/?id=${this.props.match.params.id}`)
-      .then((res)=>{
-        this.setState({
-          listing:res.data[0]
-        },()=>console.log(this.state,"this is the listing page state"))
-      })
-      .catch((err)=>console.error(err))
-    };
-      getListing()
+    //listing:null
   }
 
   render(){
