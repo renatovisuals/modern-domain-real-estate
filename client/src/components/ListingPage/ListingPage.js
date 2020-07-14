@@ -21,8 +21,6 @@ class ListingPage extends Component {
               <div className = "listing__image-carousel">
                 <span className = "listing__text">{`${this.props.match.params.id}`}</span>
               </div>
-
-              THIS IS A LISTING {this.props.match.params.id ? `${this.props.match.params.id}` : null}
             </ContentContainer>
         </div>
     );
