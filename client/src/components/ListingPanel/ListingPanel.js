@@ -29,10 +29,6 @@ class ListingPanel extends Component {
     },()=>{if(callback)callback()})
   }
 
-  handleListingClick = (listingId)=>{
-    this.props.history.push(`/listing/${listingId}/`)
-  }
-
   static getDerivedStateFromProps(nextProps, prevState){
     if(prevState.markersInBounds !== nextProps.markersInBounds){
       return {
@@ -91,7 +87,7 @@ class ListingPanel extends Component {
                 id = {marker.listingData.listing_id}
                 onMouseEnter = {()=>this.handleMouseEnter(marker.listingData.listing_id)}
                 onMouseLeave = {this.handleMouseLeave}
-                onClick = {()=> this.handleListingClick(marker.listingData.listing_id)}
+                onClick = {()=> this.props.viewListing(marker.listingData)}
                />
       })
       return listings
@@ -110,7 +106,7 @@ class ListingPanel extends Component {
                   id = {listing.listing_id}
                   onMouseEnter = {()=>this.handleMouseEnter(listing.listing_id)}
                   onMouseLeave = {this.handleMouseLeave}
-                  onClick = {()=> this.handleListingClick(listing.listing_id)}
+                  onClick = {()=> this.props.viewListing(listing)}
                  />
         })
         return listings

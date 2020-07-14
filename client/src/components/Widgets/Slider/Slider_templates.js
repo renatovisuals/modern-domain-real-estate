@@ -55,6 +55,15 @@ const SliderTemplates = (props) => {
             )
           })
           break;
+        case('listing'):
+          template = props.data.map((listing,i) => {
+            return(
+              <Link draggable = 'false'>
+                <Card type = "listing" data ={listing}> </Card>
+              </Link>
+            )
+          })
+          break;
         default:
           template = null;
     }

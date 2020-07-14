@@ -52,9 +52,11 @@ class MainListingPage extends Component {
     this.closeListing = this.closeListing.bind(this);
   }
 
-  viewListing = (marker)=>{
-    console.log(marker,"retrieving listing from marker")
-    this.props.history.push(`/listing/${marker.listingData.listing_id}/`)
+  viewListing = (listingData)=>{
+    this.props.history.push({
+      pathname:`/listing/${listingData.listing_id}/`,
+      state:{listing:listingData}
+    })
   }
 
   setMarkersInBounds = (markersInBounds)=>{
@@ -496,6 +498,7 @@ class MainListingPage extends Component {
            filterState = {this.state}
            mapHeight = {this.state.mapHeight}
            resetFilter = {(filterState)=>this.resetFilterState(filterState)}
+           viewListing = {(id)=>this.viewListing(id)}
            >
           </ListingPanel>
         </div>

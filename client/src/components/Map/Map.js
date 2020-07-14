@@ -106,7 +106,7 @@ class Map extends Component {
           pixelOffset: new window.google.maps.Size(0,5)
       })
       infoWindow.addListener('domready', e => {
-          render(<InfoWindow marker = {this.state.activeMarker} data = {this.props.data} viewListing = {()=>this.props.viewListing(this.state.activeMarker)}/>, document.getElementById('infoWindow'))
+          render(<InfoWindow marker = {this.state.activeMarker} data = {this.props.data} viewListing = {()=>this.props.viewListing(this.state.activeMarker.listingData)}/>, document.getElementById('infoWindow'))
       })
       infoWindow.addListener('closeclick', e => {
           this.setState({
