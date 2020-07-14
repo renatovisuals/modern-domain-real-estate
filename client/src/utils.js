@@ -18,7 +18,7 @@ export const arraysMatch = (arr1,arr2)=>{
 	return true;
 }
 
-export const priceToString = (price)=>{
+export const formatPrice = (price)=>{
 	const options = {
   	style: 'currency',
     currency:'USD',

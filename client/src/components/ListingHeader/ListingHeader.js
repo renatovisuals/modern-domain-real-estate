@@ -1,7 +1,7 @@
 import React from 'react';
 import './ListingHeader.scss';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
-import {priceToString} from '../../utils';
+import {formatPrice} from '../../utils';
 
 function ListingHeader(props) {
   const {listing} = props;
@@ -18,7 +18,7 @@ function ListingHeader(props) {
           </div>
           <div className = "listing-header__info-wrapper">
             <div className = "listing-header__info-container">
-              <span className = "listing-header__info listing-header__info--title"> {`${priceToString(listing.price)}`} </span>
+              <span className = "listing-header__info listing-header__info--title"> {`${formatPrice(listing.price)}`} </span>
               <span className = "listing-header__info"> Price </span>
             </div>
             <div className = "listing-header__info-container">
