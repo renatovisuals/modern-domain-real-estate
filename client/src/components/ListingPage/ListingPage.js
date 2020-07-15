@@ -3,6 +3,7 @@ import Nav from '../Nav/Nav';
 import './ListingPage.scss';
 import ContentContainer from '../../hoc/ContentContainer/ContentContainer';
 import ListingHeader from '../ListingHeader/ListingHeader';
+import ListingPageSlider from '../ListingPageSlider/ListingPageSlider';
 import axios from 'axios';
 
 class ListingPage extends Component {
@@ -19,7 +20,7 @@ class ListingPage extends Component {
             <ListingHeader listing = {this.props.location.state.listing}/>
             <ContentContainer>
               <div className = "listing__image-carousel">
-                <span className = "listing__text">{`${this.props.match.params.id}`}</span>
+                <ListingPageSlider/>
               </div>
             </ContentContainer>
         </div>

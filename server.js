@@ -23,6 +23,8 @@ app.use('/api/listings',listingsRoutes);
 app.use('/api/search',searchRoutes);
 app.use('/api/listing',listingRoutes);
 app.use('/api/agents',agentRoutes)
+app.use('/api/images',agentRoutes)
+
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static('client/build'));

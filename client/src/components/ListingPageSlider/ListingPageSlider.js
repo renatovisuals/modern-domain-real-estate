@@ -10,10 +10,27 @@ class ListingPage extends Component {
   }
 
   render(){
-    return (
-        <div className = "listing" onClick = {this.props.handleClose}>
+    let dragging = false;
+    const settings = {
+      dots: true,
+      infinite: true,
+      speed: 800,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      autoplay:true,
+      autoplaySpeed:10000,
+      beforeChange: () => dragging = true,
+      afterChange: () => dragging = false,
+      ...this.props.settings
+    }
 
-        </div>
+    return (
+        <Slider className = "listing-page-slider" {...settings}>
+          <div className = "listing-page-slider__test"></div>
+          <div className = "listing-page-slider__test"></div>
+          <div className = "listing-page-slider__test"></div>
+          <div className = "listing-page-slider__test"></div>
+        </Slider>
     );
   }
 }
