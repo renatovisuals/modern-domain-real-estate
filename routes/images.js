@@ -11,9 +11,9 @@ const buildConditions = ((params)=>{
   let values = [];
   let conditionsStr
 
-  if(params.id){
-    conditions.push("listing_id = ?")
-    values.push(params.id)
+  if(params.listing_id){
+    conditions.push("listing_listing_id = ?")
+    values.push(params.listing_id)
   }
 
   return {
@@ -26,13 +26,22 @@ const buildConditions = ((params)=>{
 
 router.route('/get/').get((req,res)=>{
   const getImages = async ()=>{
-    const limit = parseFloat(req.query.limit) || 10;
-    const searchQuery = req.params.search_query
     const conditions = buildConditions(req.query);
     const sql = 'SELECT * FROM imagepath WHERE ' + conditions.where;
-    const images = await pool.query(sql,[conditions.values])
+    pool.query(sql,[conditions.values])
+    .then((results)=>{
+      const imagePaths = results[0].map((result)=>{
+        return result.image_path
+      })
 
-    res.json(images)
+      return imagePaths
+    })
+    .then((images)=>res.json(images))
+    .catch((err)=>{
+      res.status(400).send(`error: ${err.message}`)
+    })
   }
   getImages()
 })
+
+module.exports = router;

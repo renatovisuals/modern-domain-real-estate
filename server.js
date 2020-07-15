@@ -17,13 +17,14 @@ const listingsRoutes = require('./routes/listings');
 const listingRoutes = require('./routes/listing');
 const searchRoutes = require('./routes/search');
 const agentRoutes = require('./routes/agents');
+const imageRoutes = require('./routes/images');
 
 app.use('/api/locations',locationsRoutes);
 app.use('/api/listings',listingsRoutes);
 app.use('/api/search',searchRoutes);
 app.use('/api/listing',listingRoutes);
 app.use('/api/agents',agentRoutes)
-app.use('/api/images',agentRoutes)
+app.use('/api/images',imageRoutes)
 
 
 if (process.env.NODE_ENV === "production") {

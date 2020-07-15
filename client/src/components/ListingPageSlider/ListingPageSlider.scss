@@ -3,7 +3,12 @@
   &__test{
     width:500px;
     height:500px;
-    background:red;
-    border:2px solid orange;
+  }
+
+  &__image{
+    height:100%;
+    width:100%;
+    background-size: cover;
+    background-position: center;
   }
 }

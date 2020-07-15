@@ -20,7 +20,7 @@ class ListingPage extends Component {
             <ListingHeader listing = {this.props.location.state.listing}/>
             <ContentContainer>
               <div className = "listing__image-carousel">
-                <ListingPageSlider/>
+                <ListingPageSlider listing = {this.props.location.state.listing}/>
               </div>
             </ContentContainer>
         </div>
