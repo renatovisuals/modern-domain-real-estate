@@ -5,14 +5,16 @@ import {formatPrice} from '../../utils';
 import {formatNumber} from '../../utils';
 
 function ListingHeader(props) {
-  const {listing} = props;
+  const {listing,headerIsHidden} = props;
 
   return (
     <div className = "listing-header">
-      <ContentContainer className = "listing-header__content-container">
-          <div>
-            <span className = "listing-header__info listing-header__info--title"> {`${listing.street} ${listing.apartment ? ','+ listing.apartment : ''}`} </span>
-            <span className = "listing-header__info"> {`${listing.city}, ${listing.state}`} </span>
+      <div className = "listing-header__wrapper">
+          <div className = "listing-header__address-wrapper">
+            <div className = "listing-header__address">
+              <span className = "listing-header__info listing-header__info--title"> {`${listing.street} ${listing.apartment ? ','+ listing.apartment : ''}`} </span>
+              <span className = "listing-header__info"> {`${listing.city}, ${listing.state}`} </span>
+            </div>
           </div>
           <div className = "listing-header__info-wrapper">
             <div className = "listing-header__info-container">
@@ -32,8 +34,7 @@ function ListingHeader(props) {
               <span className = "listing-header__info"> Sqft </span>
             </div>
           </div>
-
-      </ContentContainer>
+      </div>
     </div>
   );
 }

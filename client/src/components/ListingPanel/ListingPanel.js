@@ -112,12 +112,9 @@ class ListingPanel extends Component {
         return listings
       }
     }
-
-
   }
 
   render(){
-
     return(
       <div id = "listing-panel" className= {`listing-panel ${this.state.filterDrawerIsTransitioning ? "disable-scroll" : ""}`}>
         <ListingPanelFilter
