@@ -14,8 +14,6 @@
     margin-left:-100%;
   }
 
-
-
   &__input-error-text{
     font-size:11px;
     margin:0;
@@ -25,16 +23,6 @@
 
     &--radio{
       padding-top:5px;
-    }
-  }
-
-  &__input-error{
-    input{
-      border:1px solid red !important;
-      margin: 5px 0 2px 0 !important;
-    }
-    p{
-      display:block !important;
     }
   }
 
@@ -105,26 +93,6 @@
     display:flex;
     justify-content: space-between;
     flex-wrap: wrap;
-
-    input[type="text"]{
-      height:35px;
-      border-radius: 3px;
-      border:1px solid #dedede;
-      padding-left: 10px;
-      font-size: 14px;
-      box-sizing: border-box;
-      margin: 5px 0;
-      flex-basis:100%;
-      width:100%;
-
-      &:focus{
-        outline:none;
-        border: 1px solid #3bc193;
-      }
-      &:hover{
-        border: 1px solid #3bc193;
-      }
-    }
 
     input[type="radio"]{
       position:absolute;

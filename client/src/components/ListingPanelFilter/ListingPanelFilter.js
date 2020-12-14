@@ -104,15 +104,15 @@ class ListingPanelFilter extends Component {
       const renderFilterButton = ()=>{
         if(window.innerWidth > 570 && window.innerWidth <768){
           return(
-            <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'More Filters'} className = "listing-panel-filter__button listing-panel-filter__button--filter"> </Button>
+            <Button onClick = {this.handleFilterToggle} className = "listing-panel-filter__button listing-panel-filter__button--filter"> {this.props.filterDrawerIsOpen ? 'Close Filters' : 'More Filters'} </Button>
           )
         }else if(window.innerWidth > 1000){
           return(
-            <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'More Filters'} className = "listing-panel-filter__button listing-panel-filter__button--filter"> </Button>
+            <Button onClick = {this.handleFilterToggle} className = "listing-panel-filter__button listing-panel-filter__button--filter"> {this.props.filterDrawerIsOpen ? 'Close Filters' : 'More Filters'} </Button>
           )
         }else{
           return(
-            <Button onClick = {this.handleFilterToggle} content = {this.props.filterDrawerIsOpen ? 'Close Filters' : 'Filters'} className = "listing-panel-filter__button listing-panel-filter__button--filter"> </Button>
+            <Button onClick = {this.handleFilterToggle} className = "listing-panel-filter__button listing-panel-filter__button--filter"> {this.props.filterDrawerIsOpen ? 'Close Filters' : 'Filters'} </Button>
           )
         }
       }
@@ -215,7 +215,7 @@ class ListingPanelFilter extends Component {
         </div>
         {this.props.filterDrawerIsOpen ?
           <div className = "listing-panel-filter__bottom-menu">
-            <Button className = "listing-panel-filter__button listing-panel-filter__button--reset" content = "Reset Filter" onClick = {(e)=>this.resetFilter(e)}/>
+            <Button className = "listing-panel-filter__button listing-panel-filter__button--reset" onClick = {(e)=>this.resetFilter(e)}> Reset Filter </Button>
           </div>
           :
          null}

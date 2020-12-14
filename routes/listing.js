@@ -68,16 +68,23 @@ router.route('/getbyaddressid/:addressid').get((req,res)=>{
 
 router.route('/get').get((req,res)=>{
   const id = req.params.locationnameid;
-  //const sql = "SELECT * FROM listing_address"
   const conditions = buildConditions(req.query);
   const sql = 'SELECT * FROM listing_address WHERE ' + conditions.where;
-  //const limit = parseFloat(req.query.limit) || 10;
-  console.log(sql, "these are the values")
 
   pool.query(sql,conditions.values)
   .then((results)=>res.json(results[0]))
   .catch((err)=>{
-    console.log("ERROR!")
+    res.status(400).send(`error: ${err.message}`)
+  })
+})
+
+router.route('/:listingid/agent').get((req,res)=>{
+  const id = req.params.listingid;
+  const sql = 'SELECT agent_id FROM agents_listings WHERE listing_id = ?' ;
+
+  pool.query(sql,id)
+  .then((results)=>res.json(results[0]))
+  .catch((err)=>{
     res.status(400).send(`error: ${err.message}`)
   })
 })
@@ -88,11 +95,7 @@ router.route('/add').post((req,res)=>{
   let listing = {
     building_type:req.body.buildingtype,
     address_id:null,
-    //city:req.body.city,
-    //state:req.body.state,
-    //street:req.body.street,
-    //apt:req.body.apt,
-    //zipcode:req.body.zip,
+    agent_id:492,
     price:req.body.price,
     est_payment:req.body.estpayment,
     bedrooms:req.body.bedrooms,
@@ -103,13 +106,18 @@ router.route('/add').post((req,res)=>{
     heating:req.body.heating,
     cooling:req.body.cooling,
     parking:req.body.parking,
+    pool:req.body.pool,
+    washerDryer:req.body.washerdryer,
+    airConditioning:req.body.airconditioning,
+    elevator:req.body.elevator,
+    garage:req.body.garage,
     lot_unit:req.body.lot.unit,
     lot_quantity:req.body.lot.quantity,
     price_per_sqft:req.body.pricepersqft,
     description:req.body.description,
     pos_lat:'',
-    pos_lng:''
-    //formattedAddress:''
+    pos_lng:'',
+
   }
   const nameTypes = {
     street_number:"street_number",
@@ -284,16 +292,26 @@ router.route('/add').post((req,res)=>{
       req.body.images.forEach((image)=>{
         imagePaths.push([image,listingId])
       })
+      //inserting listing images
       sql = 'INSERT IGNORE INTO imagepath (image_path,listing_listing_id) VALUES ?;';
       await connection.query(sql,[imagePaths])
+      //inserting agent id
+      sql = 'SELECT agent_id FROM agent WHERE agent_id = ?';
+      let agentExists = await connection.query(sql,listing.agent_id)
+      agentExists = agentExists[0][0]
+
+      if(agentExists){
+        sql = 'INSERT IGNORE INTO agents_listings (agent_id,listing_id) VALUES (?,?)'
+        await connection.query(sql,[listing.agent_id,listingId])
+      }else{
+        throw new Error("listing must have valid agent_id")
+      }
 
       res.status(200).send('listing submitted')
-
       connection.commit(connection.release())
     } catch(err) {
-      //res.send(err)
       res.status(400).send(`error: ${err.message}`)
-      throw err
+      //throw err
       connection.rollback(()=>connection.release())
     }
   }

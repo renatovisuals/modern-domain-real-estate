@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {CSSTransition} from 'react-transition-group';
 import AgentContactForm from '../AgentContactForm/AgentContactForm';
 import AgentFormSuccessPage from '../AgentFormSuccessPage/AgentFormSuccessPage';
+import AgentFormSuccessMessage from '../AgentFormSuccessMessage/AgentFormSuccessMessage';
 import './AgentModal.scss';
 
 
@@ -46,9 +47,7 @@ class AgentModal extends Component {
     )
   }
 
-  handleUserInput = (e)=>{
-    const name = e.target.name;
-    const value = e.target.value;
+  handleUserInput = (name,value)=>{
     this.setState({
         [name]:value
     },()=>{this.validateField(name,value)})
@@ -57,7 +56,7 @@ class AgentModal extends Component {
   handleModalClose =()=>{
     this.props.toggleModal()
     setTimeout(()=>{
-      this.setState(this.getInitialState(), console.log(this.state, 'this is the new state'))
+      this.setState(this.getInitialState())
     },300)
   }
 
@@ -79,7 +78,7 @@ class AgentModal extends Component {
   onFormSubmit = (e)=>{
   e.preventDefault();
    if(this.state.formValid){
-    this.setState(this.getInitialState(),()=>console.log(this.state, 'this is the new state'))
+    this.setState(this.getInitialState())
     this.setState({submissionSuccess:true})
     setTimeout(()=>this.handleModalClose(),1800);
    }else{
@@ -132,7 +131,6 @@ class AgentModal extends Component {
         borderColor:'red'
       }
     }
-    console.log(this.state,"this is the state")
     return(
       <CSSTransition
         in={this.props.appear}
@@ -163,7 +161,9 @@ class AgentModal extends Component {
               appear = {!this.state.submissionSuccess}
               setContainerHeight = {this.setModalHeight}
             />
-            <AgentFormSuccessPage agent ={this.props.agent} appear = {this.state.submissionSuccess} submissionSuccess = {this.state.submissionSuccess}/>
+            <AgentFormSuccessPage appear = {this.state.submissionSuccess}>
+              <AgentFormSuccessMessage agent = {this.props.agent} submissionSuccess = {this.state.submissionSuccess}/>
+            </AgentFormSuccessPage>
         </div>
       </CSSTransition>
     )

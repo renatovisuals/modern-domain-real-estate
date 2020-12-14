@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './AgentFormSuccessPage.scss';
+import AgentFormSuccessMessage from '../AgentFormSuccessMessage/AgentFormSuccessMessage';
 import {CSSTransition} from 'react-transition-group';
 
 
@@ -25,9 +26,7 @@ const AgentFormSuccessPage = (props)=> {
       }}
     >
       <div className = "agent-success-page">
-        <img className = {`agent-success-page__image ${props.submissionSuccess ? 'agent-success-page__image--animated':null}`} src ="/images/logo-emblem.svg"/>
-        <span className = "agent-success-page__title"> Your Message Has Been Sent! </span>
-        <span className = "agent-success-page__description"> {`${props.agent.first_name} will contact you shortly!`} </span>
+        {props.children}
       </div>
     </CSSTransition>
   )

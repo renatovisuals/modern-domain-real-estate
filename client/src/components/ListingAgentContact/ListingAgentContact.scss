@@ -1,6 +1,14 @@
 .listing-agent-contact{
   width:100%;
-  height:600px;
-  background-color: red;
+  //height:600px;
+  padding:15px;
+  border:1px solid #c4c4c4;
   margin-top: 20px;
+
+  &__submit-btn{
+    height:35px;
+    box-shadow:none;
+    font-size: 18px;
+    color: #fff;
+  }
 }
