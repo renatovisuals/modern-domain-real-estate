@@ -15,7 +15,7 @@
     "@material-ui/core": "^3.9.3",
     "axios": "^0.19.0",
     "gifsicle": "^4.0.1",
-    "i": "^0.3.6",
+    "i": "^0.3.7",
     "lodash.debounce": "^4.0.8",
     "materialize-css": "^1.0.0-rc.2",
     "node-sass": "^4.13.1",
